@@ -94,3 +94,7 @@ fabric.properties
 openrocket.log
 
 *.snap
+
+prime/*
+swing/resources/datafiles/presets/system.ser
+swing/resources/datafiles/presets/
