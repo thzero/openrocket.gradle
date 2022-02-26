@@ -1,0 +1,1007 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="4856984f-2420-47e8-9f4d-bb0784a4e1c4" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/.name" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries-with-intellij-classes.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/openrocket.gradle.unstable.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/core/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" afterPath="$PROJECT_DIR$/core/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/settings.gradle" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/de/congrace/exp4j/ExpressionBuilder.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/de/congrace/exp4j/ExpressionBuilder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/de/congrace/exp4j/FunctionToken.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/de/congrace/exp4j/FunctionToken.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/de/congrace/exp4j/PostfixExpression.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/de/congrace/exp4j/PostfixExpression.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/de/congrace/exp4j/Variable.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/de/congrace/exp4j/Variable.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/de/congrace/exp4j/VariableSet.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/de/congrace/exp4j/VariableSet.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/aerodynamics/Warning.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/aerodynamics/Warning.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/aerodynamics/barrowman/FinSetCalc.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/aerodynamics/barrowman/FinSetCalc.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/aerodynamics/barrowman/LaunchLugCalc.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/aerodynamics/barrowman/LaunchLugCalc.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/aerodynamics/barrowman/SymmetricComponentCalc.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/aerodynamics/barrowman/SymmetricComponentCalc.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/aerodynamics/barrowman/TubeFinSetCalc.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/aerodynamics/barrowman/TubeFinSetCalc.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/appearance/Decal.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/appearance/Decal.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/appearance/DecalImage.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/appearance/DecalImage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/appearance/defaults/DefaultAppearance.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/appearance/defaults/DefaultAppearance.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/appearance/defaults/ResourceDecalImage.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/appearance/defaults/ResourceDecalImage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/arch/SystemInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/arch/SystemInfo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/communication/BugReporter.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/communication/BugReporter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/communication/Communicator.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/communication/Communicator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/communication/UpdateInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/communication/UpdateInfo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/communication/UpdateInfoRetriever.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/communication/UpdateInfoRetriever.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/database/ComponentPresetDatabase.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/database/ComponentPresetDatabase.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/database/Database.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/database/Database.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/database/motor/ThrustCurveMotorSet.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/database/motor/ThrustCurveMotorSet.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/database/motor/ThrustCurveMotorSetDatabase.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/database/motor/ThrustCurveMotorSetDatabase.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/document/Attachment.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/document/Attachment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/document/DecalRegistry.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/document/DecalRegistry.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/document/OpenRocketDocument.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/document/OpenRocketDocument.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/document/Simulation.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/document/Simulation.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/document/attachments/FileSystemAttachment.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/document/attachments/FileSystemAttachment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/document/attachments/ZipFileAttachment.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/document/attachments/ZipFileAttachment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/file/AttachmentUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/file/AttachmentUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/file/CSVExport.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/file/CSVExport.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/file/GeneralRocketLoader.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/file/GeneralRocketLoader.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/file/GeneralRocketSaver.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/file/GeneralRocketSaver.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/file/configuration/XmlContainerElement.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/file/configuration/XmlContainerElement.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/file/openrocket/OpenRocketSaver.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/file/openrocket/OpenRocketSaver.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/file/openrocket/importt/AppearanceHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/file/openrocket/importt/AppearanceHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/file/openrocket/importt/ComponentParameterHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/file/openrocket/importt/ComponentParameterHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/file/openrocket/importt/ComponentPresetSetter.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/file/openrocket/importt/ComponentPresetSetter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/file/openrocket/importt/ConfigHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/file/openrocket/importt/ConfigHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/file/openrocket/importt/DocumentConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/file/openrocket/importt/DocumentConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/file/openrocket/importt/DoubleSetter.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/file/openrocket/importt/DoubleSetter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/file/openrocket/importt/FinSetPointHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/file/openrocket/importt/FinSetPointHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/file/openrocket/importt/FlightDataBranchHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/file/openrocket/importt/FlightDataBranchHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/file/openrocket/importt/FlightDataHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/file/openrocket/importt/FlightDataHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/file/openrocket/importt/OpenRocketContentHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/file/openrocket/importt/OpenRocketContentHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/file/openrocket/importt/OpenRocketHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/file/openrocket/importt/OpenRocketHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/file/openrocket/importt/SimulationConditionsHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/file/openrocket/importt/SimulationConditionsHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/file/openrocket/importt/SingleSimulationHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/file/openrocket/importt/SingleSimulationHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/file/openrocket/savers/BodyTubeSaver.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/file/openrocket/savers/BodyTubeSaver.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/file/openrocket/savers/FinSetSaver.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/file/openrocket/savers/FinSetSaver.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/file/openrocket/savers/RocketComponentSaver.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/file/openrocket/savers/RocketComponentSaver.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/file/openrocket/savers/TransitionSaver.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/file/openrocket/savers/TransitionSaver.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/file/rocksim/RocksimNoseConeCode.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/file/rocksim/RocksimNoseConeCode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/file/rocksim/export/RocketDesignDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/file/rocksim/export/RocketDesignDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/file/rocksim/export/RocksimSaver.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/file/rocksim/export/RocksimSaver.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/file/rocksim/export/StageDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/file/rocksim/export/StageDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/file/rocksim/importt/FinSetHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/file/rocksim/importt/FinSetHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/file/rocksim/importt/MassObjectHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/file/rocksim/importt/MassObjectHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/file/rocksim/importt/RingHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/file/rocksim/importt/RingHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/file/rocksim/importt/RockSimAppearanceBuilder.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/file/rocksim/importt/RockSimAppearanceBuilder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/file/simplesax/ElementHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/file/simplesax/ElementHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/file/simplesax/NullElementHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/file/simplesax/NullElementHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/l10n/ClassBasedTranslator.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/l10n/ClassBasedTranslator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/masscalc/MassCalculation.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/masscalc/MassCalculation.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/masscalc/MassCalculator.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/masscalc/MassCalculator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/models/atmosphere/ExtendedISAModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/models/atmosphere/ExtendedISAModel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/models/atmosphere/InterpolatingAtmosphericModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/models/atmosphere/InterpolatingAtmosphericModel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/motor/CaseInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/motor/CaseInfo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/motor/DesignationComparator.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/motor/DesignationComparator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/motor/IgnitionEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/motor/IgnitionEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/motor/Manufacturer.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/motor/Manufacturer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/motor/Motor.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/motor/Motor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/motor/MotorConfiguration.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/motor/MotorConfiguration.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/motor/MotorConfigurationSet.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/motor/MotorConfigurationSet.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/motor/MotorDigest.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/motor/MotorDigest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/motor/ThrustCurveMotor.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/motor/ThrustCurveMotor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/optimization/general/FunctionCache.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/optimization/general/FunctionCache.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/optimization/general/ParallelExecutorCache.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/optimization/general/ParallelExecutorCache.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/optimization/general/Point.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/optimization/general/Point.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/optimization/general/multidim/MultidirectionalSearchOptimizer.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/optimization/general/multidim/MultidirectionalSearchOptimizer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/plugin/PluginModule.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/plugin/PluginModule.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/preset/ComponentPreset.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/preset/ComponentPreset.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/preset/InvalidComponentPresetException.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/preset/InvalidComponentPresetException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/preset/loader/DoubleColumnParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/preset/loader/DoubleColumnParser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/preset/loader/DoubleUnitColumnParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/preset/loader/DoubleUnitColumnParser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/preset/loader/IntegerColumnParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/preset/loader/IntegerColumnParser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/preset/loader/MaterialLoader.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/preset/loader/MaterialLoader.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/preset/loader/RocksimComponentFileLoader.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/preset/loader/RocksimComponentFileLoader.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/preset/loader/StringColumnParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/preset/loader/StringColumnParser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/preset/xml/BaseComponentDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/preset/xml/BaseComponentDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/preset/xml/BodyTubeDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/preset/xml/BodyTubeDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/preset/xml/BulkHeadDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/preset/xml/BulkHeadDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/preset/xml/CenteringRingDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/preset/xml/CenteringRingDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/preset/xml/EngineBlockDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/preset/xml/EngineBlockDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/preset/xml/LaunchLugDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/preset/xml/LaunchLugDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/preset/xml/MaterialDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/preset/xml/MaterialDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/preset/xml/MaterialTypeDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/preset/xml/MaterialTypeDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/preset/xml/NoseConeDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/preset/xml/NoseConeDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/preset/xml/OpenRocketComponentDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/preset/xml/OpenRocketComponentDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/preset/xml/OpenRocketComponentSaver.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/preset/xml/OpenRocketComponentSaver.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/preset/xml/ParachuteDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/preset/xml/ParachuteDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/preset/xml/RailButtonDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/preset/xml/RailButtonDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/preset/xml/ShapeDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/preset/xml/ShapeDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/preset/xml/StreamerDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/preset/xml/StreamerDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/preset/xml/TransitionDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/preset/xml/TransitionDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/preset/xml/TubeCouplerDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/preset/xml/TubeCouplerDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/AxialStage.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/AxialStage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/BodyComponent.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/BodyComponent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/BodyTube.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/BodyTube.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/BoxBounded.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/BoxBounded.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/Bulkhead.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/Bulkhead.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/CenteringRing.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/CenteringRing.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/ComponentAssembly.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/ComponentAssembly.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/ComponentChangeEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/ComponentChangeEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/DeploymentConfiguration.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/DeploymentConfiguration.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/EllipticalFinSet.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/EllipticalFinSet.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/EngineBlock.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/EngineBlock.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/ExternalComponent.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/ExternalComponent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/FinSet.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/FinSet.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/FlightConfigurableParameterSet.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/FlightConfigurableParameterSet.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/FlightConfiguration.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/FlightConfiguration.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/FlightConfigurationId.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/FlightConfigurationId.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/FreeformFinSet.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/FreeformFinSet.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/InnerTube.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/InnerTube.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/InstanceContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/InstanceContext.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/LaunchLug.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/LaunchLug.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/MassComponent.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/MassComponent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/MassObject.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/MassObject.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/MotorMount.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/MotorMount.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/NoseCone.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/NoseCone.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/Parachute.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/Parachute.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/ParallelStage.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/ParallelStage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/PodSet.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/PodSet.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/RadiusRingComponent.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/RadiusRingComponent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/RailButton.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/RailButton.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/RecoveryDevice.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/RecoveryDevice.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/RingComponent.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/RingComponent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/Rocket.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/Rocket.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/RocketComponent.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/RocketComponent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/ShockCord.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/ShockCord.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/Sleeve.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/Sleeve.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/StageSeparationConfiguration.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/StageSeparationConfiguration.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/Streamer.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/Streamer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/StructuralComponent.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/StructuralComponent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/SymmetricComponent.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/SymmetricComponent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/ThicknessRingComponent.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/ThicknessRingComponent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/Transition.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/Transition.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/TrapezoidFinSet.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/TrapezoidFinSet.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/TubeCoupler.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/TubeCoupler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/TubeFinSet.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/TubeFinSet.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/position/AxialMethod.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketcomponent/position/AxialMethod.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketvisitors/DepthFirstRecusiveVisitor.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketvisitors/ListComponents.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/rocketvisitors/ListComponents.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/simulation/BasicEventSimulationEngine.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/simulation/BasicEventSimulationEngine.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/simulation/BasicLandingStepper.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/simulation/BasicLandingStepper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/simulation/BasicTumbleStepper.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/simulation/BasicTumbleStepper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/simulation/DefaultSimulationOptionFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/simulation/DefaultSimulationOptionFactory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/simulation/FlightData.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/simulation/FlightData.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/simulation/FlightDataBranch.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/simulation/FlightDataBranch.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/simulation/FlightDataType.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/simulation/FlightDataType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/simulation/GroundStepper.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/simulation/GroundStepper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/simulation/RK4SimulationStepper.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/simulation/RK4SimulationStepper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/simulation/SimulationOptions.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/simulation/SimulationOptions.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/simulation/SimulationStatus.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/simulation/SimulationStatus.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/simulation/customexpression/CustomExpression.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/simulation/customexpression/CustomExpression.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/simulation/customexpression/Functions.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/simulation/customexpression/Functions.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/simulation/extension/impl/ScriptingSimulationListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/simulation/extension/impl/ScriptingSimulationListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/simulation/extension/impl/ScriptingUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/simulation/extension/impl/ScriptingUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/simulation/listeners/example/StopSimulationListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/simulation/listeners/example/StopSimulationListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/startup/Application.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/startup/Application.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/startup/Preferences.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/startup/Preferences.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/thrustcurve/DownloadRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/thrustcurve/DownloadRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/thrustcurve/DownloadResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/thrustcurve/DownloadResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/thrustcurve/DownloadResponseParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/thrustcurve/DownloadResponseParser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/thrustcurve/MotorBurnFile.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/thrustcurve/MotorBurnFile.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/thrustcurve/SearchResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/thrustcurve/SearchResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/thrustcurve/SearchResponseParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/thrustcurve/SearchResponseParser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/thrustcurve/SerializeThrustcurveMotors.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/thrustcurve/SerializeThrustcurveMotors.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/thrustcurve/TCMotor.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/thrustcurve/TCMotor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/thrustcurve/ThrustCurveAPI.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/thrustcurve/ThrustCurveAPI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/unit/UnitGroup.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/unit/UnitGroup.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/util/BoundingBox.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/util/BoundingBox.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/util/BuildProperties.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/util/BuildProperties.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/util/Color.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/util/Color.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/util/Config.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/util/Config.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/util/GeodeticComputationStrategy.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/util/GeodeticComputationStrategy.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/util/ListenerList.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/util/ListenerList.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/util/MemoryManagement.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/util/MemoryManagement.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/util/MonitorableSet.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/util/MonitorableSet.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/util/PolyInterpolator.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/util/PolyInterpolator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/util/PrintProperties.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/util/PrintProperties.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/util/SafetyMutex.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/util/SafetyMutex.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/util/TextUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/util/TextUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/util/Transformation.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/util/Transformation.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/util/UniqueID.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/util/UniqueID.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/utils/L10nPropertyReport.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/utils/L10nPropertyReport.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/utils/TestFunctionOptimizer.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/utils/TestFunctionOptimizer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/utils/TestFunctionOptimizerLoop.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/utils/TestFunctionOptimizerLoop.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/resources/ChangeLog" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/resources/LICENSE.TXT" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/resources/README.TXT" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/resources/ReleaseNotes.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/resources/build.properties" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/resources/build.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/resources/fileformat.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/resources/l10n/messages.properties" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/resources/l10n/messages.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/resources/l10n/messages_cs.properties" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/resources/l10n/messages_cs.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/resources/l10n/messages_de.properties" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/resources/l10n/messages_de.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/resources/l10n/messages_es.properties" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/resources/l10n/messages_es.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/resources/l10n/messages_fr.properties" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/resources/l10n/messages_fr.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/resources/l10n/messages_it.properties" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/resources/l10n/messages_it.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/resources/l10n/messages_ja.properties" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/resources/l10n/messages_ja.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/resources/l10n/messages_pl.properties" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/resources/l10n/messages_pl.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/resources/l10n/messages_pt.properties" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/resources/l10n/messages_pt.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/resources/l10n/messages_ru.properties" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/resources/l10n/messages_ru.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/resources/l10n/messages_tr.properties" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/resources/l10n/messages_tr.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/resources/l10n/messages_uk_UA.properties" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/resources/l10n/messages_uk_UA.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/resources/l10n/messages_zh_CN.properties" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/resources/l10n/messages_zh_CN.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/ServicesForTesting.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/ServicesForTesting.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/aerodynamics/SymmetricComponentCalcTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/aerodynamics/SymmetricComponentCalcTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/communication/HttpURLConnectionMock.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/communication/HttpURLConnectionMock.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/communication/UpdateInfoTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/communication/UpdateInfoTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/database/ThrustCurveMotorSetTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/database/ThrustCurveMotorSetTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/file/openrocket/OpenRocketSaverTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/file/openrocket/OpenRocketSaverTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/file/openrocket/importt/DocumentConfigTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/file/openrocket/importt/DocumentConfigTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/file/rocksim/importt/RocksimLoaderTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/file/rocksim/importt/RocksimLoaderTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/file/rocksim/importt/RocksimTestBase.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/file/rocksim/importt/RocksimTestBase.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/masscalc/MassCacheTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/masscalc/MassCacheTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/masscalc/MassCalculatorTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/masscalc/MassCalculatorTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/masscalc/RigidBodyTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/masscalc/RigidBodyTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/models/gravity/WGSGravityModelTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/models/gravity/WGSGravityModelTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/motor/MotorDigestTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/motor/MotorDigestTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/motor/ThrustCurveMotorTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/motor/ThrustCurveMotorTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/optimization/rocketoptimization/TestRocketOptimizationFunction.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/optimization/rocketoptimization/TestRocketOptimizationFunction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/optimization/rocketoptimization/modifiers/TestGenericModifier.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/optimization/rocketoptimization/modifiers/TestGenericModifier.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/plugin/PluginTester.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/plugin/PluginTester.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/preset/BodyTubeComponentTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/preset/BodyTubeComponentTests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/preset/BulkHeadComponentTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/preset/BulkHeadComponentTests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/preset/CenteringRingComponentTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/preset/CenteringRingComponentTests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/preset/EngineBlockComponentTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/preset/EngineBlockComponentTests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/preset/LaunchLugComponentTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/preset/LaunchLugComponentTests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/preset/NoseConeComponentTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/preset/NoseConeComponentTests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/preset/NoseConePresetTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/preset/NoseConePresetTests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/preset/ParachuterComponentTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/preset/ParachuterComponentTests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/preset/StreamerComponentTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/preset/StreamerComponentTests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/preset/TransitionComponentTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/preset/TransitionComponentTests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/preset/TransitionPresetTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/preset/TransitionPresetTests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/preset/TubeCouplerComponentTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/preset/TubeCouplerComponentTests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/rocketcomponent/BoundingBoxTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/rocketcomponent/BoundingBoxTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/rocketcomponent/FinSetTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/rocketcomponent/FinSetTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/rocketcomponent/FlightConfigurationTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/rocketcomponent/FlightConfigurationTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/rocketcomponent/FreeformFinSetTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/rocketcomponent/FreeformFinSetTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/rocketcomponent/LaunchLugTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/rocketcomponent/LaunchLugTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/rocketcomponent/ParallelStageTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/rocketcomponent/ParallelStageTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/rocketcomponent/ParameterSetTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/rocketcomponent/ParameterSetTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/rocketcomponent/RocketTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/rocketcomponent/RocketTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/rocketcomponent/SymmetricComponentVolumeTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/rocketcomponent/SymmetricComponentVolumeTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/rocketcomponent/TransitionTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/rocketcomponent/TransitionTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/rocketcomponent/TrapezoidFinSetTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/rocketcomponent/TrapezoidFinSetTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/simulation/customexpression/TestExpressions.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/simulation/customexpression/TestExpressions.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/simulation/extension/impl/TestScriptingUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/simulation/extension/impl/TestScriptingUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/thrustcurve/SearchResponseParserTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/thrustcurve/SearchResponseParserTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/unit/FractionalUnitTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/unit/FractionalUnitTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/util/BaseTestCase/BaseTestCase.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/util/BaseTestCase.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/util/ExpressionParserTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/util/ExpressionParserTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/util/GeodeticComputationStrategyTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/util/GeodeticComputationStrategyTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/util/TestConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/util/TestConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/util/TextUtilTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/util/TextUtilTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/test/resources/thurstcurve/SampleSearchResponse.xml" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/test/resources/thrustcurve/SampleSearchResponse.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/test-writing/asimple.ork" beforeDir="false" afterPath="$PROJECT_DIR$/core/test-writing/asimple.ork" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/settings.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/settings.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/swing/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" afterPath="$PROJECT_DIR$/swing/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/settings.gradle" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/database/ComponentPresetDatabaseLoader.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/database/ComponentPresetDatabaseLoader.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/database/MotorDatabaseLoader.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/database/MotorDatabaseLoader.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/adaptors/ParameterSetModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/adaptors/ParameterSetModel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/adaptors/PresetModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/adaptors/PresetModel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/components/ColorChooser.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/components/ColorChooser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/components/ConfigurationComboBox.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/components/ConfigurationComboBox.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/components/DescriptionArea.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/components/DescriptionArea.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/components/SimulationExportPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/components/SimulationExportPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/components/StageSelector.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/components/StageSelector.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/components/compass/CompassSelectionButton.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/components/compass/CompassSelectionButton.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/configdialog/AppearancePanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/configdialog/AppearancePanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/configdialog/AxialStageConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/configdialog/AxialStageConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/configdialog/BodyTubeConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/configdialog/BodyTubeConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/configdialog/ComponentConfigDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/configdialog/ComponentConfigDialog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/configdialog/FinSetConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/configdialog/FinSetConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/configdialog/FreeformFinSetConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/configdialog/FreeformFinSetConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/configdialog/InnerTubeConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/configdialog/InnerTubeConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/configdialog/LaunchLugConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/configdialog/LaunchLugConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/configdialog/MassComponentConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/configdialog/MassComponentConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/configdialog/NoseConeConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/configdialog/NoseConeConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/configdialog/ParachuteConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/configdialog/ParachuteConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/configdialog/RocketComponentConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/configdialog/RocketComponentConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/configdialog/ShockCordConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/configdialog/ShockCordConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/configdialog/StreamerConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/configdialog/StreamerConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/configdialog/TransitionConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/configdialog/TransitionConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/configdialog/TubeFinSetConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/configdialog/TubeFinSetConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/customexpression/CustomExpressionPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/customexpression/CustomExpressionPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/customexpression/ExpressionBuilderDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/customexpression/ExpressionBuilderDialog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/customexpression/OperatorSelector.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/customexpression/OperatorSelector.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/customexpression/VariableSelector.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/customexpression/VariableSelector.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/dialogs/AboutDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/dialogs/AboutDialog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/dialogs/BugReportDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/dialogs/BugReportDialog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/dialogs/ComponentAnalysisDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/dialogs/ComponentAnalysisDialog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/dialogs/CustomMaterialDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/dialogs/CustomMaterialDialog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/dialogs/DebugLogDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/dialogs/DebugLogDialog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/dialogs/EditDecalDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/dialogs/EditDecalDialog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/dialogs/LicenseDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/dialogs/LicenseDialog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/dialogs/PrintDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/dialogs/PrintDialog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/dialogs/PrintSettingsDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/dialogs/PrintSettingsDialog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/dialogs/ScaleDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/dialogs/ScaleDialog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/dialogs/SwingWorkerDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/dialogs/SwingWorkerDialog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/dialogs/UpdateInfoDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/dialogs/UpdateInfoDialog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/dialogs/flightconfiguration/DeploymentSelectionDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/dialogs/flightconfiguration/DeploymentSelectionDialog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/dialogs/flightconfiguration/IgnitionSelectionDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/dialogs/flightconfiguration/IgnitionSelectionDialog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/dialogs/flightconfiguration/RenameConfigDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/dialogs/flightconfiguration/RenameConfigDialog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/dialogs/flightconfiguration/SeparationSelectionDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/dialogs/flightconfiguration/SeparationSelectionDialog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/dialogs/motor/MotorChooserDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/dialogs/motor/MotorChooserDialog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/dialogs/motor/thrustcurve/MotorFilterPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/dialogs/motor/thrustcurve/MotorFilterPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/dialogs/motor/thrustcurve/MotorHolder.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/dialogs/motor/thrustcurve/MotorHolder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/dialogs/motor/thrustcurve/MotorInformationPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/dialogs/motor/thrustcurve/MotorInformationPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/dialogs/motor/thrustcurve/ThrustCurveMotorColumns.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/dialogs/motor/thrustcurve/ThrustCurveMotorColumns.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/dialogs/motor/thrustcurve/ThrustCurveMotorPlotDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/dialogs/motor/thrustcurve/ThrustCurveMotorPlotDialog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/dialogs/motor/thrustcurve/ThrustCurveMotorSelectionPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/dialogs/motor/thrustcurve/ThrustCurveMotorSelectionPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/dialogs/optimization/GeneralOptimizationDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/dialogs/optimization/GeneralOptimizationDialog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/dialogs/optimization/OptimizationPlotDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/dialogs/optimization/OptimizationPlotDialog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/dialogs/preferences/DesignPreferencesPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/dialogs/preferences/DesignPreferencesPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/dialogs/preferences/GeneralPreferencesPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/dialogs/preferences/GeneralPreferencesPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/dialogs/preferences/GraphicsPreferencesPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/dialogs/preferences/GraphicsPreferencesPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/dialogs/preferences/LaunchPreferencesPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/dialogs/preferences/LaunchPreferencesPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/dialogs/preferences/MaterialEditPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/dialogs/preferences/MaterialEditPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/dialogs/preferences/PreferencesDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/dialogs/preferences/PreferencesDialog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/dialogs/preferences/SimulationPreferencesPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/dialogs/preferences/SimulationPreferencesPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/dialogs/preferences/UnitsPreferencesPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/dialogs/preferences/UnitsPreferencesPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/dialogs/preset/ComponentPresetChooserDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/dialogs/preset/ComponentPresetChooserDialog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/dialogs/preset/ComponentPresetRowFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/dialogs/preset/ComponentPresetRowFilter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/dialogs/preset/ComponentPresetTable.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/dialogs/preset/ComponentPresetTable.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/dialogs/preset/XTableColumnModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/dialogs/preset/XTableColumnModel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/figure3d/RealisticRenderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/figure3d/RealisticRenderer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/figure3d/RocketFigure3d.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/figure3d/RocketFigure3d.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/figure3d/UnfinishedRenderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/figure3d/UnfinishedRenderer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/figure3d/geometry/ComponentRenderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/figure3d/geometry/ComponentRenderer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/figure3d/geometry/FinRenderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/figure3d/geometry/FinRenderer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/figure3d/geometry/MassObjectRenderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/figure3d/geometry/MassObjectRenderer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/figure3d/photo/PhotoFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/figure3d/photo/PhotoFrame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/figure3d/photo/PhotoPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/figure3d/photo/PhotoPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/figure3d/photo/PhotoSettings.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/figure3d/photo/PhotoSettings.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/figure3d/photo/PhotoSettingsConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/figure3d/photo/PhotoSettingsConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/figure3d/photo/sky/SkyBoxCross.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/figure3d/photo/sky/SkyBoxCross.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/figureelements/RocketInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/figureelements/RocketInfo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/help/tours/GuidedTourSelectionDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/help/tours/GuidedTourSelectionDialog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/help/tours/SlideShowDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/help/tours/SlideShowDialog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/main/BasicFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/main/BasicFrame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/main/ComponentAddButtons.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/main/ComponentAddButtons.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/main/ComponentIcons.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/main/ComponentIcons.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/main/DocumentSelectionModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/main/DocumentSelectionModel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/main/ExportDecalDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/main/ExportDecalDialog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/main/OpenRocketClipboard.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/main/OpenRocketClipboard.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/main/RocketActions.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/main/RocketActions.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/main/SaveAsFileChooser.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/main/SaveAsFileChooser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/main/SimulationPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/main/SimulationPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/main/Splash.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/main/Splash.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/main/componenttree/ComponentTreeModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/main/componenttree/ComponentTreeModel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/main/componenttree/ComponentTreeTransferHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/main/componenttree/ComponentTreeTransferHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/main/componenttree/RocketComponentTransferable.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/main/componenttree/RocketComponentTransferable.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/main/flightconfigpanel/FlightConfigurablePanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/main/flightconfigpanel/FlightConfigurablePanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/main/flightconfigpanel/FlightConfigurationPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/main/flightconfigpanel/FlightConfigurationPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/main/flightconfigpanel/MotorConfigurationPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/main/flightconfigpanel/MotorConfigurationPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/main/flightconfigpanel/RecoveryConfigurationPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/main/flightconfigpanel/RecoveryConfigurationPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/main/flightconfigpanel/SeparationConfigurationPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/main/flightconfigpanel/SeparationConfigurationPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/plot/SimulationChart.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/plot/SimulationChart.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/plot/SimulationPlot.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/plot/SimulationPlot.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/plot/SimulationPlotDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/plot/SimulationPlotDialog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/preset/ButtonColumn.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/preset/ButtonColumn.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/preset/PresetEditorDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/preset/PresetEditorDialog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/print/DesignReport.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/print/DesignReport.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/rocketfigure/FinSetShapes.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/rocketfigure/FinSetShapes.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/rocketfigure/RailButtonShapes.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/rocketfigure/RailButtonShapes.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/rocketfigure/RocketComponentShape.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/rocketfigure/RocketComponentShape.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/rocketfigure/ShockCordShapes.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/rocketfigure/ShockCordShapes.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/scalefigure/FinPointFigure.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/scalefigure/FinPointFigure.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/scalefigure/RocketFigure.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/scalefigure/RocketFigure.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/scalefigure/RocketPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/scalefigure/RocketPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/scalefigure/ScaleSelector.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/scalefigure/ScaleSelector.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/simulation/SimulationConditionsPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/simulation/SimulationConditionsPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/simulation/SimulationEditDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/simulation/SimulationEditDialog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/simulation/SimulationExportPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/simulation/SimulationExportPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/simulation/SimulationOptionsPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/simulation/SimulationOptionsPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/simulation/SimulationPlotPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/simulation/SimulationPlotPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/simulation/SimulationRunDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/simulation/SimulationRunDialog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/util/EditDecalHelper.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/util/EditDecalHelper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/util/FileHelper.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/util/FileHelper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/util/GUIUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/util/GUIUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/util/Icons.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/util/Icons.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/util/SwingPreferences.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/util/SwingPreferences.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/widgets/MultiSlider.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/widgets/MultiSlider.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/widgets/MultiSliderUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/widgets/MultiSliderUI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/logging/LogLine.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/logging/LogLine.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/logging/LoggingSystemSetup.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/logging/LoggingSystemSetup.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/logging/PrintStreamToSLF4J.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/logging/PrintStreamToSLF4J.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/simulation/extension/AbstractSwingSimulationExtensionConfigurator.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/simulation/extension/AbstractSwingSimulationExtensionConfigurator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/simulation/extension/impl/ScriptingConfigurator.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/simulation/extension/impl/ScriptingConfigurator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/startup/OpenRocket.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/startup/OpenRocket.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/startup/SwingStartup.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/startup/SwingStartup.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/startup/providers/BlockingMotorDatabaseProvider.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/startup/providers/BlockingMotorDatabaseProvider.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/startup/providers/TranslatorProvider.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/startup/providers/TranslatorProvider.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/utils/ComponentPresetEditor.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/utils/ComponentPresetEditor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/utils/RocksimConverter.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/utils/RocksimConverter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/utils/SerializePresets.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/utils/SerializePresets.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swing/src/test/java/net/sf/openrocket/gui/configdialog/FinSetConfigTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/swing/src/test/java/net/sf/openrocket/gui/configdialog/FinSetConfigTest.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+    <projectState path="$PROJECT_DIR$/core">
+      <ProjectState />
+    </projectState>
+    <projectState path="$PROJECT_DIR$/swing">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <task path="$PROJECT_DIR$">
+          <activation />
+        </task>
+        <task path="$PROJECT_DIR$/swing">
+          <activation />
+        </task>
+        <task path="$PROJECT_DIR$/core">
+          <activation />
+        </task>
+        <projects_view>
+          <tree_state>
+            <expand>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="openrocket" type="f1a62948:ProjectNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="openrocket" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="openrocket" type="f1a62948:ProjectNode" />
+                <item name="core" type="2d1252cf:ModuleNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="openrocket" type="f1a62948:ProjectNode" />
+                <item name="core" type="2d1252cf:ModuleNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="openrocket" type="f1a62948:ProjectNode" />
+                <item name="core" type="2d1252cf:ModuleNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="build" type="c8890929:TasksNode$1" />
+              </path>
+            </expand>
+            <select />
+          </tree_state>
+        </projects_view>
+      </state>
+    </system>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>Graphics2D g2 = content.createGraphics(pageSize.getWidth(), pageSize.getHeight());</find>
+      <find>Graphics2D g2 = cb.createGraphics(d.width, d.height);</find>
+      <find>return theCb.createGraphics(theWPage, theHPage);</find>
+      <find>Chunk tab1 = new Chunk(new VerticalPositionMark(), (level - 2) * 10, true);</find>
+      <find>rotected PdfPCell createNameCell (String v, boolean withIndent, Componen</find>
+      <find>@RunWith(JMock.class)</find>
+      <find>BUILD_VERSION</find>
+      <find>// todo: d</find>
+      <find>// TODO: Deprecated</find>
+      <find>BlockingComponentPresetDatabaseProvide</find>
+      <find>scriptengine</find>
+      <find>scriptengin</find>
+      <find>new URLClassLoader</find>
+      <find>JarInJarStarter</find>
+      <find>hamcrest</find>
+      <find>.assert</find>
+      <find>junit</find>
+      <find>engineblockcom</find>
+      <find>class preferences</find>
+      <find>SwingPreferences</find>
+      <find>listen</find>
+      <find>init</find>
+      <find>errors</find>
+      <find>guid</find>
+      <find>guice</find>
+      <find>from range is singular and to range is not</find>
+      <find>thrust</find>
+      <find>PluginTest</find>
+      <find>import org.slf4j.Logger;</find>
+      <find>ERROR_UUID</find>
+    </findStrings>
+    <replaceStrings>
+      <replace>com.jogamp</replace>
+    </replaceStrings>
+    <dirStrings>
+      <dir>D:\Programming\java\openrocket\thzero\openrocket.gradle.unstable</dir>
+    </dirStrings>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="-8" />
+    <option name="y" value="-8" />
+    <option name="width" value="1400" />
+    <option name="height" value="1000" />
+  </component>
+  <component name="ProjectId" id="1PgoC5kg9e2HUXVoMqMkL6ab6mI" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="project.structure.last.edited" value="SDKs" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.5862069" />
+    <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
+    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.project.gradle" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\programming\java\openrocket\thzero\openrocket.gradle.unstable\core" />
+      <recent name="D:\Programming\java\openrocket\thzero\openrocket.gradle.unstable\swing" />
+      <recent name="D:\Programming\java\openrocket\thzero\openrocket.gradle.unstable\core" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="net.sf.openrocket.utils" />
+      <recent name="net.sf.openrocket.plugin" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Gradle.openrocket.gradle.unstable:core [build]">
+    <configuration name="TestScriptingUtil.testGetLanguages" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="--tests &quot;net.sf.openrocket.simulation.extension.impl.TestScriptingUtil.testGetLanguages&quot;" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":core:test" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <method v="2" />
+    </configuration>
+    <configuration name="openrocket.gradle.unstable [build]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="build" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <method v="2" />
+    </configuration>
+    <configuration name="openrocket.gradle.unstable:core [build]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/core" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="build" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <method v="2" />
+    </configuration>
+    <configuration name="openrocket.gradle.unstable:core [clean]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/core" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="clean" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <method v="2" />
+    </configuration>
+    <configuration name="openrocket.gradle.unstable:core [testClasses]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/core" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="testClasses" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Gradle.openrocket.gradle.unstable [build]" />
+      <item itemvalue="Gradle.openrocket.gradle.unstable:core [build]" />
+      <item itemvalue="Gradle.openrocket.gradle.unstable:core [clean]" />
+      <item itemvalue="Gradle.openrocket.gradle.unstable:core [testClasses]" />
+      <item itemvalue="Gradle.TestScriptingUtil.testGetLanguages" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Gradle.openrocket.gradle.unstable:core [build]" />
+        <item itemvalue="Gradle.TestScriptingUtil.testGetLanguages" />
+        <item itemvalue="Gradle.openrocket.gradle.unstable:core [testClasses]" />
+        <item itemvalue="Gradle.openrocket.gradle.unstable:core [clean]" />
+        <item itemvalue="Gradle.openrocket.gradle.unstable [build]" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="4856984f-2420-47e8-9f4d-bb0784a4e1c4" name="Default Changelist" comment="" />
+      <created>1538949190086</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1538949190086</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/plugin/PluginTest.java</url>
+          <line>22</line>
+          <option name="timeStamp" value="91" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/plugin/PluginTester.java</url>
+          <line>26</line>
+          <option name="timeStamp" value="92" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/plugin/PluginTester.java</url>
+          <line>31</line>
+          <option name="timeStamp" value="93" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/plugin/PluginTester.java</url>
+          <line>23</line>
+          <option name="timeStamp" value="94" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/print/PrintSimulationWorker.java</url>
+          <line>32</line>
+          <option name="timeStamp" value="99" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/print/PrintSimulationWorker.java</url>
+          <line>26</line>
+          <option name="timeStamp" value="100" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/print/PrintSimulationWorker.java</url>
+          <line>22</line>
+          <option name="timeStamp" value="101" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/gui/print/PrintSimulationWorker.java</url>
+          <line>16</line>
+          <option name="timeStamp" value="102" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/startup/OpenRocket.java</url>
+          <line>33</line>
+          <option name="timeStamp" value="108" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/startup/OpenRocket.java</url>
+          <line>34</line>
+          <option name="timeStamp" value="109" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/startup/OpenRocket.java</url>
+          <line>35</line>
+          <option name="timeStamp" value="110" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/startup/OpenRocket.java</url>
+          <line>40</line>
+          <option name="timeStamp" value="111" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/startup/OpenRocket.java</url>
+          <line>41</line>
+          <option name="timeStamp" value="112" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/swing/src/main/java/net/sf/openrocket/startup/OpenRocket.java</url>
+          <line>42</line>
+          <option name="timeStamp" value="113" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/communication/Communicator.java</url>
+          <line>66</line>
+          <option name="timeStamp" value="115" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/simulation/extension/impl/TestScriptingUtil.java</url>
+          <line>28</line>
+          <option name="timeStamp" value="116" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/simulation/extension/impl/TestScriptingUtil.java</url>
+          <line>31</line>
+          <option name="timeStamp" value="118" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/simulation/extension/impl/TestScriptingUtil.java</url>
+          <line>30</line>
+          <option name="timeStamp" value="120" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/simulation/extension/impl/TestScriptingUtil.java</url>
+          <line>29</line>
+          <option name="timeStamp" value="121" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/simulation/extension/impl/TestScriptingUtil.java</url>
+          <line>32</line>
+          <option name="timeStamp" value="122" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/simulation/extension/impl/TestScriptingUtil.java</url>
+          <line>33</line>
+          <option name="timeStamp" value="123" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/simulation/extension/impl/TestScriptingUtil.java</url>
+          <line>34</line>
+          <option name="timeStamp" value="124" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/simulation/extension/impl/TestScriptingUtil.java</url>
+          <line>40</line>
+          <option name="timeStamp" value="125" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/simulation/extension/impl/TestScriptingUtil.java</url>
+          <line>41</line>
+          <option name="timeStamp" value="126" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/simulation/extension/impl/TestScriptingUtil.java</url>
+          <line>46</line>
+          <option name="timeStamp" value="129" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/simulation/extension/impl/TestScriptingUtil.java</url>
+          <line>47</line>
+          <option name="timeStamp" value="130" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/simulation/extension/impl/TestScriptingUtil.java</url>
+          <line>48</line>
+          <option name="timeStamp" value="131" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/core/src/test/java/net/sf/openrocket/simulation/extension/impl/TestScriptingUtil.java</url>
+          <line>49</line>
+          <option name="timeStamp" value="132" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/simulation/extension/impl/ScriptingUtil.java</url>
+          <line>61</line>
+          <option name="timeStamp" value="133" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/core/src/main/java/net/sf/openrocket/simulation/extension/impl/ScriptingUtil.java</url>
+          <line>66</line>
+          <option name="timeStamp" value="134" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+    <watches-manager>
+      <configuration name="GradleRunConfiguration">
+        <watch expression="util.getLanguages()" language="JAVA" />
+      </configuration>
+      <configuration name="Application">
+        <watch expression="massCalc.getCGAnalysis( config)" language="JAVA" />
+        <watch expression="massCalc.getCGAnalysis( config).get(c).weight" language="JAVA" />
+      </configuration>
+    </watches-manager>
+  </component>
+  <component name="debuggerHistoryManager">
+    <expressions id="watch">
+      <expression>
+        <expression-string>massCalc.getCGAnalysis( config).get(c).weight</expression-string>
+        <language-id>JAVA</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>massCalc.getCGAnalysis( config).get(c)</expression-string>
+        <language-id>JAVA</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>massCalc.getCGAnalysis( config).get(stage)</expression-string>
+        <language-id>JAVA</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>massCalc.getCGAnalysis( config).get(stage).weight</expression-string>
+        <language-id>JAVA</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>massCalc.getCGAnalysis( config)</expression-string>
+        <language-id>JAVA</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+    </expressions>
+  </component>
+  <component name="masterDetails">
+    <states>
+      <state key="ArtifactsStructureConfigurable.UI">
+        <settings>
+          <artifact-editor />
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="FacetStructureConfigurable.UI">
+        <settings>
+          <last-edited>No facets are configured</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="GlobalLibrariesConfigurable.UI">
+        <settings>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="JdkListConfigurable.UI">
+        <settings>
+          <last-edited>9</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ModuleStructureConfigurable.UI">
+        <settings>
+          <last-edited>openrocket.gradle.unstable</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ProjectJDKs.UI">
+        <settings>
+          <last-edited>9</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ProjectLibrariesConfigurable.UI">
+        <settings>
+          <last-edited>Gradle: com.fifesoft:rsyntaxtextarea:2.6.1</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.5862069" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+    </states>
+  </component>
+</project>

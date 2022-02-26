@@ -1,0 +1,49 @@
+//// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+plugins {
+    id "com.github.johnrengelman.shadow"
+    id "java"
+}
+
+Properties props = new Properties()
+try {
+    props.load(file('./core/src/main/resources/build.properties').newDataInputStream())
+} catch (Exception ex) {
+    throw new Exception("Missing build.properties. file: " + ex.getMessage())
+}
+
+allprojects {
+    group 'net.sf.openrocket'
+    version = props['build.version']
+
+    repositories {
+        mavenCentral()
+    }
+}
+
+dependencies {
+    implementation project(':core')
+    implementation project(':swing')
+}
+
+jar {
+    // Keep jar clean:
+//    exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA', 'META-INF/*.MF'
+//    baseName = 'openrocket'
+//    classifier = null
+
+    archiveClassifier.set("openrocket")
+    getArchiveBaseName().set('null')
+
+    manifest {
+        attributes (
+            'Main-Class': 'net.sf.openrocket.startup.OpenRocket',
+            'SplashScreen-Image': 'pix/splashscreen.png'
+        )
+    }
+}
+
+shadowJar {
+    baseName = 'openrocket'
+    classifier = null
+}
