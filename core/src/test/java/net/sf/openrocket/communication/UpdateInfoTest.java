@@ -7,7 +7,14 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import net.sf.openrocket.util.BaseTestCase;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
+
+import net.sf.openrocket.util.BuildProperties;
+import net.sf.openrocket.util.ComparablePair;
+import net.sf.openrocket.util.BaseTestCase.BaseTestCase;
 
 import org.junit.Test;
 
