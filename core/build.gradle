@@ -27,7 +27,7 @@ dependencies {
 
     implementation 'jakarta.xml.bind:jakarta.xml.bind-api:3.0.1'
     implementation 'com.sun.xml.bind:jaxb-impl:3.0.2'
-    implementation 'org.glassfish:javax.json:1.1.4'
+    implementation 'javax.json:javax.json-api:1.1.4'
     implementation 'org.eclipse:yasson:2.0.4'
 
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.3.1' // 5.7.0
