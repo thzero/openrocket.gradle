@@ -64,7 +64,7 @@ public abstract class Communicator {
 	public static String encode(String str) {
 		if (str == null)
 			return "null";
-		return URLEncoder.encode(str, StandardCharsets.UTF_8);
+        return URLEncoder.encode(str, StandardCharsets.UTF_8);
     }
 	
 }

@@ -1,12 +1,20 @@
 package net.sf.openrocket.rocketcomponent;
 
+import net.sf.openrocket.rocketcomponent.position.AngleMethod;
+import net.sf.openrocket.rocketcomponent.position.AxialMethod;
+import net.sf.openrocket.rocketcomponent.position.RadiusMethod;
+import net.sf.openrocket.util.ArrayList;
+// thzero - begin
 import net.sf.openrocket.util.BaseTestCase;
+// thzero - end
 import net.sf.openrocket.util.BoundingBox;
+import net.sf.openrocket.util.Coordinate;
 import net.sf.openrocket.util.MathUtil;
 import net.sf.openrocket.util.TestRockets;
 import org.junit.Test;
 
 
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;

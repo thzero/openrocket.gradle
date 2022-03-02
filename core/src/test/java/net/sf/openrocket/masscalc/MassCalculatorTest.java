@@ -16,7 +16,9 @@ import net.sf.openrocket.simulation.SimulationConditions;
 import net.sf.openrocket.simulation.SimulationStatus;
 import net.sf.openrocket.util.Coordinate;
 import net.sf.openrocket.util.TestRockets;
+// thzero - begin
 import net.sf.openrocket.util.BaseTestCase;
+// thzero - end
 
 public class MassCalculatorTest extends BaseTestCase {
 

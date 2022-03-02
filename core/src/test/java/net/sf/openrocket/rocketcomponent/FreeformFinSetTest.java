@@ -26,7 +26,9 @@ import net.sf.openrocket.util.Color;
 import net.sf.openrocket.util.Coordinate;
 import net.sf.openrocket.util.LineStyle;
 import net.sf.openrocket.util.Transformation;
+// thzero - begin
 import net.sf.openrocket.util.BaseTestCase;
+// thzero - end
 
 public class FreeformFinSetTest extends BaseTestCase {
 

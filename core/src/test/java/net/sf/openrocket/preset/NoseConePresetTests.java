@@ -4,7 +4,9 @@ import static org.junit.Assert.assertEquals;
 import net.sf.openrocket.material.Material;
 import net.sf.openrocket.motor.Manufacturer;
 import net.sf.openrocket.rocketcomponent.Transition;
+// thzero - begin
 import net.sf.openrocket.util.BaseTestCase;
+// thzero - end
 
 import org.junit.Test;
 

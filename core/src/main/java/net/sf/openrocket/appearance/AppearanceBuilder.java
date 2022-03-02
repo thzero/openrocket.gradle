@@ -51,8 +51,8 @@ public class AppearanceBuilder extends AbstractChangeSource {
 	*	Clears the builder cache and set to build blank appearances
 	*/
 	private void resetToDefaults() {
-		paint = new Color(0, 0, 0);
-		shine = 0;
+		paint = new Color(187, 187, 187);
+		shine = 0.3;
 		offsetU = offsetV = 0;
 		centerU = centerV = 0;
 		scaleU = scaleV = 1;
@@ -161,6 +161,34 @@ public class AppearanceBuilder extends AbstractChangeSource {
 		this.shine = shine;
 		fireChangeEvent();
 	}
+
+	/**
+	 * Returns the opacity of the paint color, expressed in percentages, where 0 is fully transparent and 1 is fully opaque
+	 * @return opacity value of the pain color, expressed in a percentage
+	 */
+	public double getOpacity() {
+		if (this.paint == null) {
+			return 100;
+		}
+		return (double) this.paint.getAlpha() / 255;
+	}
+
+	/**
+	 * Sets the opacity/alpha of the paint color.
+	 *
+	 * @param opacity new opacity value expressed in a percentage, where 0 is fully transparent and 1 is fully opaque
+	 */
+	public void setOpacity(double opacity) {
+		if (this.paint == null) {
+			return;
+		}
+
+		// Clamp opacity between 0 and 1
+		opacity = Math.max(0, Math.min(1, opacity));
+
+		this.paint.setAlpha((int) (opacity * 255));
+		fireChangeEvent();
+	}
 	
 	/**
 	*	gets the current offset axis U used
@@ -248,7 +276,7 @@ public class AppearanceBuilder extends AbstractChangeSource {
 	*	set a new value for axis V for center in template
 	*	fires change event
 	*
-	*	@param centerU	value of axis V for center
+	*	@param centerV	value of axis V for center
 	*/
 	public void setCenterV(double centerV) {
 		this.centerV = centerV;
@@ -351,7 +379,7 @@ public class AppearanceBuilder extends AbstractChangeSource {
 	*	sets a new value of axis Y for scalling in template
 	*	fires change event
 	*
-	*	@param scaleX the new value for axis Y
+	*	@param scaleY the new value for axis Y
 	*/	
 	public void setScaleY(double scaleY) {
 		setScaleV(1.0 / scaleY);
@@ -380,7 +408,7 @@ public class AppearanceBuilder extends AbstractChangeSource {
 	/**
 	*	gets the current image in template
 	*
-	*	@param the current image in template
+	*	@return	the current decal image
 	*/
 	public DecalImage getImage() {
 		return image;

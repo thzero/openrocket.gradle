@@ -7,7 +7,9 @@ import java.lang.reflect.Field;
 import java.util.List;
 
 import net.sf.openrocket.rocketcomponent.RocketComponent;
+// thzero - begin
 import net.sf.openrocket.util.BaseTestCase;
+// thzero - end
 
 import org.junit.Assert;
 
