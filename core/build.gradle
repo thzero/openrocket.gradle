@@ -28,7 +28,7 @@ dependencies {
     implementation group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.1'
     implementation 'org.glassfish.jaxb:jaxb-runtime:2.3.6' // 3.0.2
 //    implementation group: 'javax.activation', name: 'javax.activation-api', version: '1.2.0'
-    implementation 'org.glassfish:javax.json:1.1.4'
+    implementation 'javax.json:javax.json-api:1.1.4'
     implementation 'org.eclipse:yasson:2.0.4'
 
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.3.1' // 5.7.0
