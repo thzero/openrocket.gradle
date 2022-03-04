@@ -379,10 +379,10 @@ public class AppearanceBuilder extends AbstractChangeSource {
 	*	sets a new value of axis Y for scalling in template
 	*	fires change event
 	*
-	*	@param scaleY the new value for axis Y
+	*	@param scaleX the new value for axis Y
 	*/	
-	public void setScaleY(double scaleY) {
-		setScaleV(1.0 / scaleY);
+	public void setScaleY(double scaleX) {
+		setScaleV(1.0 / scaleX);
 	}
 	
 	/**
@@ -407,8 +407,6 @@ public class AppearanceBuilder extends AbstractChangeSource {
 	
 	/**
 	*	gets the current image in template
-	*
-	*	@return	the current decal image
 	*/
 	public DecalImage getImage() {
 		return image;

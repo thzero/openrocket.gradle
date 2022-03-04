@@ -21,38 +21,33 @@ public class RocksimDocumentDTOTest extends RocksimTestBase {
 	
 	@Test
 	public void testDTO() throws Exception {
-		try {
-			JAXBContext binder = JAXBContext.newInstance(RocksimDocumentDTO.class);
-			Marshaller marshaller = binder.createMarshaller();
-			marshaller.setProperty("jaxb.fragment", Boolean.TRUE);
+		JAXBContext binder = JAXBContext.newInstance(RocksimDocumentDTO.class);
+		Marshaller marshaller = binder.createMarshaller();
+		marshaller.setProperty("jaxb.fragment", Boolean.TRUE);
 
-			NoseConeDTO noseCone = new NoseConeDTO();
-			noseCone.setBaseDia(10d);
-			noseCone.setCalcCG(1.3d);
+		NoseConeDTO noseCone = new NoseConeDTO();
+		noseCone.setBaseDia(10d);
+		noseCone.setCalcCG(1.3d);
 
-			StageDTO stage1 = new StageDTO();
-			stage1.addExternalPart(noseCone);
+		StageDTO stage1 = new StageDTO();
+		stage1.addExternalPart(noseCone);
 
-			RocketDesignDTO design2 = new RocketDesignDTO();
-			design2.setName("Test");
-			design2.setStage3(stage1);
+		RocketDesignDTO design2 = new RocketDesignDTO();
+		design2.setName("Test");
+		design2.setStage3(stage1);
 
-			RocksimDesignDTO design = new RocksimDesignDTO();
-			design.setDesign(design2);
-			RocksimDocumentDTO message = new RocksimDocumentDTO();
-			message.setDesign(design);
+		RocksimDesignDTO design = new RocksimDesignDTO();
+		design.setDesign(design2);
+		RocksimDocumentDTO message = new RocksimDocumentDTO();
+		message.setDesign(design);
 
-			StringWriter stringWriter = new StringWriter();
-			marshaller.marshal(message, stringWriter);
+		StringWriter stringWriter = new StringWriter();
+		marshaller.marshal(message, stringWriter);
 
-			String response = stringWriter.toString();
+		String response = stringWriter.toString();
 
-			// TODO need checks here to validation that correct things were done
-			//System.err.println(response);
-		}
-		catch(Exception ex) {
-			System.out.println(ex.getMessage());
-		}
+		// TODO need checks here to validation that correct things were done
+		//System.err.println(response);
 	}
 	
 	@Test

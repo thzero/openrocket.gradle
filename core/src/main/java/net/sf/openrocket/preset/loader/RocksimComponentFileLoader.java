@@ -117,14 +117,14 @@ public abstract class RocksimComponentFileLoader {
 		InputStreamReader r = null;
 		try {
 			r = new InputStreamReader(is);
-			
+
+			// Create the CSV reader.  Use comma separator.
 			final CSVParser parser = new CSVParserBuilder().withSeparator(',').withQuoteChar('\'').withEscapeChar('\\').build();
 			final CSVReader reader = new CSVReaderBuilder(r).withSkipLines(1).withCSVParser(parser).build();
-//			CSVReader reader = new CSVReader(r, ',', '\'', '\\');
-			
+
 			//Read and throw away the header row.
 			parseHeaders(reader.readNext());
-			
+
 			String[] data = null;
 			while ((data = reader.readNext()) != null) {
 				// detect empty lines and skip:
