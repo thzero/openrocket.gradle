@@ -27,8 +27,6 @@ public abstract class Geometry {
     public final Object obj;
     public final Transformation transform;
     
-    public boolean active;
-    
 	public abstract void render(GL2 gl, Surface which );
 	
 	private Geometry() {

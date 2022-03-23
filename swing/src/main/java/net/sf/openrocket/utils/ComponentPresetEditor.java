@@ -28,7 +28,9 @@ import javax.swing.JSeparator;
 import javax.swing.JTable;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
+// thzero - begin
 import jakarta.xml.bind.JAXBException;
+// thzero - end
 
 import net.miginfocom.swing.MigLayout;
 import net.sf.openrocket.gui.preset.ButtonColumn;

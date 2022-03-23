@@ -4,8 +4,10 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.StringWriter;
 
+// thzero - begin
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.Marshaller;
+// thzero - end
 
 import net.sf.openrocket.document.OpenRocketDocument;
 import net.sf.openrocket.file.rocksim.importt.RocksimLoader;
