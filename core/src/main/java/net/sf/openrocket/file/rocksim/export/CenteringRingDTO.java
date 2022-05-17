@@ -1,14 +1,18 @@
 package net.sf.openrocket.file.rocksim.export;
 
+// thZero
+
 import net.sf.openrocket.file.rocksim.RocksimCommonConstants;
 import net.sf.openrocket.rocketcomponent.RadiusRingComponent;
 import net.sf.openrocket.rocketcomponent.ThicknessRingComponent;
 
+// thZero - Begin
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlTransient;
+// thZero - End
 
 /**
  * Centering ring conversion from OR to Rocksim.

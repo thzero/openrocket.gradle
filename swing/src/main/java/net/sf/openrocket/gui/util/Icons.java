@@ -1,5 +1,7 @@
 package net.sf.openrocket.gui.util;
 
+// thzero
+
 import java.net.URL;
 import java.util.Collections;
 import java.util.HashMap;

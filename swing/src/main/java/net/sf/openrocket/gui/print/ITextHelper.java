@@ -3,6 +3,8 @@
  */
 package net.sf.openrocket.gui.print;
 
+// thzero
+
 // thzero - begin
 import com.itextpdf.awt.PdfGraphics2D;
 // thzero - end

@@ -1,5 +1,7 @@
 package net.sf.openrocket.gui.figure3d;
 
+// thzero
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;

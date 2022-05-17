@@ -1,8 +1,11 @@
 package net.sf.openrocket.preset.xml;
 
+// thZero
+
 import java.util.ArrayList;
 import java.util.List;
 
+// thZero - Begin
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
@@ -11,6 +14,7 @@ import jakarta.xml.bind.annotation.XmlElementRefs;
 import jakarta.xml.bind.annotation.XmlElementWrapper;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlValue;
+// thZero - End
 
 import net.sf.openrocket.material.Material;
 import net.sf.openrocket.preset.ComponentPreset;

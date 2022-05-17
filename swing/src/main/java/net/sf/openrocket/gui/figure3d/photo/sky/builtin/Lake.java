@@ -1,5 +1,7 @@
 package net.sf.openrocket.gui.figure3d.photo.sky.builtin;
 
+// thzero
+
 // thzero - begin
 import com.jogamp.opengl.GL2;
 // thzero - end

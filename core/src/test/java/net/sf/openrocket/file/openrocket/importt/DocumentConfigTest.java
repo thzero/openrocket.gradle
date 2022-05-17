@@ -1,5 +1,7 @@
 package net.sf.openrocket.file.openrocket.importt;
 
+// thZero
+
 import static org.junit.Assert.assertEquals;
 import net.sf.openrocket.file.openrocket.OpenRocketSaver;
 // thzero - begin

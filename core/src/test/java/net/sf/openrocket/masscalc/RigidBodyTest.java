@@ -1,5 +1,7 @@
 package net.sf.openrocket.masscalc;
 
+// thZero
+
 //import junit.framework.TestCase;
 import static org.junit.Assert.assertEquals;
 

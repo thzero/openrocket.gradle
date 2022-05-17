@@ -1,9 +1,12 @@
-
 package net.sf.openrocket.preset.xml;
+
+// thZero
 
 import net.sf.openrocket.rocketcomponent.Transition;
 
+// thZero - Begin
 import jakarta.xml.bind.annotation.XmlEnum;
+// thZero - End
 
 /**
  * A mirror class to Transition.Shape to adapt that class to/from XML.

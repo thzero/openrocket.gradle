@@ -4,6 +4,8 @@
  */
 package net.sf.openrocket.file.rocksim.importt;
 
+// thZero
+
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;

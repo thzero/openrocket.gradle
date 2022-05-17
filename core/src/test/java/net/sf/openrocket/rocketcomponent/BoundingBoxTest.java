@@ -1,5 +1,7 @@
 package net.sf.openrocket.rocketcomponent;
 
+// thZero
+
 import net.sf.openrocket.rocketcomponent.position.AngleMethod;
 import net.sf.openrocket.rocketcomponent.position.AxialMethod;
 import net.sf.openrocket.rocketcomponent.position.RadiusMethod;

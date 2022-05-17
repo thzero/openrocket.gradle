@@ -1,5 +1,7 @@
 package net.sf.openrocket.gui.figure3d.photo.sky;
 
+// thzero
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;

@@ -1,5 +1,7 @@
 package net.sf.openrocket.gui.figure3d;
 
+// thzero
+
 // thzero - begin
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;

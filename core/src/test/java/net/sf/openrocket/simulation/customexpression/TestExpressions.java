@@ -1,5 +1,7 @@
 package net.sf.openrocket.simulation.customexpression;
 
+// thZero
+
 import net.sf.openrocket.document.OpenRocketDocument;
 import net.sf.openrocket.document.OpenRocketDocumentFactory;
 // thzero - begin

@@ -114,6 +114,8 @@
  */
 package net.sf.openrocket.gui.figure3d.geometry;
 
+// thzero
+
 // thzero - begin
 import com.jogamp.opengl.GL2;
 // thzero - end

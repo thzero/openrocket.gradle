@@ -1,5 +1,7 @@
 package net.sf.openrocket.gui.dialogs.optimization;
 
+// thzero
+
 import java.awt.Color;
 import java.awt.Paint;
 import java.awt.Window;

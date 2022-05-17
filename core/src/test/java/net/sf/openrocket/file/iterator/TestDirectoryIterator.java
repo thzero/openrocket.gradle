@@ -1,5 +1,7 @@
 package net.sf.openrocket.file.iterator;
 
+// thZero
+
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;

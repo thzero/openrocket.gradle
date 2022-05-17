@@ -66,7 +66,6 @@ import net.sf.openrocket.simulation.listeners.SimulationListener;
 import net.sf.openrocket.startup.Application;
 
 public class TestRockets {
-	
 	public final static FlightConfigurationId TEST_FCID_0 = new FlightConfigurationId("d010716e-ce0e-469d-ae46-190f3653ebbf");
 	public final static FlightConfigurationId TEST_FCID_1 = new FlightConfigurationId("f41bee5b-ebb8-4d92-bce7-53001577a313");
 	public final static FlightConfigurationId TEST_FCID_2 = new FlightConfigurationId("3e8d1280-53c2-4234-89a7-de215ef5cd69");

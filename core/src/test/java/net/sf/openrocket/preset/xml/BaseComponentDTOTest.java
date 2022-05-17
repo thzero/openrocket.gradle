@@ -1,5 +1,7 @@
 package net.sf.openrocket.preset.xml;
 
+// thZero
+
 import net.sf.openrocket.motor.Manufacturer;
 import net.sf.openrocket.preset.ComponentPreset;
 import net.sf.openrocket.preset.ComponentPresetFactory;
@@ -8,9 +10,13 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import javax.imageio.ImageIO;
+
+// thZero - Begin
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.Marshaller;
 import jakarta.xml.bind.Unmarshaller;
+// thZero - End
+
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 import java.io.StringReader;

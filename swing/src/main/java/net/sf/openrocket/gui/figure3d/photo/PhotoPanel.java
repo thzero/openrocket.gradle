@@ -1,5 +1,7 @@
 package net.sf.openrocket.gui.figure3d.photo;
 
+// thzero
+
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Rectangle;

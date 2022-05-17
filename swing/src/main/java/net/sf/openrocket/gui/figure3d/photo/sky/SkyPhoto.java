@@ -1,5 +1,7 @@
 package net.sf.openrocket.gui.figure3d.photo.sky;
 
+// thzero
+
 import java.net.URL;
 
 // thzero - begin

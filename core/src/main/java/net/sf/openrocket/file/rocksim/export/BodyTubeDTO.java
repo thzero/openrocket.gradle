@@ -1,5 +1,7 @@
 package net.sf.openrocket.file.rocksim.export;
 
+// thZero
+
 import net.sf.openrocket.file.rocksim.RocksimCommonConstants;
 import net.sf.openrocket.rocketcomponent.BodyTube;
 import net.sf.openrocket.rocketcomponent.Bulkhead;
@@ -17,6 +19,7 @@ import net.sf.openrocket.rocketcomponent.Transition;
 import net.sf.openrocket.rocketcomponent.TubeCoupler;
 import net.sf.openrocket.rocketcomponent.TubeFinSet;
 
+// thZero - Begin
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
@@ -24,6 +27,8 @@ import jakarta.xml.bind.annotation.XmlElementRef;
 import jakarta.xml.bind.annotation.XmlElementRefs;
 import jakarta.xml.bind.annotation.XmlElementWrapper;
 import jakarta.xml.bind.annotation.XmlRootElement;
+// thZero - End
+
 import java.util.ArrayList;
 import java.util.List;
 

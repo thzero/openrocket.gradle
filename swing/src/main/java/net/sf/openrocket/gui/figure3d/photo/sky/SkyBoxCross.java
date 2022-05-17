@@ -1,5 +1,7 @@
 package net.sf.openrocket.gui.figure3d.photo.sky;
 
+// thzero
+
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;

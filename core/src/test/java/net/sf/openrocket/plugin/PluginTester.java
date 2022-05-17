@@ -1,5 +1,7 @@
 package net.sf.openrocket.plugin;
 
+// thZero
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 

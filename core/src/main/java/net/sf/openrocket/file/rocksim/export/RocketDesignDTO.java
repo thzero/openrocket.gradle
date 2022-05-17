@@ -1,8 +1,12 @@
 package net.sf.openrocket.file.rocksim.export;
 
+// thZero
+
+// thZero - Begin
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
+// thZero - End
 
 /**
  * This class models a Rocksim XML element for a rocket design container.  It's really nothing more than

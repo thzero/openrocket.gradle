@@ -1,5 +1,7 @@
 package net.sf.openrocket.masscalc;
 
+// thZero
+
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;

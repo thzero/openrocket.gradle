@@ -1,5 +1,7 @@
 package net.sf.openrocket.preset;
 
+// thZero
+
 import static org.junit.Assert.*;
 import net.sf.openrocket.material.Material;
 import net.sf.openrocket.motor.Manufacturer;

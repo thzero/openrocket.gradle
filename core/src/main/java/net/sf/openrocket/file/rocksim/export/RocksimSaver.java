@@ -1,5 +1,7 @@
 package net.sf.openrocket.file.rocksim.export;
 
+// thZero
+
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -7,8 +9,10 @@ import java.io.OutputStreamWriter;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 
+// thZero - Begin
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.Marshaller;
+// thZero - End
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,5 +1,7 @@
 package net.sf.openrocket.rocketcomponent;
 
+// thZero
+
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;

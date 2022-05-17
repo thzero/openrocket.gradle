@@ -1,5 +1,7 @@
 package net.sf.openrocket.utils;
 
+// thzero
+
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

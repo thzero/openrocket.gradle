@@ -276,7 +276,7 @@ public class AppearanceBuilder extends AbstractChangeSource {
 	*	set a new value for axis V for center in template
 	*	fires change event
 	*
-	*	@param centerV	value of axis V for center
+	*	@param centerU	value of axis V for center
 	*/
 	public void setCenterV(double centerV) {
 		this.centerV = centerV;
@@ -381,8 +381,8 @@ public class AppearanceBuilder extends AbstractChangeSource {
 	*
 	*	@param scaleX the new value for axis Y
 	*/	
-	public void setScaleY(double scaleX) {
-		setScaleV(1.0 / scaleX);
+	public void setScaleY(double scaleY) {
+		setScaleV(1.0 / scaleY);
 	}
 	
 	/**
@@ -407,6 +407,8 @@ public class AppearanceBuilder extends AbstractChangeSource {
 	
 	/**
 	*	gets the current image in template
+	*
+	*	@param the current image in template
 	*/
 	public DecalImage getImage() {
 		return image;

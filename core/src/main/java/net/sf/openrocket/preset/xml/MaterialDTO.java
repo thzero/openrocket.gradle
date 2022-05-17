@@ -1,5 +1,8 @@
 package net.sf.openrocket.preset.xml;
 
+// thZero
+
+// thZero - Begin
 import jakarta.xml.bind.Marshaller;
 import jakarta.xml.bind.Unmarshaller;
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -7,6 +10,7 @@ import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
+// thZero - End
 
 import net.sf.openrocket.database.Databases;
 import net.sf.openrocket.material.Material;

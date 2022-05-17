@@ -1,13 +1,17 @@
 package net.sf.openrocket.file.rocksim.export;
 
+// thZero
+
 import net.sf.openrocket.file.rocksim.RocksimCommonConstants;
 import net.sf.openrocket.file.rocksim.importt.BaseHandler;
 import net.sf.openrocket.rocketcomponent.Parachute;
 
+// thZero - Begin
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
+// thZero - End
 
 /**
  */

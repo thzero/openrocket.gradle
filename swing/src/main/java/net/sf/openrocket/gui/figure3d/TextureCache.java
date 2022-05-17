@@ -1,5 +1,7 @@
 package net.sf.openrocket.gui.figure3d;
 
+// thzero
+
 import java.awt.image.BufferedImage;
 import java.io.InputStream;
 import java.net.URL;

@@ -1,6 +1,8 @@
 
 package net.sf.openrocket.gui.figure3d.geometry;
 
+// thzero
+
 import net.sf.openrocket.motor.Motor;
 import net.sf.openrocket.rocketcomponent.Rocket;
 import net.sf.openrocket.rocketcomponent.RocketComponent;

@@ -1,5 +1,7 @@
 package net.sf.openrocket.thrustcurve;
 
+// thZero
+
 import static org.junit.Assert.assertEquals;
 
 import java.io.InputStream;

@@ -1,10 +1,14 @@
 package net.sf.openrocket.file.rocksim.export;
 
+// thZero
+
 import java.util.List;
 
+// thZero - Begin
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlRootElement;
+// thZero - End
 
 import net.sf.openrocket.file.rocksim.RocksimCommonConstants;
 import net.sf.openrocket.rocketcomponent.BodyTube;

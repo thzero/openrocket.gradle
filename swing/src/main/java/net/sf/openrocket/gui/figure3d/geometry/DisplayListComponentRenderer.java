@@ -1,5 +1,7 @@
 package net.sf.openrocket.gui.figure3d.geometry;
 
+// thzero
+
 import java.util.HashMap;
 import java.util.Map;
 

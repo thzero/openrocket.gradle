@@ -1,10 +1,14 @@
 package net.sf.openrocket.file.rocksim.export;
 
+// thZero
+
 import net.sf.openrocket.file.rocksim.RocksimCommonConstants;
 
+// thZero - Begin
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
+// thZero - End
 
 /**
  * High-level placeholder element for Rocksim.

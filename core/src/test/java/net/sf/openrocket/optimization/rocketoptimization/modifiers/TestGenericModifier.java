@@ -1,5 +1,7 @@
 package net.sf.openrocket.optimization.rocketoptimization.modifiers;
 
+// thZero
+
 import static net.sf.openrocket.util.MathUtil.EPSILON;
 import static org.junit.Assert.assertEquals;
 import net.sf.openrocket.document.Simulation;

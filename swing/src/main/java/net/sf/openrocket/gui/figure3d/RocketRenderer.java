@@ -1,5 +1,7 @@
 package net.sf.openrocket.gui.figure3d;
 
+// thzero
+
 import java.awt.Point;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;

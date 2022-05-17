@@ -1,12 +1,16 @@
-
 package net.sf.openrocket.preset.xml;
+
+// thZero
 
 import net.sf.openrocket.preset.ComponentPreset;
 import net.sf.openrocket.preset.InvalidComponentPresetException;
 
+// thZero - Begin
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlRootElement;
+// thZero - End
+
 import java.util.List;
 
 /**

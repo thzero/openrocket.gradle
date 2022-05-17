@@ -1,5 +1,7 @@
 package net.sf.openrocket.gui.figure3d;
 
+// thzero
+
 import java.util.HashMap;
 
 // thzero - begin

@@ -1,5 +1,7 @@
 package net.sf.openrocket.startup.jij;
 
+// thzero
+
 // thzero - begin
 import org.apache.commons.lang3.JavaVersion;
 import org.apache.commons.lang3.SystemUtils;

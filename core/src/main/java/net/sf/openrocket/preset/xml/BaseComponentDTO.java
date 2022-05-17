@@ -1,5 +1,7 @@
 package net.sf.openrocket.preset.xml;
 
+// thZero
+
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -7,6 +9,7 @@ import java.io.IOException;
 import java.util.List;
 
 import javax.imageio.ImageIO;
+// thZero - Begin
 import jakarta.xml.bind.DatatypeConverter;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
@@ -16,6 +19,7 @@ import jakarta.xml.bind.annotation.XmlInlineBinaryData;
 import jakarta.xml.bind.annotation.XmlValue;
 import jakarta.xml.bind.annotation.adapters.XmlAdapter;
 import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+// thZero - End
 
 import net.sf.openrocket.database.Databases;
 import net.sf.openrocket.material.Material;

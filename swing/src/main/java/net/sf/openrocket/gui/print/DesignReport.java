@@ -3,6 +3,8 @@
  */
 package net.sf.openrocket.gui.print;
 
+// thzero
+
 import java.awt.Graphics2D;
 import java.awt.Window;
 import java.text.DecimalFormat;

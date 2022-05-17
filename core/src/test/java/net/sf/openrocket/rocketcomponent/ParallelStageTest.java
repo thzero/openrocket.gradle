@@ -1,5 +1,7 @@
 package net.sf.openrocket.rocketcomponent;
 
+// thZero
+
 //import junit.framework.TestCase;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.*;
