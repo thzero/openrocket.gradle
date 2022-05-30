@@ -1,6 +1,6 @@
 package net.sf.openrocket.gui.util;
 
-// thzero
+import net.sf.openrocket.document.Simulation;
 import net.sf.openrocket.l10n.Translator;
 import net.sf.openrocket.startup.Application;
 import org.slf4j.Logger;
