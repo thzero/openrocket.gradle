@@ -10,13 +10,11 @@ import net.sf.openrocket.util.ArrayList;
 import net.sf.openrocket.util.BaseTestCase;
 // thzero - end
 import net.sf.openrocket.util.BoundingBox;
-import net.sf.openrocket.util.Coordinate;
 import net.sf.openrocket.util.MathUtil;
 import net.sf.openrocket.util.TestRockets;
 import org.junit.Test;
 
 
-import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
@@ -29,7 +27,7 @@ public class BoundingBoxTest extends BaseTestCase {
 		final Rocket rocket = TestRockets.makeEstesAlphaIII();
 		
 		final FlightConfiguration config = rocket.getSelectedConfiguration();
-		final BoundingBox bounds = config.getBoundingBox();
+		final BoundingBox bounds = config.getBoundingBoxAerodynamic();
 		
 		assertEquals("bounds max x",  0.000000000, bounds.min.x, EPSILON);
 		assertEquals("bounds max x",  0.270000000, bounds.max.x, EPSILON);
@@ -52,7 +50,7 @@ public class BoundingBoxTest extends BaseTestCase {
 			// DEBUG
 			System.err.println("==== Case A: All Stages ====");
 			
-			final BoundingBox bounds = config.getBoundingBox();
+			final BoundingBox bounds = config.getBoundingBoxAerodynamic();
 			
 			assertEquals("bounds min x",  0.000000000, bounds.min.x, EPSILON);
 			assertEquals("bounds max x",  0.335000000, bounds.max.x, EPSILON);
@@ -67,7 +65,7 @@ public class BoundingBoxTest extends BaseTestCase {
 			// DEBUG
 			System.err.println("==== Case B: Sustainer Only ====");
 			
-			final BoundingBox bounds = config.getBoundingBox();
+			final BoundingBox bounds = config.getBoundingBoxAerodynamic();
 			
 			assertEquals("bounds min x",  0.000000000, bounds.min.x, EPSILON);
 			assertEquals("bounds max x",  0.270000000, bounds.max.x, EPSILON);
@@ -83,7 +81,7 @@ public class BoundingBoxTest extends BaseTestCase {
 			System.err.println("==== Case C: Booster Only ====");
 			System.err.println(rocket.toDebugTree());
 			
-			final BoundingBox bounds = config.getBoundingBox();
+			final BoundingBox bounds = config.getBoundingBoxAerodynamic();
 			
 			assertEquals("bounds min x",  0.270000000, bounds.min.x, EPSILON);
 			assertEquals("bounds max x",  0.335000000, bounds.max.x, EPSILON);
