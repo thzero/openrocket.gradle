@@ -1,4 +1,4 @@
-
+// thzero
 package net.sf.openrocket.gui.figure3d.geometry;
 
 import net.sf.openrocket.motor.Motor;

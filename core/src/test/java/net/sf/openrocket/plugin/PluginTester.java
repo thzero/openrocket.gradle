@@ -1,3 +1,4 @@
+// thzero
 package net.sf.openrocket.plugin;
 
 import static org.junit.Assert.assertEquals;

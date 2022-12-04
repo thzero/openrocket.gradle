@@ -1,3 +1,4 @@
+// thzero
 // thzero - begin
 //package net.sf.openrocket.startup;
 //

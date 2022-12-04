@@ -1,3 +1,4 @@
+// thzero
 package net.sf.openrocket.gui.figure3d.photo;
 
 import java.awt.BorderLayout;

@@ -1,3 +1,4 @@
+// thzero
 package net.sf.openrocket.gui.figure3d.photo.sky.builtin;
 
 // thzero - begin

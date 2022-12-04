@@ -1,3 +1,4 @@
+// thzero
 package net.sf.openrocket.gui.plot;
 
 import java.awt.AlphaComposite;
