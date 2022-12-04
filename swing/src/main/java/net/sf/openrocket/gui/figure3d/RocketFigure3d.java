@@ -87,6 +87,7 @@ public class RocketFigure3d extends JPanel implements GLEventListener {
 	private Overlay extrasOverlay, caretOverlay;
 	private BufferedImage cgCaretRaster, cpCaretRaster;
 	private volatile boolean redrawExtras = true;
+	private boolean drawCarets = true;
 	
 	private final ArrayList<FigureElement> relativeExtra = new ArrayList<FigureElement>();
 	private final ArrayList<FigureElement> absoluteExtra = new ArrayList<FigureElement>();
@@ -324,11 +325,15 @@ public class RocketFigure3d extends JPanel implements GLEventListener {
 
 			gl.glEnable(GL.GL_MULTISAMPLE);
 			gl.glEnable(GLLightingFunc.GL_LIGHTING);
+
+			updateFigure();
 		}
 		rr.render(drawable, configuration, selection);
 		
-		drawExtras(gl, glu);
-		drawCarets(gl, glu);
+		drawExtras(drawable, gl, glu);
+		if (drawCarets) {
+			drawCarets(drawable, gl, glu);
+		}
 		
 		// GLJPanel with GLSL Flipper relies on this:
 		gl.glFrontFace(GL.GL_CCW);
@@ -354,12 +359,12 @@ public class RocketFigure3d extends JPanel implements GLEventListener {
 		return og2d;
 	}
 	
-	private void drawCarets(final GL2 gl, final GLU glu) {
+	private void drawCarets(final GLAutoDrawable drawable, final GL2 gl, final GLU glu) {
 		final Graphics2D og2d = createOverlayGraphics(caretOverlay);
 		
 		og2d.setBackground(new Color(0, 0, 0, 0));
-		og2d.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-		caretOverlay.markDirty(0, 0, canvas.getWidth(), canvas.getHeight());
+		og2d.clearRect(0, 0, drawable.getSurfaceWidth(), drawable.getSurfaceHeight());
+		caretOverlay.markDirty(0, 0, drawable.getSurfaceWidth(), drawable.getSurfaceHeight());
 		
 		// The existing relative Extras don't really work right for 3d.
 		Coordinate pCP = project(cp, gl, glu);
@@ -400,7 +405,7 @@ public class RocketFigure3d extends JPanel implements GLEventListener {
 	 * Re-blits the overlay every frame. Only re-renders the overlay
 	 * when needed.
 	 */
-	private void drawExtras(final GL2 gl, final GLU glu) {
+	private void drawExtras(final GLAutoDrawable drawable, final GL2 gl, final GLU glu) {
 		//Only re-render if needed
 		//	redrawExtras: Some external change (new simulation data) means
 		//		the data is out of date.
@@ -412,8 +417,8 @@ public class RocketFigure3d extends JPanel implements GLEventListener {
 			final Graphics2D og2d = createOverlayGraphics(extrasOverlay);
 			
 			og2d.setBackground(new Color(0, 0, 0, 0));
-			og2d.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-			extrasOverlay.markDirty(0, 0, canvas.getWidth(), canvas.getHeight());
+			og2d.clearRect(0, 0, drawable.getSurfaceWidth(), drawable.getSurfaceHeight());
+			extrasOverlay.markDirty(0, 0, drawable.getSurfaceWidth(), drawable.getSurfaceHeight());
 			
 			for (FigureElement e : relativeExtra) {
 				e.paint(og2d, 1);
@@ -516,9 +521,11 @@ public class RocketFigure3d extends JPanel implements GLEventListener {
 		// Calculate the distance needed to fit the bounds in both the X and Y
 		// direction
 		// Add 10% for space around it.
+		final double maxR = Math.max( Math.hypot(b.min.y, b.min.z),
+				Math.hypot(b.max.y, b.max.z));
 		final double dX = (b.span().x * 1.2 / 2.0)
 				/ Math.tan(Math.toRadians(fovX / 2.0));
-		final double dY = (b.span().y * 1.2 / 2.0)
+		final double dY = (2*maxR * 1.2 / 2.0)
 				/ Math.tan(Math.toRadians(fovY / 2.0));
 		
 		// Move back the greater of the 2 distances
@@ -713,5 +720,12 @@ public class RocketFigure3d extends JPanel implements GLEventListener {
 			});
 		}
 	}
-	
+
+	public boolean isDrawCarets() {
+		return drawCarets;
+	}
+
+	public void setDrawCarets(boolean drawCarets) {
+		this.drawCarets = drawCarets;
+	}
 }

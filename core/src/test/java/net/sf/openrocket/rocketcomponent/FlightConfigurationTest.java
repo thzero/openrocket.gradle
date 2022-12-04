@@ -14,7 +14,9 @@ import org.junit.Test;
 import net.sf.openrocket.util.Coordinate;
 import net.sf.openrocket.util.MathUtil;
 import net.sf.openrocket.util.TestRockets;
+// thzero - begin
 import net.sf.openrocket.util.BaseTestCase;
+// thzero - end
 
 public class FlightConfigurationTest extends BaseTestCase {
 	private final static double EPSILON = MathUtil.EPSILON*1E3;
@@ -45,7 +47,7 @@ public class FlightConfigurationTest extends BaseTestCase {
 		assertThat("active stage count doesn't match", config.getActiveStageCount(), equalTo(2));
 
 		final double expectedLength = 0.335;
-		final double calculatedLength = config.getLength();
+		final double calculatedLength = config.getLengthAerodynamic();
 		assertEquals("source config length doesn't match: ", expectedLength, calculatedLength, EPSILON);
 
 		double expectedReferenceLength = 0.024;
@@ -71,7 +73,7 @@ public class FlightConfigurationTest extends BaseTestCase {
 		int actualMotorCount = config1.getActiveMotors().size();
 		assertThat("active motor count doesn't match", actualMotorCount, equalTo(expectedMotorCount));
 		double expectedLength = 0.335;
-		assertEquals("source config length doesn't match: ", expectedLength, config1.getLength(), EPSILON);
+		assertEquals("source config length doesn't match: ", expectedLength, config1.getLengthAerodynamic(), EPSILON);
 		double expectedReferenceLength = 0.024;
 		assertEquals("source config reference length doesn't match: ", expectedReferenceLength, config1.getReferenceLength(), EPSILON);
 		double expectedReferenceArea = Math.pow(expectedReferenceLength/2,2)*Math.PI;
@@ -90,7 +92,7 @@ public class FlightConfigurationTest extends BaseTestCase {
 		expectedMotorCount = 2;
 		actualMotorCount = config2.getActiveMotors().size();
 		assertThat("active motor count doesn't match", actualMotorCount, equalTo(expectedMotorCount));
-		assertEquals("source config length doesn't match: ", expectedLength, config2.getLength(), EPSILON);
+		assertEquals("source config length doesn't match: ", expectedLength, config2.getLengthAerodynamic(), EPSILON);
 		assertEquals("source config reference length doesn't match: ", expectedReferenceLength, config2.getReferenceLength(), EPSILON);
 		assertEquals("source config reference area doesn't match: ", expectedReferenceArea, config2.getReferenceArea(), EPSILON);
 
@@ -294,9 +296,22 @@ public class FlightConfigurationTest extends BaseTestCase {
 
 		config.toggleStage(0);
 		assertThat(" toggle stage #0: ", config.isStageActive(0), equalTo(false));
-		
-		AxialStage sustainer = rkt.getTopmostStage();
-		AxialStage booster = rkt.getBottomCoreStage();
+
+		AxialStage sustainer = rkt.getTopmostStage(config);
+		AxialStage booster = rkt.getBottomCoreStage(config);
+		assertThat(" sustainer stage is stage #1: ", sustainer.getStageNumber(), equalTo(1));
+		assertThat(" booster stage is stage #1: ", booster.getStageNumber(), equalTo(1));
+
+		config.setAllStages();
+		config._setStageActive(1, false);
+		sustainer = rkt.getTopmostStage(config);
+		booster = rkt.getBottomCoreStage(config);
+		assertThat(" sustainer stage is stage #1: ", sustainer.getStageNumber(), equalTo(0));
+		assertThat(" booster stage is stage #1: ", booster.getStageNumber(), equalTo(0));
+
+		config.setAllStages();
+		sustainer = rkt.getTopmostStage(config);
+		booster = rkt.getBottomCoreStage(config);
 		assertThat(" sustainer stage is stage #0: ", sustainer.getStageNumber(), equalTo(0));
 		assertThat(" booster stage is stage #1: ", booster.getStageNumber(), equalTo(1));
 		
@@ -351,7 +366,6 @@ public class FlightConfigurationTest extends BaseTestCase {
 
 		selected.clearAllStages();
 		selected.toggleStage(1);
-		selected.toggleStage(2);
 
 		// vvvv Test Target vvvv
 		InstanceMap instances = selected.getActiveInstances();

@@ -1,11 +1,14 @@
+// thzero
 package net.sf.openrocket.rocketcomponent;
 
-import net.sf.openrocket.util.BaseTestCase;
 import net.sf.openrocket.util.BoundingBox;
 import net.sf.openrocket.util.MathUtil;
 import net.sf.openrocket.util.TestRockets;
 import org.junit.Test;
 
+// thzero - begin
+import net.sf.openrocket.util.BaseTestCase;
+// thzero - end
 
 import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertEquals;
@@ -19,7 +22,7 @@ public class BoundingBoxTest extends BaseTestCase {
 		final Rocket rocket = TestRockets.makeEstesAlphaIII();
 		
 		final FlightConfiguration config = rocket.getSelectedConfiguration();
-		final BoundingBox bounds = config.getBoundingBox();
+		final BoundingBox bounds = config.getBoundingBoxAerodynamic();
 		
 		assertEquals("bounds max x",  0.000000000, bounds.min.x, EPSILON);
 		assertEquals("bounds max x",  0.270000000, bounds.max.x, EPSILON);
@@ -42,7 +45,7 @@ public class BoundingBoxTest extends BaseTestCase {
 			// DEBUG
 			System.err.println("==== Case A: All Stages ====");
 			
-			final BoundingBox bounds = config.getBoundingBox();
+			final BoundingBox bounds = config.getBoundingBoxAerodynamic();
 			
 			assertEquals("bounds min x",  0.000000000, bounds.min.x, EPSILON);
 			assertEquals("bounds max x",  0.335000000, bounds.max.x, EPSILON);
@@ -57,7 +60,7 @@ public class BoundingBoxTest extends BaseTestCase {
 			// DEBUG
 			System.err.println("==== Case B: Sustainer Only ====");
 			
-			final BoundingBox bounds = config.getBoundingBox();
+			final BoundingBox bounds = config.getBoundingBoxAerodynamic();
 			
 			assertEquals("bounds min x",  0.000000000, bounds.min.x, EPSILON);
 			assertEquals("bounds max x",  0.270000000, bounds.max.x, EPSILON);
@@ -73,7 +76,7 @@ public class BoundingBoxTest extends BaseTestCase {
 			System.err.println("==== Case C: Booster Only ====");
 			System.err.println(rocket.toDebugTree());
 			
-			final BoundingBox bounds = config.getBoundingBox();
+			final BoundingBox bounds = config.getBoundingBoxAerodynamic();
 			
 			assertEquals("bounds min x",  0.270000000, bounds.min.x, EPSILON);
 			assertEquals("bounds max x",  0.335000000, bounds.max.x, EPSILON);
@@ -100,6 +103,39 @@ public class BoundingBoxTest extends BaseTestCase {
 
 		assertEquals( -0.12069451, bounds.min.z, EPSILON);
 		assertEquals(  0.12069451, bounds.max.z, EPSILON);
+	}
+
+	@Test
+	public void testPodsBoundingBox() {
+		Rocket rocket = TestRockets.makeEndPlateRocket();
+
+		// DEBUG
+		System.err.println(rocket.toDebugTree());
+
+		BoundingBox bounds = rocket.getBoundingBox();
+		assertEquals( 0.0,   bounds.min.x,  EPSILON);
+		assertEquals( 0.304, bounds.max.x, EPSILON);
+
+		assertEquals( -0.0365, bounds.min.y, EPSILON);
+		assertEquals(  0.0365, bounds.max.y, EPSILON);
+
+		assertEquals( -0.0365, bounds.min.z, EPSILON);
+		assertEquals(  0.0365, bounds.max.z, EPSILON);
+
+		// Add a mass component to the pod set (to test GitHub issue #1849)
+		PodSet podSet = (PodSet) rocket.getChild(0).getChild(1).getChild(1);
+		BodyTube tube = (BodyTube) podSet.getChild(0);
+		tube.addChild(new MassComponent());
+
+		bounds = rocket.getBoundingBox();
+		assertEquals( 0.0,   bounds.min.x,  EPSILON);
+		assertEquals( 0.304, bounds.max.x, EPSILON);
+
+		assertEquals( -0.0365, bounds.min.y, EPSILON);
+		assertEquals(  0.0365, bounds.max.y, EPSILON);
+
+		assertEquals( -0.0365, bounds.min.z, EPSILON);
+		assertEquals(  0.0365, bounds.max.z, EPSILON);
 	}
 
 }

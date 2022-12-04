@@ -14,44 +14,46 @@ import java.util.TreeMap;
  * @author Sibo Van Gool <sibo.vangool@hotmail.com>
  */
 public class AssetHandler {
-    private static final Map<String, UpdatePlatform> mapExtensionToPlatform = new HashMap<>();  // Map file extensions to operating platform
+    private static final Map<String, UpdatePlatform[]> mapExtensionToPlatform = new HashMap<>();  // Map file extensions to operating platform
     private static final Map<UpdatePlatform, String> mapPlatformToName = new HashMap<>();       // Map operating platform to a name
 
     public enum UpdatePlatform {
         WINDOWS,
         MAC_OS,
         LINUX,
+        UNIX,
         JAR
     }
 
     static {
-        mapExtensionToPlatform.put(".dmg", UpdatePlatform.MAC_OS);
-        mapExtensionToPlatform.put(".exe", UpdatePlatform.WINDOWS);
-        mapExtensionToPlatform.put(".AppImage", UpdatePlatform.LINUX);
-        mapExtensionToPlatform.put(".sh", UpdatePlatform.LINUX);
-        mapExtensionToPlatform.put(".jar", UpdatePlatform.JAR);
+        mapExtensionToPlatform.put(".dmg", new UpdatePlatform[] {UpdatePlatform.MAC_OS});
+        mapExtensionToPlatform.put(".exe", new UpdatePlatform[] {UpdatePlatform.WINDOWS});
+        mapExtensionToPlatform.put(".AppImage", new UpdatePlatform[] {UpdatePlatform.LINUX, UpdatePlatform.UNIX});
+        mapExtensionToPlatform.put(".sh", new UpdatePlatform[] {UpdatePlatform.LINUX, UpdatePlatform.UNIX});
+        mapExtensionToPlatform.put(".jar", new UpdatePlatform[] {UpdatePlatform.JAR});
 
-        mapPlatformToName.put(UpdatePlatform.MAC_OS, "Mac OS");
+        mapPlatformToName.put(UpdatePlatform.MAC_OS, "macOS");
         mapPlatformToName.put(UpdatePlatform.WINDOWS, "Windows");
         mapPlatformToName.put(UpdatePlatform.LINUX, "Linux");
+        mapPlatformToName.put(UpdatePlatform.UNIX, "Linux");
         mapPlatformToName.put(UpdatePlatform.JAR, "JAR");
     }
 
     /**
      * Maps a list of asset URLs to their respective operating platform name.
      * E.g. "https://github.com/openrocket/openrocket/releases/download/release-15.03/OpenRocket-15.03.dmg" is mapped a
-     * map element with "Mac OS" as key and the url as value.
+     * map element with "macOS" as key and the url as value.
      * @param urls list of asset URLs
      * @return map with as key the operating platform name and as value the corresponding asset URL
      */
     public static Map<UpdatePlatform, String> mapURLToPlatform(List<String> urls) {
-        Map<UpdatePlatform, String> output = new TreeMap<>();
+        Map<UpdatePlatform, String> output = new HashMap<>();
         if (urls == null) return null;
 
         for (String url : urls) {
             for (String ext : mapExtensionToPlatform.keySet()) {
                 if (url.endsWith(ext)) {
-                    output.put(mapExtensionToPlatform.get(ext), url);
+                    output.put(mapExtensionToPlatform.get(ext)[0], url);    // First Platform element is enough
                 }
             }
         }
@@ -68,7 +70,7 @@ public class AssetHandler {
     }
 
     /**
-     * Get the name of a platform (e.g. for Platform.MAC_OS, return "Mac OS")
+     * Get the name of a platform (e.g. for Platform.MAC_OS, return "macOS")
      * @param platform platform to get the name from
      * @return name of the platform
      */

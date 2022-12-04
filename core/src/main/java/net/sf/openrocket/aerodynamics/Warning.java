@@ -18,7 +18,6 @@ public abstract class Warning {
 		return new Warning.Other(text);
 	}
 	
-	
 	/**
 	 * Return <code>true</code> if the <code>other</code> warning should replace
 	 * this warning.  The method should return <code>true</code> if the other
@@ -375,6 +374,8 @@ public abstract class Warning {
 	////Recovery device opened while motor still burning.
 	public static final Warning RECOVERY_DEPLOYMENT_WHILE_BURNING = new Other(trans.get("Warning.RECOVERY_DEPLOYMENT_WHILE_BURNING"));
 	
+	////No recovery device for simulation
+	public static final Warning NO_RECOVERY_DEVICE = new Other(trans.get("Warning.NO_RECOVERY_DEVICE"));
 	
 	//// Invalid parameter encountered, ignoring.
 	public static final Warning FILE_INVALID_PARAMETER = new Other(trans.get("Warning.FILE_INVALID_PARAMETER"));
@@ -392,4 +393,10 @@ public abstract class Warning {
 	public static final Warning ZERO_LENGTH_BODY = new Other(trans.get("Warning.ZERO_LENGTH_BODY"));
 	public static final Warning ZERO_RADIUS_BODY = new Other(trans.get("Warning.ZERO_RADIUS_BODY"));
 
+	public static final Warning TUBE_SEPARATION = new Other(trans.get("Warning.TUBE_SEPARATION"));
+	public static final Warning TUBE_OVERLAP = new Other(trans.get("Warning.TUBE_OVERLAP"));
+
+	public static final Warning SEPARATION_ORDER = new Other(trans.get("Warning.SEPARATION_ORDER"));
+
+	public static final Warning EMPTY_BRANCH = new Other(trans.get("Warning.EMPTY_BRANCH"));
 }

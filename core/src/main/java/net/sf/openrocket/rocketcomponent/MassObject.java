@@ -21,7 +21,8 @@ import net.sf.openrocket.util.MathUtil;
  */
 public abstract class MassObject extends InternalComponent {
 	
-	private double radius;
+	protected double radius;
+	private boolean autoRadius = false;
 	
 	private double radialPosition;
 	private double radialDirection;
@@ -49,11 +50,29 @@ public abstract class MassObject extends InternalComponent {
 		return false;
 	}
 
-	
-	public void setLength(double length) {
+	@Override
+	public double getLength() {
+		if (this.autoRadius) {
+			// Calculate the volume using the non auto radius and the non auto length, and transform that back
+			// to the auto radius situation to get the auto radius length (the volume in both situations is the same).
+			double volume = Math.pow(this.radius, 2) * this.length;	// Math.PI left out, not needed
+			return volume / Math.pow(getRadius(), 2);
+		}
+		return length;
+	}
+
+	public double getLengthNoAuto() {
+		return length;
+	}
+
+	/**
+	 * Set the length, ignoring the auto radius setting.
+	 * @param length new length
+	 */
+	public void setLengthNoAuto(double length) {
 		for (RocketComponent listener : configListeners) {
 			if (listener instanceof MassObject) {
-				((MassObject) listener).setLength(length);
+				((MassObject) listener).setLengthNoAuto(length);
 			}
 		}
 
@@ -64,14 +83,58 @@ public abstract class MassObject extends InternalComponent {
 		this.length = length;
 		fireComponentChangeEvent(ComponentChangeEvent.MASS_CHANGE);
 	}
-	
-	
-	public final double getRadius() {
-		return radius;
+
+	public void setLength(double length) {
+		for (RocketComponent listener : configListeners) {
+			if (listener instanceof MassObject) {
+				((MassObject) listener).setLength(length);
+			}
+		}
+
+		length = Math.max(length, 0);
+		if (this.autoRadius) {
+			// Calculate the volume using the auto radius and the new "auto" length, and transform that back
+			// to the non auto radius situation to set this.length (the volume in both situations is the same).
+			double volume = Math.pow(getRadius(), 2) * length;		// Math.PI left out, not needed
+			double newLength = volume / Math.pow(this.radius, 2);
+			if (MathUtil.equals(this.length, newLength))
+				return;
+			this.length = newLength;
+		} else {
+			if (MathUtil.equals(this.length, length)) {
+				return;
+			}
+			this.length = length;
+		}
+		fireComponentChangeEvent(ComponentChangeEvent.MASS_CHANGE);
 	}
 	
 	
-	public final void setRadius(double radius) {
+	public double getRadius() {
+		if (autoRadius) {
+			if (parent == null) {
+				return radius;
+			}
+			if (parent instanceof NoseCone) {
+				return ((NoseCone) parent).getAftRadius();
+			} else if (parent instanceof Transition) {
+				double foreRadius = ((Transition) parent).getForeRadius();
+				double aftRadius = ((Transition) parent).getAftRadius();
+				return (Math.max(foreRadius, aftRadius));
+			} else if (parent instanceof BodyComponent) {
+				return ((BodyComponent) parent).getInnerRadius();
+			} else if (parent instanceof RingComponent) {
+				return ((RingComponent) parent).getInnerRadius();
+			}
+		}
+		return radius;
+	}
+
+	public double getRadiusNoAuto() {
+		return radius;
+	}
+	
+	public void setRadius(double radius) {
 		radius = Math.max(radius, 0);
 
 		for (RocketComponent listener : configListeners) {
@@ -80,14 +143,36 @@ public abstract class MassObject extends InternalComponent {
 			}
 		}
 
-		if (MathUtil.equals(this.radius, radius)) {
+		if (MathUtil.equals(this.radius, radius) && (!autoRadius))
 			return;
-		}
+
+		this.autoRadius = false;
 		this.radius = radius;
 		fireComponentChangeEvent(ComponentChangeEvent.MASS_CHANGE);
 	}
-	
-	
+
+	public boolean isRadiusAutomatic() {
+		return autoRadius;
+	}
+
+	public void setRadiusAutomatic(boolean auto) {
+		for (RocketComponent listener : configListeners) {
+			if (listener instanceof MassObject) {
+				((MassObject) listener).setRadiusAutomatic(auto);
+			}
+		}
+
+		if (autoRadius == auto)
+			return;
+
+		autoRadius = auto;
+
+		// Set the length
+		double volume = (Math.PI * Math.pow(getRadius(), 2) * length);
+		length = volume / (Math.PI * Math.pow(getRadius(), 2));
+
+		fireComponentChangeEvent(ComponentChangeEvent.BOTH_CHANGE);
+	}
 	
 	public final double getRadialPosition() {
 		return radialPosition;
@@ -163,8 +248,8 @@ public abstract class MassObject extends InternalComponent {
 	@Override
 	public final Collection<Coordinate> getComponentBounds() {
 		Collection<Coordinate> c = new ArrayList<Coordinate>();
-		addBound(c, 0, radius);
-		addBound(c, length, radius);
+		addBound(c, 0, getRadius());
+		addBound(c, getLength(), getRadius());
 		return c;
 	}
 	

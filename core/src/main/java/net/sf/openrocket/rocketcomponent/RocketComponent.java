@@ -90,25 +90,35 @@ public abstract class RocketComponent implements ChangeSource, Cloneable, Iterab
 	 * Defaults to (0,0,0)
 	 */
 	protected Coordinate position = new Coordinate();
-	
+
 	// Color of the component, null means to use the default color
 	private Color color = null;
 	private LineStyle lineStyle = null;
 	
 	
-	// Override mass/CG
-	private double overrideMass = 0;
-	private boolean massOverridden = false;
+	// Override mass
+    protected double overrideMass = 0;
+	protected boolean massOverridden = false;
+	private boolean overrideSubcomponentsMass = false;
+	private RocketComponent massOverriddenBy = null;	// The (super-)parent component that overrides the mass of this component
+
+	// Override CG
 	private double overrideCGX = 0;
 	private boolean cgOverridden = false;
+	private boolean overrideSubcomponentsCG = false;
+	private RocketComponent CGOverriddenBy = null;	// The (super-)parent component that overrides the CG of this component
+
+	// Override CD
 	private double overrideCD = 0;
 	private boolean cdOverridden = false;
-	
-	private boolean overrideSubcomponents = false;
+	private boolean overrideSubcomponentsCD = false;
+	private RocketComponent CDOverriddenBy = null;	// The (super-)parent component that overrides the CD of this component
+
+	private boolean cdOverriddenByAncestor = false;
 	
 	
 	// User-given name of the component
-	private String name = null;
+    protected String name = null;
 	
 	// User-specified comment
 	private String comment = "";
@@ -123,7 +133,7 @@ public abstract class RocketComponent implements ChangeSource, Cloneable, Iterab
 	private Appearance appearance = null;
 
 	// If true, component change events will not be fired
-	private boolean ignoreComponentChange = false;
+	private boolean bypassComponentChangeEvent = false;
 	
 	
 	/**
@@ -134,7 +144,7 @@ public abstract class RocketComponent implements ChangeSource, Cloneable, Iterab
 	/**
 	 * List of components that will set their properties to the same as the current component
 	 */
-	protected final List<RocketComponent> configListeners = new LinkedList<>();
+	protected List<RocketComponent> configListeners = new LinkedList<>();
 
 
 	/**
@@ -426,7 +436,34 @@ public abstract class RocketComponent implements ChangeSource, Cloneable, Iterab
 			mutex.unlock("copyWithOriginalID");
 		}
 	}
+
+	@Override
+	public RocketComponent clone() throws CloneNotSupportedException {
+		RocketComponent clone = (RocketComponent) super.clone();
+		// Make sure the InsideColorComponentHandler is cloned
+		if (clone instanceof InsideColorComponent && this instanceof InsideColorComponent) {
+			InsideColorComponentHandler icch = new InsideColorComponentHandler(clone);
+			icch.copyFrom(((InsideColorComponent) this).getInsideColorComponentHandler());
+			((InsideColorComponent) clone).setInsideColorComponentHandler(icch);
+		}
+		// Make sure the config listeners aren't cloned
+		clone.configListeners = new LinkedList<>();
+		return clone;
+	}
 	
+	/**
+	 * Return true if any of this component's children are a RecoveryDevice
+	 */
+	public boolean hasRecoveryDevice() {
+	  Iterator<RocketComponent> iterator = this.iterator();
+	  while (iterator.hasNext()) {
+	    RocketComponent child = iterator.next();
+	    if (child instanceof RecoveryDevice) {
+	      return true;
+	    }
+	  }
+	  return false;
+	}
 	
 	//////////////  Methods that may not be overridden  ////////////
 	
@@ -451,10 +488,6 @@ public abstract class RocketComponent implements ChangeSource, Cloneable, Iterab
 	 * @param appearance
 	 */
 	public void setAppearance(Appearance appearance) {
-		for (RocketComponent listener : configListeners) {
-			listener.setAppearance(appearance);
-		}
-
 		this.appearance = appearance;
 		if (this.appearance != null) {
 			Decal d = this.appearance.getTexture();
@@ -568,9 +601,9 @@ public abstract class RocketComponent implements ChangeSource, Cloneable, Iterab
 	 */
 	public final void setMassOverridden(boolean o) {
 		for (RocketComponent listener : configListeners) {
-			listener.setIgnoreComponentChange(false);
+			listener.setBypassChangeEvent(false);
 			listener.setMassOverridden(o);
-			listener.setIgnoreComponentChange(false);
+			listener.setBypassChangeEvent(false);
 		}
 
 		if (massOverridden == o) {
@@ -578,6 +611,7 @@ public abstract class RocketComponent implements ChangeSource, Cloneable, Iterab
 		}
 		checkState();
 		massOverridden = o;
+		updateChildrenMassOverriddenBy();
 		fireComponentChangeEvent(ComponentChangeEvent.MASS_CHANGE);
 	}
 	
@@ -642,9 +676,9 @@ public abstract class RocketComponent implements ChangeSource, Cloneable, Iterab
 	 */
 	public final void setCGOverridden(boolean o) {
 		for (RocketComponent listener : configListeners) {
-			listener.setIgnoreComponentChange(false);
+			listener.setBypassChangeEvent(false);
 			listener.setCGOverridden(o);
-			listener.setIgnoreComponentChange(true);
+			listener.setBypassChangeEvent(true);
 		}
 
 		if (cgOverridden == o) {
@@ -652,14 +686,14 @@ public abstract class RocketComponent implements ChangeSource, Cloneable, Iterab
 		}
 		checkState();
 		cgOverridden = o;
+		updateChildrenCGOverriddenBy();
 		fireComponentChangeEvent(ComponentChangeEvent.MASS_CHANGE);
 	}
 
 
-
 	/** Return the current override CD. The CD is not necessarily overridden.
 	 * 
-	 * @return the override CG.
+	 * @return the override CD.
 	 */
 	public final double getOverrideCD() {
 		mutex.verify();
@@ -680,10 +714,15 @@ public abstract class RocketComponent implements ChangeSource, Cloneable, Iterab
 			return;
 		checkState();
 		this.overrideCD = x;
-		if (isCDOverridden())
-			fireComponentChangeEvent(ComponentChangeEvent.MASS_CHANGE);
-		else
+			
+		if (isCDOverridden()) {
+			if (isSubcomponentsOverriddenCD()) {
+				overrideSubcomponentsCD(true);
+			}
+			fireComponentChangeEvent(ComponentChangeEvent.AERODYNAMIC_CHANGE);
+		} else {
 			fireComponentChangeEvent(ComponentChangeEvent.NONFUNCTIONAL_CHANGE);
+		}
 	}
 		
 
@@ -700,9 +739,9 @@ public abstract class RocketComponent implements ChangeSource, Cloneable, Iterab
 
 
 	/**
-	 * Set whether the CD is currently overridden.
+	 * Set whether the CD is currently directly overridden.
 	 *
-	 * @param o whether the CD is overridden
+	 * @param o whether the CD is currently directly overridden
 	 */
 	public final void setCDOverridden(boolean o) {
 		for (RocketComponent listener : configListeners) {
@@ -714,9 +753,28 @@ public abstract class RocketComponent implements ChangeSource, Cloneable, Iterab
 		}
 		checkState();
 		cdOverridden = o;
-		fireComponentChangeEvent(ComponentChangeEvent.MASS_CHANGE);
+		updateChildrenCDOverriddenBy();
+
+		// if overrideSubcompoents is set, we need to descend the component
+		// tree.  If we are overriding our own CD, we need to override all
+		// our descendants.  If we are not overriding our own CD, we are
+		// also not overriding our descendants
+		if (isSubcomponentsOverriddenCD()) {
+			overrideSubcomponentsCD(o);
+		}
+		
+		fireComponentChangeEvent(ComponentChangeEvent.AERODYNAMIC_CHANGE);
 	}
-	
+
+	/**
+	 * Return whether the CD is currently overridden by an ancestor.
+	 * 
+	 * @return whether the CD is overridden by an ancestor
+	 */
+	public final boolean isCDOverriddenByAncestor() {
+		mutex.verify();
+		return cdOverriddenByAncestor;
+	}
 	
 	
 	/**
@@ -727,34 +785,152 @@ public abstract class RocketComponent implements ChangeSource, Cloneable, Iterab
 	 * also override {@link #isOverrideSubcomponentsEnabled()} to return
 	 * <code>false</code>.
 	 *
-	 * @return	whether the current mass and/or CG override overrides subcomponents as well.
+	 * @return	whether the current mass, CG, and/or CD override overrides subcomponents as well.
 	 */
-	public boolean getOverrideSubcomponents() {
+	public boolean isSubcomponentsOverriddenMass() {
 		mutex.verify();
-		return overrideSubcomponents;
+		return overrideSubcomponentsMass;
+	}
+
+	// TODO: delete when compatibility with OR 15.03 is not needed anymore
+	public void setSubcomponentsOverridden(boolean override) {
+		setSubcomponentsOverriddenMass(override);
+		setSubcomponentsOverriddenCG(override);
+		setSubcomponentsOverriddenCD(override);
 	}
 	
 	
 	/**
 	 * Set whether the mass and/or CG override overrides all subcomponent values
-	 * as well.  See {@link #getOverrideSubcomponents()} for details.
+	 * as well.  See {@link #isSubcomponentsOverriddenMass()} for details.
 	 *
 	 * @param override	whether the mass and/or CG override overrides all subcomponent.
 	 */
-	public void setOverrideSubcomponents(boolean override) {
+	public void setSubcomponentsOverriddenMass(boolean override) {
 		for (RocketComponent listener : configListeners) {
-			listener.setOverrideSubcomponents(override);
+			listener.setSubcomponentsOverriddenMass(override);
 		}
 
-		if (overrideSubcomponents == override) {
+		if (overrideSubcomponentsMass == override) {
 			return;
 		}
 		checkState();
-		overrideSubcomponents = override;
+		overrideSubcomponentsMass = override;
 
-		fireComponentChangeEvent(ComponentChangeEvent.MASS_CHANGE);
+		updateChildrenMassOverriddenBy();
+
+		fireComponentChangeEvent(ComponentChangeEvent.BOTH_CHANGE | ComponentChangeEvent.TREE_CHANGE_CHILDREN);
 	}
-	
+
+	/**
+	 * Return whether the CG override overrides all subcomponent values
+	 * as well.  The default implementation is a normal getter/setter implementation,
+	 * however, subclasses are allowed to override this behavior if some subclass
+	 * always or never overrides subcomponents.  In this case the subclass should
+	 * also override {@link #isOverrideSubcomponentsEnabled()} to return
+	 * <code>false</code>.
+	 *
+	 * @return	whether the current CG override overrides subcomponents as well.
+	 */
+	public boolean isSubcomponentsOverriddenCG() {
+		mutex.verify();
+		return overrideSubcomponentsCG;
+	}
+
+
+	/**
+	 * Set whether the mass and/or CG override overrides all subcomponent values
+	 * as well.  See {@link #isSubcomponentsOverriddenCG()} for details.
+	 *
+	 * @param override	whether the mass and/or CG override overrides all subcomponent.
+	 */
+	public void setSubcomponentsOverriddenCG(boolean override) {
+		for (RocketComponent listener : configListeners) {
+			listener.setSubcomponentsOverriddenCG(override);
+		}
+
+		if (overrideSubcomponentsCG == override) {
+			return;
+		}
+		checkState();
+		overrideSubcomponentsCG = override;
+
+		updateChildrenCGOverriddenBy();
+
+		fireComponentChangeEvent(ComponentChangeEvent.BOTH_CHANGE | ComponentChangeEvent.TREE_CHANGE_CHILDREN);
+	}
+
+	/**
+	 * Return whether the CD override overrides all subcomponent values
+	 * as well.  The default implementation is a normal getter/setter implementation,
+	 * however, subclasses are allowed to override this behavior if some subclass
+	 * always or never overrides subcomponents.  In this case the subclass should
+	 * also override {@link #isOverrideSubcomponentsEnabled()} to return
+	 * <code>false</code>.
+	 *
+	 * @return	whether the current CD override overrides subcomponents as well.
+	 */
+	public boolean isSubcomponentsOverriddenCD() {
+		mutex.verify();
+		return overrideSubcomponentsCD;
+	}
+
+
+	/**
+	 * Set whether the CD override overrides all subcomponent values
+	 * as well.  See {@link #isSubcomponentsOverriddenCD()} for details.
+	 *
+	 * @param override	whether the CD override overrides all subcomponent.
+	 */
+	public void setSubcomponentsOverriddenCD(boolean override) {
+		for (RocketComponent listener : configListeners) {
+			listener.setSubcomponentsOverriddenCD(override);
+		}
+
+		if (overrideSubcomponentsCD == override) {
+			return;
+		}
+		checkState();
+		overrideSubcomponentsCD = override;
+
+		updateChildrenCDOverriddenBy();
+
+		overrideSubcomponentsCD(override);
+
+		fireComponentChangeEvent(ComponentChangeEvent.BOTH_CHANGE | ComponentChangeEvent.TREE_CHANGE_CHILDREN);
+	}
+
+	/**
+	 * Recursively descend component tree and set descendant CD override values
+	 *
+	 * Logic:  
+	 *    If we are setting the override true, descend the component tree marking
+	 *    every component as overridden by ancestor
+	 *
+	 *    If we are setting the override false, descend the component tree marking every
+	 *    component as not overridden by ancestor.
+	 *        If in the course of descending the tree we encounter a descendant whose direct
+	 *        CD override and overrideSubcomponentsCD flags are both true, descend from there
+	 *        setting the ancestoroverride from that component
+	 *
+	 * @param override whether setting or clearing overrides
+	 *
+	 */
+	void overrideSubcomponentsCD(boolean override) {
+		for (RocketComponent c: this.children) {
+			if (c.isCDOverriddenByAncestor() != override) {
+
+				c.cdOverriddenByAncestor = override;
+
+				if (!override && c.isCDOverridden() && c.isSubcomponentsOverriddenCD()) {
+					c.overrideSubcomponentsCD(true);
+				} else {
+					c.overrideSubcomponentsCD(override);
+				}
+			}
+		}
+	}
+						
 	/**
 	 * Return whether the option to override all subcomponents is enabled or not.
 	 * The default implementation returns <code>false</code> if neither mass nor
@@ -767,10 +943,64 @@ public abstract class RocketComponent implements ChangeSource, Cloneable, Iterab
 	 */
 	public boolean isOverrideSubcomponentsEnabled() {
 		mutex.verify();
-		return isCGOverridden() || isMassOverridden();
+		return isCGOverridden() || isMassOverridden() || isCDOverridden();
 	}
-	
-	/** 
+
+	/**
+	 * Returns which (super-)parent overrides the mass of this component, or null if no parent does so.
+	 */
+	public RocketComponent getMassOverriddenBy() {
+		return massOverriddenBy;
+	}
+
+	/**
+	 * Returns which (super-)parent overrides the CG of this component, or null if no parent does so.
+	 */
+	public RocketComponent getCGOverriddenBy() {
+		return CGOverriddenBy;
+	}
+
+	/**
+	 * Returns which (super-)parent overrides the CD of this component, or null if no parent does so.
+	 */
+	public RocketComponent getCDOverriddenBy() {
+		return CDOverriddenBy;
+	}
+
+	private void updateChildrenMassOverriddenBy() {
+		RocketComponent overriddenBy = massOverridden && overrideSubcomponentsMass ? this : null;
+		for (RocketComponent c : getAllChildren()) {
+			c.massOverriddenBy = overriddenBy;
+			// We need to update overriddenBy in case one of the children components has its subcomponents overridden
+			if (overriddenBy == null) {
+				overriddenBy = c.massOverridden && c.overrideSubcomponentsMass ? c : null;
+			}
+		}
+	}
+
+	private void updateChildrenCGOverriddenBy() {
+		RocketComponent overriddenBy = cgOverridden && overrideSubcomponentsCG ? this : null;
+		for (RocketComponent c : getAllChildren()) {
+			c.CGOverriddenBy = overriddenBy;
+			// We need to update overriddenBy in case one of the children components has its subcomponents overridden
+			if (overriddenBy == null) {
+				overriddenBy = c.cgOverridden && c.overrideSubcomponentsCG ? c : null;
+			}
+		}
+	}
+
+	private void updateChildrenCDOverriddenBy() {
+		RocketComponent overriddenBy = cdOverridden && overrideSubcomponentsCD ? this : null;
+		for (RocketComponent c : getAllChildren()) {
+			c.CDOverriddenBy = overriddenBy;
+			// We need to update overriddenBy in case one of the children components has its subcomponents overridden
+			if (overriddenBy == null) {
+				overriddenBy = c.cdOverridden && c.overrideSubcomponentsCD ? c : null;
+			}
+		}
+	}
+
+	/**
 	 * placeholder. This allows code to generally test if this component represents multiple instances with just one function call. 
 	 * 
 	 * @return number of instances
@@ -793,9 +1023,9 @@ public abstract class RocketComponent implements ChangeSource, Cloneable, Iterab
 	 */
 	public final void setName(String name) {
 		for (RocketComponent listener : configListeners) {
-			listener.setIgnoreComponentChange(false);
+			listener.setBypassChangeEvent(false);
 			listener.setName(name);
-			listener.setIgnoreComponentChange(true);
+			listener.setBypassChangeEvent(true);
 		}
 
 		if (this.name.equals(name)) {
@@ -987,7 +1217,7 @@ public abstract class RocketComponent implements ChangeSource, Cloneable, Iterab
 	 * If the length of a component is settable, the class must define the setter method
 	 * itself.
 	 */
-	public final double getLength() {
+	public double getLength() {
 		mutex.verify();
 		return length;
 	}
@@ -1372,6 +1602,9 @@ public abstract class RocketComponent implements ChangeSource, Cloneable, Iterab
 	 */
 	public final double getSectionMass() {
 		Double massSubtotal = getMass();
+		if (massOverridden && overrideSubcomponentsMass) {
+			return massSubtotal;
+		}
 		mutex.verify();
 		for (RocketComponent rc : children) {
 			massSubtotal += rc.getSectionMass();
@@ -1477,6 +1710,36 @@ public abstract class RocketComponent implements ChangeSource, Cloneable, Iterab
 		
 		children.add(index, component);
 		component.parent = this;
+		if (this.massOverridden && this.overrideSubcomponentsMass) {
+			component.massOverriddenBy = this;
+		} else {
+			component.massOverriddenBy = this.massOverriddenBy;
+		}
+		if (this.cgOverridden && this.overrideSubcomponentsCG) {
+			component.CGOverriddenBy = this;
+		} else {
+			component.CGOverriddenBy = this.CGOverriddenBy;
+		}
+		if (this.cdOverridden && this.overrideSubcomponentsCD) {
+			component.CDOverriddenBy = this;
+		} else {
+			component.CDOverriddenBy = this.CDOverriddenBy;
+		}
+		for (Iterator<RocketComponent> it = component.iterator(false); it.hasNext(); ) {
+			RocketComponent child = it.next();
+			// You only want to change the overriddenBy if the overriddenBy of component changed (i.e. is not null),
+			// otherwise you could lose overriddenBy information of the sub-children that have one of this component's
+			// children as its overrideBy component.
+			if (component.massOverriddenBy != null) {
+				child.massOverriddenBy = component.massOverriddenBy;
+			}
+			if (component.CGOverriddenBy != null) {
+				child.CGOverriddenBy = component.CGOverriddenBy;
+			}
+			if (component.CDOverriddenBy != null) {
+				child.CDOverriddenBy = component.CDOverriddenBy;
+			}
+		}
 		
 		if (component instanceof AxialStage) {
 			AxialStage nStage = (AxialStage) component;
@@ -1498,7 +1761,7 @@ public abstract class RocketComponent implements ChangeSource, Cloneable, Iterab
 	 */
 	public final void removeChild(int n) {
 		checkState();
-		RocketComponent component = this.getChild(n); 
+		RocketComponent component = this.getChild(n);
 		this.removeChild(component);
 	}
 	
@@ -1517,9 +1780,28 @@ public abstract class RocketComponent implements ChangeSource, Cloneable, Iterab
 
 		if (children.remove(component)) {
 			component.parent = null;
+			for (RocketComponent c : component) {
+				// You only want to set the override components to null if the child's override component is either
+				// this component, or a (super-)parent of this component. Otherwise, you could lose the overrideBy
+				// information of sub-children that have one of this component's children as its overrideBy component.
+				if (c.massOverriddenBy == this || c.massOverriddenBy == this.massOverriddenBy) {
+					c.massOverriddenBy = null;
+				}
+				if (c.CGOverriddenBy == this || c.CGOverriddenBy == this.CGOverriddenBy) {
+					c.CGOverriddenBy = null;
+				}
+				if (c.CDOverriddenBy == this || c.CDOverriddenBy == this.CDOverriddenBy) {
+					c.CDOverriddenBy = null;
+				}
+			}
 			
 			if (component instanceof AxialStage) {
 				AxialStage stage = (AxialStage) component;
+				this.getRocket().forgetStage(stage);
+			}
+
+			// Remove sub-stages of the removed component
+			for (AxialStage stage : component.getSubStages()) {
 				this.getRocket().forgetStage(stage);
 			}
 			
@@ -1588,11 +1870,31 @@ public abstract class RocketComponent implements ChangeSource, Cloneable, Iterab
 		this.checkComponentStructure();
 		return children.get(n);
 	}
-	
+
+	/**
+	 * Returns all the direct children of this component. The result is a clone of the children list and may be edited.
+	 * @return direct children of this component.
+	 */
 	public final List<RocketComponent> getChildren() {
 		checkState();
 		this.checkComponentStructure();
 		return children.clone();
+	}
+
+	/**
+	 * Returns all the children of this component, including children of sub-components (children of children).
+	 * The order is the same as you would read in the component tree (disregarding parent-child relations; just top to
+	 * bottom).
+	 */
+	public final List<RocketComponent> getAllChildren() {
+		checkState();
+		this.checkComponentStructure();
+		List<RocketComponent> children = new ArrayList<>();
+		for (RocketComponent child : getChildren()) {
+			children.add(child);
+			children.addAll(child.getAllChildren());
+		}
+		return children;
 	}
 	
 	
@@ -1618,6 +1920,59 @@ public abstract class RocketComponent implements ChangeSource, Cloneable, Iterab
 	public final RocketComponent getParent() {
 		checkState();
 		return parent;
+	}
+
+	/**
+	 * Get all the parent and super-parent components of this component.
+	 * @return parent and super-parents of this component
+	 */
+	public final List<RocketComponent> getParents() {
+		checkState();
+		List<RocketComponent> result = new LinkedList<>();
+		RocketComponent currComp = this;
+
+		while (currComp.parent != null) {
+			currComp = currComp.parent;
+			result.add(currComp);
+		}
+
+		return result;
+	}
+
+	/**
+	 * Iteratively checks whether the list of components contains the parent or super-parent (parent of parent of parent of...)
+	 * of component.
+	 * @param components list of components that may contain the parent
+	 * @param component component to check the parent for
+	 * @return true if the list contains the parent, false if not
+	 */
+	public static boolean listContainsParent(List<RocketComponent> components, RocketComponent component) {
+		RocketComponent c = component;
+		while (c.getParent() != null) {
+			if (components.contains(c.getParent())) {
+				return true;
+			}
+			c = c.getParent();
+		}
+		return false;
+	}
+
+	/**
+	 * Checks whether all components in the list have the same class as this component.
+	 * @param components list to check
+	 * @return true if all components are of the same class, false if not
+	 */
+	public boolean checkAllClassesEqual(List<RocketComponent> components) {
+		if (components == null || components.size() == 0) {
+			return true;
+		}
+		Class<? extends RocketComponent> myClass = this.getClass();
+		for (RocketComponent c : components) {
+			if (!c.getClass().equals(myClass)) {
+				return false;
+			}
+		}
+		return true;
 	}
 	
 	/**
@@ -1669,6 +2024,21 @@ public abstract class RocketComponent implements ChangeSource, Cloneable, Iterab
 		}
 		throw new IllegalStateException("getStage() called on hierarchy without an AxialStage.");
 	}
+
+	/**
+	 * Returns all the stages that are a child or sub-child of this component.
+	 * @return all the stages that are a child or sub-child of this component.
+	 */
+	public final List<AxialStage> getSubStages() {
+		List<AxialStage> result = new LinkedList<>();
+		Iterator<RocketComponent> it = iterator(false);
+		while (it.hasNext()) {
+			RocketComponent c = it.next();
+			if (c instanceof AxialStage)
+				result.add((AxialStage) c);
+		}
+		return result;
+	}
 	
 	/**
 	 * Return the first component assembly component that this component belongs to.
@@ -1683,9 +2053,48 @@ public abstract class RocketComponent implements ChangeSource, Cloneable, Iterab
 		while ( null != curComponent ) {
 			if( ComponentAssembly.class.isAssignableFrom( curComponent.getClass()))
 				return (ComponentAssembly) curComponent;
-			curComponent = curComponent.parent;
 		}
 		throw new IllegalStateException("getAssembly() called on hierarchy without a ComponentAssembly.");
+	}
+
+	/**
+	 * Return all the component assemblies that are a child of this component
+	 * @return list of ComponentAssembly components that are a child of this component
+	 */
+	public final List<RocketComponent> getChildAssemblies() {
+		checkState();
+
+		Iterator<RocketComponent> children = iterator(false);
+
+		List<RocketComponent> result = new ArrayList<>();
+
+		while (children.hasNext()) {
+			RocketComponent child = children.next();
+			if (child instanceof ComponentAssembly) {
+				result.add(child);
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * Return all the component assemblies that are a parent or super-parent of this component
+	 * @return list of ComponentAssembly components that are a parent or super-parent of this component
+	 */
+	public final List<RocketComponent> getParentAssemblies() {
+		checkState();
+
+		List<RocketComponent> result = new LinkedList<>();
+		RocketComponent currComp = this;
+
+		while (currComp.parent != null) {
+			currComp = currComp.parent;
+			if (currComp instanceof ComponentAssembly) {
+				result.add(currComp);
+			}
+		}
+
+		return result;
 	}
 	
 	
@@ -1845,7 +2254,7 @@ public abstract class RocketComponent implements ChangeSource, Cloneable, Iterab
 	 */
 	protected void fireComponentChangeEvent(ComponentChangeEvent e) {
 		checkState();
-		if (parent == null || ignoreComponentChange) {
+		if (parent == null || bypassComponentChangeEvent) {
 			/* Ignore if root invalid. */
 			return;
 		}
@@ -1864,37 +2273,36 @@ public abstract class RocketComponent implements ChangeSource, Cloneable, Iterab
 		fireComponentChangeEvent(new ComponentChangeEvent(this, type));
 	}
 
-	public void setIgnoreComponentChange(boolean newValue) {
-		this.ignoreComponentChange = newValue;
+	public void setBypassChangeEvent(boolean newValue) {
+		this.bypassComponentChangeEvent = newValue;
 	}
 
-	public boolean getIgnoreComponentChange() {
-		return this.ignoreComponentChange;
+	public boolean getBypassComponentChangeEvent() {
+		return this.bypassComponentChangeEvent;
 	}
 
 	/**
-	 * Add a new config listener that will undergo the same configuration changes as this.component. Listener must be
-	 * of the same class as this.component.
+	 * Add a new config listener that will undergo the same configuration changes as this.component.
 	 * @param listener new config listener
 	 * @return true if listener was successfully added, false if not
 	 */
 	public boolean addConfigListener(RocketComponent listener) {
-		if (listener == null || !this.getClass().equals(listener.getClass())) {
+		if (listener == null || configListeners.contains(listener) || listener == this) {
 			return false;
 		}
 		configListeners.add(listener);
-		listener.setIgnoreComponentChange(true);
+		listener.setBypassChangeEvent(true);
 		return true;
 	}
 
 	public void removeConfigListener(RocketComponent listener) {
 		configListeners.remove(listener);
-		listener.setIgnoreComponentChange(false);
+		listener.setBypassChangeEvent(false);
 	}
 
 	public void clearConfigListeners() {
 		for (RocketComponent listener : configListeners) {
-			listener.setIgnoreComponentChange(false);
+			listener.setBypassChangeEvent(false);
 		}
 		configListeners.clear();
 	}
@@ -2137,12 +2545,21 @@ public abstract class RocketComponent implements ChangeSource, Cloneable, Iterab
 		this.massOverridden = src.massOverridden;
 		this.overrideCGX = src.overrideCGX;
 		this.cgOverridden = src.cgOverridden;
-		this.overrideSubcomponents = src.overrideSubcomponents;
+		this.cdOverriddenByAncestor = src.cdOverriddenByAncestor;
+		this.overrideSubcomponentsMass = src.overrideSubcomponentsMass;
+		this.overrideSubcomponentsCG = src.overrideSubcomponentsCG;
+		this.overrideSubcomponentsCD = src.overrideSubcomponentsCD;
 		this.name = src.name;
 		this.comment = src.comment;
 		this.id = src.id;
 		this.displayOrder_side = src.displayOrder_side;
 		this.displayOrder_back = src.displayOrder_back;
+		this.configListeners = new LinkedList<>();
+		if (this instanceof InsideColorComponent && src instanceof InsideColorComponent) {
+			InsideColorComponentHandler icch = new InsideColorComponentHandler(this);
+			icch.copyFrom(((InsideColorComponent) src).getInsideColorComponentHandler());
+			((InsideColorComponent) this).setInsideColorComponentHandler(icch);
+		}
 		
 		// Add source components to invalidation tree
 		for (RocketComponent c : src) {

@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import java.util.EventObject;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
@@ -13,6 +14,7 @@ import javax.swing.JSpinner;
 import net.miginfocom.swing.MigLayout;
 import net.sf.openrocket.document.OpenRocketDocument;
 import net.sf.openrocket.gui.SpinnerEditor;
+import net.sf.openrocket.gui.adaptors.CustomFocusTraversalPolicy;
 import net.sf.openrocket.gui.adaptors.DoubleModel;
 import net.sf.openrocket.gui.adaptors.EnumModel;
 import net.sf.openrocket.gui.adaptors.IntegerModel;
@@ -29,8 +31,8 @@ public class TubeFinSetConfig extends RocketComponentConfig {
 	private static final long serialVersionUID = 508482875624928676L;
 	private static final Translator trans = Application.getTranslator();
 	
-	public TubeFinSetConfig(OpenRocketDocument d, RocketComponent c) {
-		super(d, c);
+	public TubeFinSetConfig(OpenRocketDocument d, RocketComponent c, JDialog parent) {
+		super(d, c, parent);
 		
 		JPanel primary = new JPanel(new MigLayout("fill"));
 		
@@ -45,6 +47,7 @@ public class TubeFinSetConfig extends RocketComponentConfig {
 		JSpinner spin = new JSpinner(im.getSpinnerModel());
 		spin.setEditor(new SpinnerEditor(spin));
 		panel.add(spin, "growx, wrap");
+		order.add(((SpinnerEditor) spin.getEditor()).getTextField());
 
 		//// Length:
 		panel.add(new JLabel(trans.get("TubeFinSetCfg.lbl.Length")));
@@ -53,7 +56,9 @@ public class TubeFinSetConfig extends RocketComponentConfig {
 		
 		spin = new JSpinner(m.getSpinnerModel());
 		spin.setEditor(new SpinnerEditor(spin));
+		focusElement = spin;
 		panel.add(spin, "growx");
+		order.add(((SpinnerEditor) spin.getEditor()).getTextField());
 		
 		panel.add(new UnitSelector(m), "growx");
 		panel.add(new BasicSlider(m.getSliderModel(0, 0.02, 0.1)), "w 100lp, wrap para");
@@ -68,6 +73,7 @@ public class TubeFinSetConfig extends RocketComponentConfig {
 		spin = new JSpinner(od.getSpinnerModel());
 		spin.setEditor(new SpinnerEditor(spin));
 		panel.add(spin, "growx");
+		order.add(((SpinnerEditor) spin.getEditor()).getTextField());
 		
 		panel.add(new UnitSelector(od), "growx");
 		panel.add(new BasicSlider(od.getSliderModel(0, 0.04, 0.2)), "w 100lp, wrap rel");
@@ -76,6 +82,7 @@ public class TubeFinSetConfig extends RocketComponentConfig {
 		//// Automatic
 		check.setText(trans.get("TubeFinSetCfg.checkbox.Automatic"));
 		panel.add(check, "skip, span 2, wrap");
+		order.add(check);
 
 		////  Inner diameter:
 		panel.add(new JLabel(trans.get("TubeFinSetCfg.lbl.Innerdiam")));
@@ -87,6 +94,7 @@ public class TubeFinSetConfig extends RocketComponentConfig {
 		spin = new JSpinner(m.getSpinnerModel());
 		spin.setEditor(new SpinnerEditor(spin));
 		panel.add(spin, "growx");
+		order.add(((SpinnerEditor) spin.getEditor()).getTextField());
 		
 		panel.add(new UnitSelector(m), "growx");
 		panel.add(new BasicSlider(m.getSliderModel(new DoubleModel(0), od)), "w 100lp, wrap rel");
@@ -101,6 +109,7 @@ public class TubeFinSetConfig extends RocketComponentConfig {
 		spin = new JSpinner(m.getSpinnerModel());
 		spin.setEditor(new SpinnerEditor(spin));
 		panel.add(spin, "growx");
+		order.add(((SpinnerEditor) spin.getEditor()).getTextField());
 		
 		panel.add(new UnitSelector(m), "growx");
 		panel.add(new BasicSlider(m.getSliderModel(0, 0.01)), "w 100lp, wrap 20lp");
@@ -118,6 +127,7 @@ public class TubeFinSetConfig extends RocketComponentConfig {
 		spin = new JSpinner(m.getSpinnerModel());
 		spin.setEditor(new SpinnerEditor(spin));
 		panel.add(spin, "growx");
+		order.add(((SpinnerEditor) spin.getEditor()).getTextField());
 		
 		panel.add(new UnitSelector(m), "growx");
 		panel.add(new BasicSlider(m.getSliderModel(-Math.PI, Math.PI)), "w 100lp, wrap");
@@ -131,6 +141,7 @@ public class TubeFinSetConfig extends RocketComponentConfig {
 		final EnumModel<AxialMethod> axialMethodModel = new EnumModel<AxialMethod>(component, "AxialMethod", AxialMethod.axialOffsetMethods );
 		final JComboBox<AxialMethod> axialMethodCombo = new JComboBox<AxialMethod>( axialMethodModel );
 		panel.add(axialMethodCombo, "spanx, growx, wrap");
+		order.add(axialMethodCombo);
 
 		//// plus
 		panel.add(new JLabel(trans.get("LaunchLugCfg.lbl.plus")), "right");
@@ -139,6 +150,7 @@ public class TubeFinSetConfig extends RocketComponentConfig {
 		spin = new JSpinner(axialOffsetModel.getSpinnerModel());
 		spin.setEditor(new SpinnerEditor(spin));
 		panel.add(spin, "growx");
+		order.add(((SpinnerEditor) spin.getEditor()).getTextField());
 
 		axialMethodCombo.addActionListener(new ActionListener() {
 			@Override
@@ -156,7 +168,8 @@ public class TubeFinSetConfig extends RocketComponentConfig {
 		
 		
 		//// Material
-		panel.add(materialPanel(Material.Type.BULK), "span, wrap");
+		MaterialPanel materialPanel = new MaterialPanel(component, document, Material.Type.BULK, order);
+		panel.add(materialPanel, "span, wrap");
 		
 		primary.add(panel, "grow");
 		
@@ -164,6 +177,11 @@ public class TubeFinSetConfig extends RocketComponentConfig {
 		tabbedPane.insertTab(trans.get("LaunchLugCfg.tab.General"), null, primary,
 				trans.get("LaunchLugCfg.tab.Generalprop"), 0);
 		tabbedPane.setSelectedIndex(0);
+
+		// Apply the custom focus travel policy to this config dialog
+		order.add(closeButton);		// Make sure the close button is the last component
+		CustomFocusTraversalPolicy policy = new CustomFocusTraversalPolicy(order);
+		parent.setFocusTraversalPolicy(policy);
 	}
 	
 	@Override

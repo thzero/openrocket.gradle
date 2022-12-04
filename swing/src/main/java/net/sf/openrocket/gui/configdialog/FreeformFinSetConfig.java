@@ -19,21 +19,29 @@ import java.util.ArrayList;
 import java.util.EventObject;
 import java.util.List;
 
+import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JSpinner;
+import javax.swing.JSplitPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 
+import net.sf.openrocket.gui.adaptors.CustomFocusTraversalPolicy;
+import net.sf.openrocket.gui.util.Icons;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -75,15 +83,20 @@ public class FreeformFinSetConfig extends FinSetConfig {
 	
 	private JTable table = null;
 	private FinPointTableModel tableModel = null;
+	private JPopupMenu pm;
 	
 	private int dragIndex = -1;
 	private Point dragPoint = null;
 
 	private FinPointFigure figure = null;
+	private ScaleScrollPane figurePane = null;
 	private ScaleSelector selector;
+
+	private FinPointAction insertFinPointAction;
+	private FinPointAction deleteFinPointAction;
 	
-	public FreeformFinSetConfig(OpenRocketDocument d, RocketComponent component) {
-		super(d, component);
+	public FreeformFinSetConfig(OpenRocketDocument d, RocketComponent component, JDialog parent) {
+		super(d, component, parent);
 		
 		//// General and General properties
 		tabbedPane.insertTab(trans.get("FreeformFinSetCfg.tab.General"), null, generalPane(), trans.get("FreeformFinSetCfg.tab.ttip.General"), 0);
@@ -92,6 +105,11 @@ public class FreeformFinSetConfig extends FinSetConfig {
 		tabbedPane.setSelectedIndex(0);
 		
 		addFinSetButtons();
+
+		// Apply the custom focus travel policy to this panel
+		order.add(closeButton);		// Make sure the close button is the last component
+		CustomFocusTraversalPolicy policy = new CustomFocusTraversalPolicy(order);
+		parent.setFocusTraversalPolicy(policy);
 	}
 	
 	
@@ -111,6 +129,7 @@ public class FreeformFinSetConfig extends FinSetConfig {
 			JSpinner spin = new JSpinner(finCountModel.getSpinnerModel());
 			spin.setEditor(new SpinnerEditor(spin));
 			panel.add(spin, "growx, wrap");
+			order.add(((SpinnerEditor) spin.getEditor()).getTextField());
 		}
 
 		{ ////  Base rotation
@@ -121,6 +140,7 @@ public class FreeformFinSetConfig extends FinSetConfig {
 			JSpinner spin = new JSpinner(m.getSpinnerModel());
 			spin.setEditor(new SpinnerEditor(spin));
 			panel.add(spin, "growx");
+			order.add(((SpinnerEditor) spin.getEditor()).getTextField());
 
 			panel.add(new UnitSelector(m), "growx");
 			panel.add(new BasicSlider(m.getSliderModel(-Math.PI, Math.PI)), "w 100lp, wrap");
@@ -138,6 +158,7 @@ public class FreeformFinSetConfig extends FinSetConfig {
 			final JSpinner cantAngleSpinner = new JSpinner(cantAngleModel.getSpinnerModel());
 			cantAngleSpinner.setEditor(new SpinnerEditor(cantAngleSpinner));
 			panel.add(cantAngleSpinner, "growx");
+			order.add(((SpinnerEditor) cantAngleSpinner.getEditor()).getTextField());
 
 			panel.add(new UnitSelector(cantAngleModel), "growx");
 			panel.add(new BasicSlider(cantAngleModel.getSliderModel(-FinSet.MAX_CANT_RADIANS, FinSet.MAX_CANT_RADIANS)), "w 100lp, wrap 40lp");
@@ -152,6 +173,7 @@ public class FreeformFinSetConfig extends FinSetConfig {
 			final EnumModel<AxialMethod> axialMethodModel = new EnumModel<AxialMethod>(component, "AxialMethod", AxialMethod.axialOffsetMethods);
 			final JComboBox<AxialMethod> axialMethodCombo = new JComboBox<AxialMethod>(axialMethodModel);
 			panel.add(axialMethodCombo, "spanx 3, growx, wrap");
+			order.add(axialMethodCombo);
 
 			//// plus
 			panel.add(new JLabel(trans.get("FreeformFinSetCfg.lbl.plus")), "right");
@@ -160,6 +182,7 @@ public class FreeformFinSetConfig extends FinSetConfig {
 			final JSpinner axialOffsetSpinner = new JSpinner(axialOffsetModel.getSpinnerModel());
 			axialOffsetSpinner.setEditor(new SpinnerEditor(axialOffsetSpinner));
 			panel.add(axialOffsetSpinner, "growx");
+			order.add(((SpinnerEditor) axialOffsetSpinner.getEditor()).getTextField());
 
 			panel.add(new UnitSelector(axialOffsetModel), "growx");
 			panel.add(new BasicSlider(axialOffsetModel.getSliderModel(new DoubleModel(component.getParent(), "Length", -1.0, UnitGroup.UNITS_NONE), new DoubleModel(component.getParent(), "Length"))), "w 100lp, wrap");
@@ -184,6 +207,7 @@ public class FreeformFinSetConfig extends FinSetConfig {
 			panel.add(new JLabel(trans.get("FreeformFinSetCfg.lbl.FincrossSection")), "span, split");
 			JComboBox<FinSet.CrossSection> sectionCombo = new JComboBox<>(new EnumModel<FinSet.CrossSection>(component, "CrossSection"));
 			panel.add(sectionCombo, "growx, wrap unrel");
+			order.add(sectionCombo);
 
 
 			////  Thickness:
@@ -194,18 +218,21 @@ public class FreeformFinSetConfig extends FinSetConfig {
 			final JSpinner spin = new JSpinner(m.getSpinnerModel());
 			spin.setEditor(new SpinnerEditor(spin));
 			panel.add(spin, "growx");
+			order.add(((SpinnerEditor) spin.getEditor()).getTextField());
 
 			panel.add(new UnitSelector(m), "growx");
 			panel.add(new BasicSlider(m.getSliderModel(0, 0.01)), "w 100lp, wrap 30lp");
 		}
 
 		{ //// Material
-			panel.add(materialPanel(Material.Type.BULK), "span, wrap");
+			MaterialPanel materialPanel = new MaterialPanel(component, document, Material.Type.BULK, order);
+			panel.add(materialPanel, "span, wrap");
+
 			panel.add(filletMaterialPanel(), "span, wrap");
 		}
 		
 		mainPanel.add(panel, "aligny 20%");
-		
+
 		return mainPanel;
 	}
 	
@@ -218,7 +245,7 @@ public class FreeformFinSetConfig extends FinSetConfig {
 		
 		// Create the figure
 		figure = new FinPointFigure(finset);
-		ScaleScrollPane figurePane = new FinPointScrollPane( figure);
+		figurePane = new FinPointScrollPane( figure);
 		
 		// Create the table
 		tableModel = new FinPointTableModel();
@@ -229,11 +256,31 @@ public class FreeformFinSetConfig extends FinSetConfig {
 		}
 		table.addMouseListener(new MouseAdapter() {
 		    @Override
-            public void mouseClicked(MouseEvent ev) {
+            public void mouseClicked(MouseEvent e) {
+				int row = table.rowAtPoint(e.getPoint());
+
+				// Context menu on right-click
+				if (e.getButton() == MouseEvent.BUTTON3 && e.getClickCount() == 1) {
+					// Select new row
+					if (!table.isRowSelected(row)) {
+						if (row >= 0 && row < table.getRowCount()) {
+							table.setRowSelectionInterval(row, row);
+						} else {
+							return;
+						}
+					}
+
+					doPopup(e);
+				}
+			}
+
+		});
+		table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+			@Override
+			public void valueChanged(ListSelectionEvent e) {
 				figure.setSelectedIndex(table.getSelectedRow());
 				figure.updateFigure();
 			}
-
 		});
 		JScrollPane tablePane = new JScrollPane(table);
 		
@@ -247,6 +294,21 @@ public class FreeformFinSetConfig extends FinSetConfig {
 				dialog.dispose();
 			}
 		});
+
+		// Context menu for table
+		insertFinPointAction = new InsertPointAction();
+		deleteFinPointAction = new DeletePointAction();
+		pm = new JPopupMenu();
+		pm.add(insertFinPointAction);
+		pm.add(deleteFinPointAction);
+
+		table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+			@Override
+			public void valueChanged(ListSelectionEvent e) {
+				updateActionStates();
+			}
+		});
+
 		
 		//		panel.add(new JLabel("Coordinates:"), "aligny bottom, alignx 50%");
 		//		panel.add(new JLabel("    View:"), "wrap, aligny bottom");
@@ -286,16 +348,19 @@ public class FreeformFinSetConfig extends FinSetConfig {
         panel.setLayout(new MigLayout("fill, gap 5!","", "[nogrid, fill, sizegroup display, growprio 200]5![sizegroup text, growprio 5]5![sizegroup buttons, align top, growprio 5]0!"));
         
         // first row: main display
-        panel.add(tablePane, "width 100lp:100lp:, growy");        
-        panel.add(figurePane, "width 200lp:400lp:, gap unrel, grow, height 100lp:250lp:, wrap");
-        
+		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, tablePane, figurePane);
+		splitPane.setResizeWeight(0.1);
+		splitPane.setBorder(null);
+		panel.add(splitPane, "width 300lp:500lp:, gap unrel, grow, height 100lp:250lp:, wrap");
+		order.add(table);
+
 		// row of text directly below figure
 		panel.add(new StyledLabel(trans.get("lbl.doubleClick1")+" "+trans.get("FreeformFinSetConfig.lbl.doubleClick2"), -2), "spanx 3");
         panel.add(new StyledLabel(trans.get("FreeformFinSetConfig.lbl.clickDrag"), -2), "spanx 3");
         panel.add(new StyledLabel(trans.get("FreeformFinSetConfig.lbl.ctrlClick"), -2), "spanx 3, wrap");
         
         // row of controls at the bottom of the tab:
-        panel.add(selector, "aligny bottom, gap unrel");
+        panel.add(selector.getAsPanel(), "aligny bottom, gap unrel");
         panel.add(scaleButton, "");
         panel.add(importButton, "");
         panel.add(exportCsvButton, "");
@@ -391,9 +456,55 @@ public class FreeformFinSetConfig extends FinSetConfig {
 		    }
             figure.updateFigure();
 		}
-		
-		revalidate();
-		repaint();
+
+		if (figurePane != null) {
+			figurePane.revalidate();
+		}
+	}
+
+	/**
+	 * Insert a new fin point between the currently selected point and the next point.
+	 * The coordinates of the new point will be the average of the two points.
+	 */
+	private void insertPoint() {
+		int currentPointIdx = table.getSelectedRow();
+		if (currentPointIdx == -1 || currentPointIdx >= table.getRowCount() - 1) {
+			return;
+		}
+		final FreeformFinSet finSet = (FreeformFinSet) component;
+		Coordinate currentPoint = finSet.getFinPoints()[currentPointIdx];
+		Coordinate nextPoint = finSet.getFinPoints()[currentPointIdx + 1];
+		Point2D.Double toAdd = new Point2D.Double((currentPoint.x + nextPoint.x) / 2, (currentPoint.y + nextPoint.y) / 2);
+		finSet.addPoint(currentPointIdx + 1, toAdd);
+	}
+
+	/**
+	 * Delete the currently selected fin point.
+	 */
+	private void deletePoint() {
+		int currentPointIdx = table.getSelectedRow();
+		if (currentPointIdx == -1) {
+			return;
+		}
+		final FreeformFinSet finSet = (FreeformFinSet) component;
+		try {
+			finSet.removePoint(currentPointIdx);
+		} catch (IllegalFinPointException ex) {
+			throw new RuntimeException(ex);
+		}
+	}
+
+	private void doPopup(MouseEvent e) {
+		pm.show(e.getComponent(), e.getX(), e.getY());
+	}
+
+	private void updateActionStates() {
+		if (insertFinPointAction == null) {		// If one of the actions is null, the rest will be too
+			return;
+		}
+
+		insertFinPointAction.updateEnabledState();
+		deleteFinPointAction.updateEnabledState();
 	}
 	
 	private class FinPointScrollPane extends ScaleScrollPane {
@@ -407,8 +518,6 @@ public class FreeformFinSetConfig extends FinSetConfig {
 
 		@Override
 		public void mousePressed(MouseEvent event) {
-			int mods = event.getModifiersEx();
-
 			final FreeformFinSet finset = (FreeformFinSet) component;
 
 			final int pressIndex = getPoint(event);
@@ -674,6 +783,48 @@ public class FreeformFinSetConfig extends FinSetConfig {
 			} catch (NumberFormatException ignore) {
 			    log.warn("ignoring NumberFormatException while editing a Freeform Fin");
 			}
+		}
+	}
+
+	private abstract static class FinPointAction extends AbstractAction {
+		private static final long serialVersionUID = 1L;
+
+		public abstract void updateEnabledState();
+	}
+
+	private class InsertPointAction extends FinPointAction {
+		public InsertPointAction() {
+			putValue(NAME, trans.get("FreeformFinSetConfig.lbl.insertPoint"));
+			this.putValue(SMALL_ICON, Icons.FILE_NEW);
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			insertPoint();
+		}
+
+		@Override
+		public void updateEnabledState() {
+			// You can't add to the last fin point
+			setEnabled(table.getSelectedRow() < table.getRowCount() - 1);
+		}
+	}
+
+	private class DeletePointAction extends FinPointAction {
+		public DeletePointAction() {
+			putValue(NAME, trans.get("FreeformFinSetConfig.lbl.deletePoint"));
+			this.putValue(SMALL_ICON, Icons.EDIT_DELETE);
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			deletePoint();
+		}
+
+		@Override
+		public void updateEnabledState() {
+			// You can't delete the first or last fin point
+			setEnabled(table.getSelectedRow() > 0 && table.getSelectedRow() < table.getRowCount() - 1);
 		}
 	}
 }

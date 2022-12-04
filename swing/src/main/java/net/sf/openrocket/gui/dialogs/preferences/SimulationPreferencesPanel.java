@@ -15,6 +15,7 @@ import net.sf.openrocket.gui.SpinnerEditor;
 import net.sf.openrocket.gui.adaptors.DoubleModel;
 import net.sf.openrocket.gui.adaptors.EnumModel;
 import net.sf.openrocket.gui.components.BasicSlider;
+import net.sf.openrocket.gui.components.StyledLabel;
 import net.sf.openrocket.gui.components.UnitSelector;
 import net.sf.openrocket.simulation.RK4SimulationStepper;
 import net.sf.openrocket.unit.UnitGroup;
@@ -64,7 +65,6 @@ public class SimulationPreferencesPanel extends PreferencesPanel {
 		JPanel sub, subsub;
 		String tip;
 		JLabel label;
-		DoubleModel m;
 		JSpinner spin;
 		UnitSelector unit;
 		BasicSlider slider;
@@ -79,6 +79,14 @@ public class SimulationPreferencesPanel extends PreferencesPanel {
 		// Separate panel for computation methods, as they use a different
 		// layout
 		subsub = new JPanel(new MigLayout("insets 0, fill", "[grow][min!][min!][]"));
+
+		// // Warning
+		StyledLabel warning = new StyledLabel(String.format(
+				"<html>%s</html>", trans.get("pref.dlg.lbl.launchWarning")),
+				0, StyledLabel.Style.BOLD);
+		warning.setFontColor(net.sf.openrocket.util.Color.DARK_RED.toAWTColor());
+		warning.setToolTipText(trans.get("pref.dlg.lbl.launchWarning.ttip"));
+		subsub.add(warning, "spanx, wrap para");
 
 		// // Calculation method:
 		tip = trans.get("simedtdlg.lbl.ttip.Calcmethod");
@@ -116,6 +124,7 @@ public class SimulationPreferencesPanel extends PreferencesPanel {
 				GeodeticComputationStrategy gcs = (GeodeticComputationStrategy) gcsCombo
 						.getSelectedItem();
 				gcsCombo.setToolTipText(gcs.getDescription());
+				gcsCombo.repaint(); // On some machines, the combobox did not visually update to the selected item
 			}
 		};
 		gcsCombo.addActionListener(gcsTTipListener);
@@ -134,18 +143,18 @@ public class SimulationPreferencesPanel extends PreferencesPanel {
 		label.setToolTipText(tip);
 		subsub.add(label, "gapright para");
 
-		m = new DoubleModel(preferences, "TimeStep", UnitGroup.UNITS_TIME_STEP,
-				0, 1);
+		DoubleModel m_ts = new DoubleModel(preferences, "TimeStep", UnitGroup.UNITS_TIME_STEP,
+				0.01, 1);
 
-		spin = new JSpinner(m.getSpinnerModel());
+		spin = new JSpinner(m_ts.getSpinnerModel());
 		spin.setEditor(new SpinnerEditor(spin));
 		spin.setToolTipText(tip);
 		subsub.add(spin, "");
 
-		unit = new UnitSelector(m);
+		unit = new UnitSelector(m_ts);
 		unit.setToolTipText(tip);
 		subsub.add(unit, "");
-		slider = new BasicSlider(m.getSliderModel(0, 0.2));
+		slider = new BasicSlider(m_ts.getSliderModel(0.01, 0.2));
 		slider.setToolTipText(tip);
 		subsub.add(slider, "w 100");
 
@@ -161,10 +170,9 @@ public class SimulationPreferencesPanel extends PreferencesPanel {
 		button.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				preferences
-						.setTimeStep(RK4SimulationStepper.RECOMMENDED_TIME_STEP);
-				preferences
-						.setGeodeticComputation(GeodeticComputationStrategy.SPHERICAL);
+				m_ts.setValue(RK4SimulationStepper.RECOMMENDED_TIME_STEP);
+				gcsModel.setSelectedItem(GeodeticComputationStrategy.SPHERICAL);
+				gcsCombo.repaint();
 			}
 		});
 

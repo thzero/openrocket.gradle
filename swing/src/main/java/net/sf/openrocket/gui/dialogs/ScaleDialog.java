@@ -6,12 +6,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -98,7 +96,13 @@ public class ScaleDialog extends JDialog {
 		// Body tube
 		addScaler(BodyTube.class, "OuterRadius", "isOuterRadiusAutomatic", SCALERS_NO_OFFSET);
 		addScaler(BodyTube.class, "MotorOverhang", SCALERS_NO_OFFSET);
-		
+
+		// Rail button
+		list = new ArrayList<>(1);
+		list.add(new RailButtonScaler());
+		SCALERS_NO_OFFSET.put(RailButton.class, list);
+		addScaler(RailButton.class, "InstanceSeparation", SCALERS_OFFSET);
+
 		// Launch lug
 		addScaler(LaunchLug.class, "OuterRadius", SCALERS_NO_OFFSET);
 		addScaler(LaunchLug.class, "Thickness", SCALERS_NO_OFFSET);
@@ -121,17 +125,19 @@ public class ScaleDialog extends JDialog {
 		addScaler(EllipticalFinSet.class, "Height", SCALERS_NO_OFFSET);
 		
 		// FreeformFinSet
-		list = new ArrayList<ScaleDialog.Scaler>(1);
+		list = new ArrayList<>(1);
 		list.add(new FreeformFinSetScaler());
 		SCALERS_NO_OFFSET.put(FreeformFinSet.class, list);
 		
 		// MassObject
-		addScaler(MassObject.class, "Length", SCALERS_NO_OFFSET);
-		addScaler(MassObject.class, "Radius", SCALERS_NO_OFFSET);
+		list = new ArrayList<>(1);
+		list.add(new MassObjectScaler());
+		SCALERS_NO_OFFSET.put(MassObject.class, list);
+		addScaler(MassObject.class, "Radius", "isRadiusAutomatic", SCALERS_NO_OFFSET);
 		addScaler(MassObject.class, "RadialPosition", SCALERS_OFFSET);
 		
 		// MassComponent
-		list = new ArrayList<ScaleDialog.Scaler>(1);
+		list = new ArrayList<>(1);
 		list.add(new MassComponentScaler());
 		SCALERS_NO_OFFSET.put(MassComponent.class, list);
 		
@@ -151,15 +157,17 @@ public class ScaleDialog extends JDialog {
 		addScaler(RingComponent.class, "RadialPosition", SCALERS_OFFSET);
 		
 		// ThicknessRingComponent
-		addScaler(ThicknessRingComponent.class, "OuterRadius", "isOuterRadiusAutomatic", SCALERS_NO_OFFSET);
-		addScaler(ThicknessRingComponent.class, "Thickness", SCALERS_NO_OFFSET);
+		list = new ArrayList<>(1);
+		list.add(new ThicknessRingComponentScaler());
+		SCALERS_NO_OFFSET.put(ThicknessRingComponent.class, list);
 		
 		// InnerTube
 		addScaler(InnerTube.class, "MotorOverhang", SCALERS_NO_OFFSET);
 		
 		// RadiusRingComponent
-		addScaler(RadiusRingComponent.class, "OuterRadius", "isOuterRadiusAutomatic", SCALERS_NO_OFFSET);
-		addScaler(RadiusRingComponent.class, "InnerRadius", "isInnerRadiusAutomatic", SCALERS_NO_OFFSET);
+		list = new ArrayList<>(1);
+		list.add(new RadiusRingComponentScaler());
+		SCALERS_NO_OFFSET.put(RadiusRingComponent.class, list);
 	}
 	
 	private static void addScaler(Class<? extends RocketComponent> componentClass, String methodName,
@@ -193,6 +201,7 @@ public class ScaleDialog extends JDialog {
 	
 	
 	private final DoubleModel multiplier = new DoubleModel(1.0, UnitGroup.UNITS_RELATIVE, SCALE_MIN, SCALE_MAX);
+	private UnitSelector multiplierUnit;
 	private final DoubleModel fromField = new DoubleModel(0, UnitGroup.UNITS_LENGTH, 0);
 	private final DoubleModel toField = new DoubleModel(0, UnitGroup.UNITS_LENGTH, 0);
 	
@@ -229,7 +238,7 @@ public class ScaleDialog extends JDialog {
 		super(parent, trans.get("title"), ModalityType.APPLICATION_MODAL);
 		
 		this.document = document;
-		this.selection = selection;
+		this.selection = new ArrayList<>(selection);
 		this.onlySelection = onlySelection;
 		
 		init();
@@ -345,17 +354,31 @@ public class ScaleDialog extends JDialog {
 		selectionOption.setToolTipText(tip);
 		panel.add(selectionOption, "growx, wrap para*2");
 
-		// Change the offset checkbox to false when 'Scale selection' is selection and only one component is selected,
-		// since this is a common action.
-		selectionOption.addItemListener(new ItemListener() {
-			@Override
-			public void itemStateChanged(ItemEvent e) {
-				if (SCALE_SELECTION.equals(selectionOption.getSelectedItem()) && (selection != null) &&
-						(selection.size() == 1) && (scaleOffsets != null)) {
-					scaleOffsets.setSelected(false);
+		// Select the 'scale component / scale selection and all subcomponents' if a component is selected
+		if (options.size() > 1 && selection != null && selection.size() > 0) {
+			boolean entireRocket = false;	// Flag to scale entire rocket
+			for (RocketComponent component : selection) {
+				if (component instanceof Rocket || (component instanceof AxialStage && !(component instanceof ParallelStage))) {
+					entireRocket = true;
+					break;
 				}
 			}
-		});
+			if (!entireRocket) {
+				selectionOption.setSelectedIndex(1);
+			}
+		}
+
+		// Change the offset checkbox to false when 'Scale selection' is selection and only one component is selected,
+		// since this is a common action.
+		ItemListener listener = new ItemListener() {
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				if (scaleOffsets == null) return;
+
+				scaleOffsets.setSelected(!SCALE_SELECTION.equals(selectionOption.getSelectedItem()));
+			}
+		};
+		selectionOption.addItemListener(listener);
 		
 		
 		// Scale multiplier
@@ -368,11 +391,11 @@ public class ScaleDialog extends JDialog {
 		JSpinner spin = new JSpinner(multiplier.getSpinnerModel());
 		spin.setEditor(new SpinnerEditor(spin));
 		spin.setToolTipText(tip);
-		panel.add(spin, "w :30lp:65lp");
+		panel.add(spin, "wmin 40lp, growx 1000");
 		
-		UnitSelector unit = new UnitSelector(multiplier);
-		unit.setToolTipText(tip);
-		panel.add(unit, "w 30lp");
+		multiplierUnit = new UnitSelector(multiplier);
+		multiplierUnit.setToolTipText(tip);
+		panel.add(multiplierUnit, "w 30lp");
 		BasicSlider slider = new BasicSlider(multiplier.getSliderModel(0.25, 1.0, 4.0));
 		slider.setToolTipText(tip);
 		panel.add(slider, "w 100lp, growx, wrap para");
@@ -387,9 +410,9 @@ public class ScaleDialog extends JDialog {
 		spin = new JSpinner(fromField.getSpinnerModel());
 		spin.setEditor(new SpinnerEditor(spin));
 		spin.setToolTipText(tip);
-		panel.add(spin, "span, split, w :30lp:65lp");
-		
-		unit = new UnitSelector(fromField);
+		panel.add(spin, "span, split, wmin 40lp, growx 1000");
+
+		UnitSelector unit = new UnitSelector(fromField);
 		unit.setToolTipText(tip);
 		panel.add(unit, "w 30lp");
 		
@@ -400,7 +423,7 @@ public class ScaleDialog extends JDialog {
 		spin = new JSpinner(toField.getSpinnerModel());
 		spin.setEditor(new SpinnerEditor(spin));
 		spin.setToolTipText(tip);
-		panel.add(spin, "w :30lp:65lp");
+		panel.add(spin, "wmin 40lp, growx 1000");
 		
 		unit = new UnitSelector(toField);
 		unit.setToolTipText(tip);
@@ -424,7 +447,7 @@ public class ScaleDialog extends JDialog {
 		// Scale offsets
 		scaleOffsets = new JCheckBox(trans.get("checkbox.scaleOffsets"));
 		scaleOffsets.setToolTipText(trans.get("checkbox.scaleOffsets.ttip"));
-		scaleOffsets.setSelected(true);
+		listener.itemStateChanged(null);		// Triggers the selection state of scaleOffsets
 		panel.add(scaleOffsets, "span, wrap para*3");
 		
 		
@@ -457,7 +480,7 @@ public class ScaleDialog extends JDialog {
 		});
 		panel.add(cancel, "right, gap para");
 		
-		
+
 		
 		GUIUtil.setDisposableDialogOptions(this, scale);
 	}
@@ -467,7 +490,11 @@ public class ScaleDialog extends JDialog {
 	private void doScale() {
 		double mul = multiplier.getValue();
 		if (!(SCALE_MIN <= mul && mul <= SCALE_MAX)) {
-			Application.getExceptionHandler().handleErrorCondition("Illegal multiplier value, mul=" + mul);
+			if (multiplierUnit == null) {
+				Application.getExceptionHandler().handleErrorCondition("Illegal multiplier value, mul=" + mul);
+			} else {
+				Application.getExceptionHandler().handleErrorCondition("Illegal multiplier value, mul=" + multiplierUnit.getSelectedUnit().toStringUnit(mul));
+			}
 			return;
 		}
 		
@@ -478,57 +505,41 @@ public class ScaleDialog extends JDialog {
 		}
 		
 		boolean scaleMass = scaleMassValues.isSelected();
-		
+
+		// Apply the selected scaling mode
+		Iterable<RocketComponent> scaleComponents = selection;
 		Object item = selectionOption.getSelectedItem();
 		log.info(Markers.USER_MARKER, "Scaling design by factor " + mul + ", option=" + item);
 		if (SCALE_ROCKET.equals(item)) {
-			
+			document.startUndo(trans.get("undo.scaleRocket"));
+
 			// Scale the entire rocket design
-			try {
-				document.startUndo(trans.get("undo.scaleRocket"));
-				for (RocketComponent c : document.getRocket()) {
-					scale(c, mul, scaleMass, scaleOffsets.isSelected());
-				}
-			} finally {
-				document.stopUndo();
-			}
-			
+			scaleComponents = document.getRocket();
 		} else if (SCALE_SUBSELECTION.equals(item)) {
-			
-			// Scale component and subcomponents
-			try {
-				document.startUndo(trans.get("undo.scaleComponents"));
-
-				// Keep track of which components are already scaled so that we don't scale children multiple times (if
-				// they were also part of selection)
-				List<RocketComponent> scaledComponents = new ArrayList<>();
-				for (RocketComponent component : selection) {
-					scale(component, mul, scaleMass, scaleOffsets.isSelected());
-					scaledComponents.add(component);
-
-					if (component.getChildCount() > 0) {
-						scaleChildren(component, scaledComponents, mul, scaleMass);
-					}
-				}
-			} finally {
-				document.stopUndo();
+			document.startUndo(trans.get("undo.scaleComponents"));
+			for (RocketComponent component : new ArrayList<>(selection)) {
+				addChildrenToSelection(component);
 			}
-			
 		} else if (SCALE_SELECTION.equals(item)) {
-			
-			// Scale only the selected components
-			try {
-				document.startUndo(trans.get("undo.scaleComponent"));
-
-				for (RocketComponent component : selection) {
-					scale(component, mul, scaleMass, scaleOffsets.isSelected());
-				}
-			} finally {
-				document.stopUndo();
-			}
-			
+			document.startUndo(trans.get("undo.scaleComponent"));
 		} else {
 			throw new BugException("Unknown item selected, item=" + item);
+		}
+
+		// Perform the scaling
+		try {
+			// Scale the offsets
+			if (scaleOffsets.isSelected()) {
+				for (RocketComponent component : scaleComponents) {
+					scaleOffset(component, mul, scaleMass);
+				}
+			}
+			// Scale the components
+			for (RocketComponent component : scaleComponents) {
+				scale(component, mul, scaleMass);
+			}
+		} finally {
+			document.stopUndo();
 		}
 	}
 
@@ -538,44 +549,59 @@ public class ScaleDialog extends JDialog {
 	 * @param component component to be scaled
 	 * @param mul scaling factor
 	 * @param scaleMass flag to check if the mass should be scaled as well
-	 * @param scaleOffset flag to check if the axial/radial offsets should be scaled as well
 	 */
-	private void scale(RocketComponent component, double mul, boolean scaleMass, boolean scaleOffset) {
-		
+	private void scale(RocketComponent component, double mul, boolean scaleMass) {
 		Class<?> clazz = component.getClass();
+		List<Class<?>> classes = new ArrayList<>();
 		while (clazz != null) {
-			List<Scaler> list = null;
-			if (scaleOffset) {
-				Stream<Scaler> strm_no_offset = SCALERS_NO_OFFSET.get(clazz) == null ? Stream.empty() : SCALERS_NO_OFFSET.get(clazz).stream();
-				Stream<Scaler> strm_offset = SCALERS_OFFSET.get(clazz) == null ? Stream.empty() : SCALERS_OFFSET.get(clazz).stream();
-				list = Stream.concat(strm_no_offset, strm_offset).distinct().collect(Collectors.toList());
-			}
-			else {
-				list = SCALERS_NO_OFFSET.get(clazz);
-			}
-			if (list != null) {
+			classes.add(clazz);
+			clazz = clazz.getSuperclass();
+		}
+		Collections.reverse(classes);	// Always do the super component scales first (can cause problems otherwise in the scale order)
+		for (Class<?> cl : classes) {
+			List<Scaler> list = SCALERS_NO_OFFSET.get(cl);
+			if (list != null && list.size() > 0) {
 				for (Scaler s : list) {
 					s.scale(component, mul, scaleMass);
 				}
 			}
-			
-			clazz = clazz.getSuperclass();
 		}
 	}
 
 	/**
-	 * Iteratively scale the children of component. If one of the children was already present in scaledComponents,
-	 * don't scale it.
-	 * @param component component whose children need to be scaled
-	 * @param scaledComponents list of components that were already scaled
+	 * Perform scaling of the axial/radial offsets a single component.
+	 * @param component component to be scaled
+	 * @param mul scaling factor
+	 * @param scaleMass flag to check if the mass should be scaled as well
 	 */
-	private void scaleChildren(RocketComponent component, List<RocketComponent> scaledComponents, double mul, boolean scaleMass) {
-		for (RocketComponent child : component.getChildren()) {
-			if (!scaledComponents.contains(component)) {
-				scale(child, mul, scaleMass, scaleOffsets.isSelected());
-				scaledComponents.add(child);
-				scaleChildren(child, scaledComponents, mul, scaleMass);
+	private void scaleOffset(RocketComponent component, double mul, boolean scaleMass) {
+		Class<?> clazz = component.getClass();
+		List<Class<?>> classes = new ArrayList<>();
+		while (clazz != null) {
+			classes.add(clazz);
+			clazz = clazz.getSuperclass();
+		}
+		Collections.reverse(classes);	// Always do the super component scales first (can cause problems otherwise in the scaleNoOffset order)
+		for (Class<?> cl : classes) {
+			List<Scaler> list = SCALERS_OFFSET.get(cl);
+			if (list != null && list.size() > 0) {
+				for (Scaler s : list) {
+					s.scale(component, mul, scaleMass);
+				}
 			}
+		}
+	}
+
+	/**
+	 * Iteratively add the children of component to the component selection list.
+	 * @param component component whose children need to be added
+	 */
+	private void addChildrenToSelection(RocketComponent component) {
+		for (RocketComponent child : component.getChildren()) {
+			if (!selection.contains(child)) {
+				selection.add(child);
+			}
+			addChildrenToSelection(child);
 		}
 	}
 	
@@ -684,6 +710,25 @@ public class ScaleDialog extends JDialog {
 		}
 		
 	}
+
+	private static class MassObjectScaler implements Scaler {
+		@Override
+		public void scale(RocketComponent component, double multiplier, boolean scaleMass) {
+			if (scaleMass) {
+				MassObject c = (MassObject) component;
+				if (c.isRadiusAutomatic()) {
+					double volume = Math.PI * Math.pow(c.getRadiusNoAuto(), 2) * c.getLengthNoAuto();
+					double scaledVolume = volume * MathUtil.pow3(multiplier);
+					c.setRadius(c.getRadiusNoAuto() * multiplier);
+					c.setLengthNoAuto(scaledVolume / (Math.PI * Math.pow(c.getRadiusNoAuto(), 2)));
+					c.setRadiusAutomatic(true);
+				} else {
+					c.setLength(c.getLength() * multiplier);
+				}
+			}
+		}
+
+	}
 	
 	private static class FreeformFinSetScaler implements Scaler {
 		
@@ -699,6 +744,77 @@ public class ScaleDialog extends JDialog {
 			
 		}
 		
+	}
+
+	private static class RadiusRingComponentScaler implements Scaler {
+
+		@Override
+		public void scale(RocketComponent component, double multiplier, boolean scaleMass) {
+			final Map<Class<? extends RocketComponent>, List<Scaler>> scalers = new HashMap<>();
+			// We need to specify this particular order, otherwise scale the inner/outer radius may clip the dimensions of the other outer/inner radius
+			if (multiplier >= 1) {			// Scale up
+				addScaler(RadiusRingComponent.class, "OuterRadius", "isOuterRadiusAutomatic", scalers);
+				addScaler(RadiusRingComponent.class, "InnerRadius", "isInnerRadiusAutomatic", scalers);
+			} else {						// Scale down
+				addScaler(RadiusRingComponent.class, "InnerRadius", "isInnerRadiusAutomatic", scalers);
+				addScaler(RadiusRingComponent.class, "OuterRadius", "isOuterRadiusAutomatic", scalers);
+			}
+
+			for (List<Scaler> foo : scalers.values()) {
+				for (Scaler s : foo) {
+					s.scale(component, multiplier, scaleMass);
+				}
+			}
+		}
+
+	}
+
+	private static class ThicknessRingComponentScaler implements Scaler {
+		@Override
+		public void scale(RocketComponent component, double multiplier, boolean scaleMass) {
+			final Map<Class<? extends RocketComponent>, List<Scaler>> scalers = new HashMap<>();
+			// We need to specify this particular order, otherwise scale the inner/outer radius may clip the dimensions of the other outer/inner radius
+			if (multiplier >= 1) {			// Scale up
+				addScaler(ThicknessRingComponent.class, "OuterRadius", "isOuterRadiusAutomatic", scalers);
+				addScaler(ThicknessRingComponent.class, "Thickness", scalers);
+			} else {						// Scale down
+				addScaler(ThicknessRingComponent.class, "Thickness", scalers);
+				addScaler(ThicknessRingComponent.class, "OuterRadius", "isOuterRadiusAutomatic", scalers);
+			}
+
+			for (List<Scaler> foo : scalers.values()) {
+				for (Scaler s : foo) {
+					s.scale(component, multiplier, scaleMass);
+				}
+			}
+		}
+	}
+
+	private static class RailButtonScaler implements Scaler {
+		@Override
+		public void scale(RocketComponent component, double multiplier, boolean scaleMass) {
+			final Map<Class<? extends RocketComponent>, List<Scaler>> scalers = new HashMap<>();
+			// We need to specify this particular order, otherwise scale the inner/outer radius may clip the dimensions of the other outer/inner radius
+			if (multiplier >= 1) {			// Scale up
+				addScaler(RailButton.class, "OuterDiameter", scalers);
+				addScaler(RailButton.class, "InnerDiameter", scalers);
+				addScaler(RailButton.class, "TotalHeight", scalers);
+				addScaler(RailButton.class, "BaseHeight", scalers);
+				addScaler(RailButton.class, "FlangeHeight", scalers);
+			} else {						// Scale down
+				addScaler(RailButton.class, "InnerDiameter", scalers);
+				addScaler(RailButton.class, "OuterDiameter", scalers);
+				addScaler(RailButton.class, "BaseHeight", scalers);
+				addScaler(RailButton.class, "FlangeHeight", scalers);
+				addScaler(RailButton.class, "TotalHeight", scalers);
+			}
+
+			for (List<Scaler> foo : scalers.values()) {
+				for (Scaler s : foo) {
+					s.scale(component, multiplier, scaleMass);
+				}
+			}
+		}
 	}
 	
 }

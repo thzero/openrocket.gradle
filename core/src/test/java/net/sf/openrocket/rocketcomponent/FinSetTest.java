@@ -1,3 +1,4 @@
+// thzero
 package net.sf.openrocket.rocketcomponent;
 
 import static org.junit.Assert.assertEquals;
@@ -8,7 +9,9 @@ import org.junit.Test;
 
 import net.sf.openrocket.rocketcomponent.position.*;
 import net.sf.openrocket.util.Coordinate;
+// thzero - begin
 import net.sf.openrocket.util.BaseTestCase;
+// thzero - end
 
 public class FinSetTest extends BaseTestCase {
 

@@ -4,7 +4,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
@@ -12,9 +14,11 @@ import javax.swing.JSpinner;
 import net.miginfocom.swing.MigLayout;
 import net.sf.openrocket.document.OpenRocketDocument;
 import net.sf.openrocket.gui.SpinnerEditor;
+import net.sf.openrocket.gui.adaptors.CustomFocusTraversalPolicy;
 import net.sf.openrocket.gui.adaptors.DoubleModel;
 import net.sf.openrocket.gui.adaptors.EnumModel;
 import net.sf.openrocket.gui.components.BasicSlider;
+import net.sf.openrocket.gui.components.StyledLabel;
 import net.sf.openrocket.gui.components.UnitSelector;
 import net.sf.openrocket.l10n.Translator;
 import net.sf.openrocket.rocketcomponent.MassComponent;
@@ -29,12 +33,15 @@ import net.sf.openrocket.gui.widgets.SelectColorButton;
 public class MassComponentConfig extends RocketComponentConfig {
 	private static final Translator trans = Application.getTranslator();
 	
-	public MassComponentConfig(OpenRocketDocument d, RocketComponent component) {
-		super(d, component);
-		
-		
+	public MassComponentConfig(OpenRocketDocument d, RocketComponent component, JDialog parent) {
+		super(d, component, parent);
+
+		//// Left side
 		JPanel panel = new JPanel(new MigLayout("gap rel unrel", "[][65lp::][30lp::]", ""));
-		
+
+		//// Attributes
+		panel.add(new StyledLabel(trans.get("MassComponentCfg.lbl.Attributes"), StyledLabel.Style.BOLD), "wrap unrel");
+
 		//// Mass component type
 		panel.add(new JLabel(trans.get("MassComponentCfg.lbl.type")));
 		
@@ -50,7 +57,8 @@ public class MassComponentConfig extends RocketComponentConfig {
 								MassComponent.MassComponentType.RECOVERYHARDWARE,
 								MassComponent.MassComponentType.BATTERY}));
 		
-		panel.add(typecombo, "spanx, growx, wrap");
+		panel.add(typecombo, "spanx, wrap");
+		order.add(typecombo);
 		
 		////  Mass
 		panel.add(new JLabel(trans.get("MassComponentCfg.lbl.Mass")));
@@ -60,11 +68,12 @@ public class MassComponentConfig extends RocketComponentConfig {
 		JSpinner spin = new JSpinner(m.getSpinnerModel());
 		spin.setEditor(new SpinnerEditor(spin));
 		panel.add(spin, "growx");
+		order.add(((SpinnerEditor) spin.getEditor()).getTextField());
 		
 		panel.add(new UnitSelector(m), "growx");
 		panel.add(new BasicSlider(m.getSliderModel(0, 0.05, 0.5)), "w 100lp, wrap");
 		
-		
+		/// Approximate Density
 		panel.add(new JLabel(trans.get("MassComponentCfg.lbl.Density")));
 		
 		m = new DoubleModel(component, "Density", UnitGroup.UNITS_DENSITY_BULK, 0);
@@ -72,6 +81,7 @@ public class MassComponentConfig extends RocketComponentConfig {
 		spin = new JSpinner(m.getSpinnerModel());
 		spin.setEditor(new SpinnerEditor(spin));
 		panel.add(spin, "growx");
+		order.add(((SpinnerEditor) spin.getEditor()).getTextField());
 		
 		panel.add(new UnitSelector(m), "growx");
 		panel.add(new BasicSlider(m.getSliderModel(500, 2000, 10000)), "w 100lp, wrap");
@@ -87,6 +97,7 @@ public class MassComponentConfig extends RocketComponentConfig {
 		spin = new JSpinner(m.getSpinnerModel());
 		spin.setEditor(new SpinnerEditor(spin));
 		panel.add(spin, "growx");
+		order.add(((SpinnerEditor) spin.getEditor()).getTextField());
 		
 		panel.add(new UnitSelector(m), "growx");
 		panel.add(new BasicSlider(m.getSliderModel(0, 0.1, 0.5)), "w 100lp, wrap");
@@ -102,28 +113,45 @@ public class MassComponentConfig extends RocketComponentConfig {
 		spin = new JSpinner(od.getSpinnerModel());
 		spin.setEditor(new SpinnerEditor(spin));
 		panel.add(spin, "growx");
+		order.add(((SpinnerEditor) spin.getEditor()).getTextField());
 		
 		panel.add(new UnitSelector(od), "growx");
 		panel.add(new BasicSlider(od.getSliderModel(0, 0.04, 0.2)), "w 100lp, wrap");
-		
-		
-		////  Position
+
+		////// Automatic
+		JCheckBox checkAutoPackedRadius = new JCheckBox(od.getAutomaticAction());
+		checkAutoPackedRadius.setText(trans.get("ParachuteCfg.checkbox.AutomaticPacked"));
+		checkAutoPackedRadius.setToolTipText(trans.get("ParachuteCfg.checkbox.AutomaticPacked.ttip"));
+		panel.add(checkAutoPackedRadius, "skip, span 2, wrap");
+		order.add(checkAutoPackedRadius);
+
+
+		//// Right side
+		JPanel panel2 = new JPanel(new MigLayout("gap rel unrel", "[][65lp::][30lp::]", ""));
+		panel.add(panel2, "cell 4 0, gapleft paragraph, aligny 0%, spany");
+
+		//// Placement
+		panel2.add(new StyledLabel(trans.get("MassComponentCfg.lbl.Placement"), StyledLabel.Style.BOLD), "wrap unrel");
+
 		//// Position relative to:
-		panel.add(new JLabel(trans.get("MassComponentCfg.lbl.PosRelativeto")));
+		panel2.add(new JLabel(trans.get("MassComponentCfg.lbl.PosRelativeto")));
 		
         final EnumModel<AxialMethod> methodModel = new EnumModel<AxialMethod>(component, "AxialMethod", AxialMethod.axialOffsetMethods );
         final JComboBox<?> methodCombo = new JComboBox<AxialMethod>( methodModel );
-		panel.add(methodCombo, "spanx, growx, wrap");
+		panel2.add(methodCombo, "spanx, growx, wrap");
+		order.add(methodCombo);
+
 		//// plus
-		panel.add(new JLabel(trans.get("MassComponentCfg.lbl.plus")), "right");
+		panel2.add(new JLabel(trans.get("MassComponentCfg.lbl.plus")), "right");
 		
 		m = new DoubleModel(component, "AxialOffset", UnitGroup.UNITS_LENGTH);
 		spin = new JSpinner(m.getSpinnerModel());
 		spin.setEditor(new SpinnerEditor(spin));
-		panel.add(spin, "growx");
+		panel2.add(spin, "growx");
+		order.add(((SpinnerEditor) spin.getEditor()).getTextField());
 		
-		panel.add(new UnitSelector(m), "growx");
-		panel.add(new BasicSlider(m.getSliderModel(
+		panel2.add(new UnitSelector(m), "growx");
+		panel2.add(new BasicSlider(m.getSliderModel(
 				new DoubleModel(component.getParent(), "Length", -1.0, UnitGroup.UNITS_NONE),
 				new DoubleModel(component.getParent(), "Length"))),
 				"w 100lp, wrap");
@@ -136,6 +164,11 @@ public class MassComponentConfig extends RocketComponentConfig {
 		tabbedPane.insertTab(trans.get("MassComponentCfg.tab.Radialpos"), null, positionTab(),
 				trans.get("MassComponentCfg.tab.ttip.Radialpos"), 1);
 		tabbedPane.setSelectedIndex(0);
+
+		// Apply the custom focus travel policy to this config dialog
+		order.add(closeButton);		// Make sure the close button is the last component
+		CustomFocusTraversalPolicy policy = new CustomFocusTraversalPolicy(order);
+		parent.setFocusTraversalPolicy(policy);
 	}
 	
 	
@@ -151,6 +184,7 @@ public class MassComponentConfig extends RocketComponentConfig {
 		JSpinner spin = new JSpinner(m.getSpinnerModel());
 		spin.setEditor(new SpinnerEditor(spin));
 		panel.add(spin, "growx");
+		order.add(((SpinnerEditor) spin.getEditor()).getTextField());
 		
 		panel.add(new UnitSelector(m), "growx");
 		panel.add(new BasicSlider(m.getSliderModel(0, 0.1, 1.0)), "w 100lp, wrap");
@@ -164,6 +198,7 @@ public class MassComponentConfig extends RocketComponentConfig {
 		spin = new JSpinner(m.getSpinnerModel());
 		spin.setEditor(new SpinnerEditor(spin));
 		panel.add(spin, "growx");
+		order.add(((SpinnerEditor) spin.getEditor()).getTextField());
 		
 		panel.add(new UnitSelector(m), "growx");
 		panel.add(new BasicSlider(m.getSliderModel(-Math.PI, Math.PI)), "w 100lp, wrap");
@@ -179,7 +214,8 @@ public class MassComponentConfig extends RocketComponentConfig {
 			}
 		});
 		panel.add(button, "spanx, right");
-		
+		order.add(button);
+
 		return panel;
 	}
 }

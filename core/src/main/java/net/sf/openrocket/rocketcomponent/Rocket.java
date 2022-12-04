@@ -1,6 +1,7 @@
 package net.sf.openrocket.rocketcomponent;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,7 +63,7 @@ public class Rocket extends ComponentAssembly {
 	// Flight configuration list
 	private FlightConfiguration selectedConfiguration;
 	private FlightConfigurableParameterSet<FlightConfiguration> configSet;
-	private HashMap<Integer, AxialStage> stageMap = new HashMap<>();
+	private ConcurrentHashMap<Integer, AxialStage> stageMap = new ConcurrentHashMap<>();
 	
 	// Does the rocket have a perfect finish (a notable amount of laminar flow)
 	private boolean perfectFinish = false;
@@ -91,7 +92,7 @@ public class Rocket extends ComponentAssembly {
 	 *
 	 * @return    Return a bounding box enveloping the rocket
 	 */
-	public BoundingBox getBoundingBox (){ return selectedConfiguration.getBoundingBox(); }
+	public BoundingBox getBoundingBox (){ return selectedConfiguration.getBoundingBoxAerodynamic(); }
 
 	public String getDesigner() {
 		checkState();
@@ -197,24 +198,46 @@ public class Rocket extends ComponentAssembly {
 	public AxialStage getStage( final int stageNumber ) {
 		return this.stageMap.get( stageNumber);
 	}
-	
-	/*
-	 * Returns the stage at the top of the central stack
-	 * 
-	 * @Return a reference to the topmost stage
-	 */
-	public AxialStage getTopmostStage(){
-		return (AxialStage) getChild(0);
+
+	public AxialStage getStage(final String stageId) {
+		for (AxialStage stage : getStageList()) {
+			if (stage.getID().equals(stageId)) {
+				return stage;
+			}
+		}
+		return null;
 	}
-	
-	/*
-	 * Returns the stage at the top of the central stack
-	 * 
-	 * @Return a reference to the topmost stage
+
+	/**
+	 * Get the topmost stage (including boosters), only taking into account active stages from the flight configuration.
+	 * @param config flight configuration dictating which stages are active
+	 * @return the topmost active stage, or null if there are no active stages.
 	 */
-	/*package-local*/ AxialStage getBottomCoreStage(){
-		// get last stage that's a direct child of the rocket.
-		return (AxialStage) children.get( children.size()-1 );
+	public AxialStage getTopmostStage(FlightConfiguration config) {
+		if (config == null) return null;
+
+		for (AxialStage stage : getStageList()) {
+			if (config.isStageActive(stage.getStageNumber())) {
+				return stage;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Get the bottommost stage, only taking into account active stages from the flight configuration.
+	 * @param config flight configuration dictating which stages are active
+	 * @return the bottommost active stage, or null if there are no active stages.
+	 */
+	public AxialStage getBottomCoreStage(FlightConfiguration config) {
+		if (config == null) return null;
+
+		for (int i = getChildCount() - 1; i >= 0; i--) {
+			if (getChild(i) instanceof AxialStage && config.isStageActive(getChild(i).getStageNumber())) {
+				return (AxialStage) getChild(i);
+			}
+		}
+		return null;
 	}
 	
 	@Override
@@ -274,6 +297,11 @@ public class Rocket extends ComponentAssembly {
 		refType = type;
 		fireComponentChangeEvent(ComponentChangeEvent.NONFUNCTIONAL_CHANGE);
 	}
+
+	@Override
+	public double getLength() {
+		return selectedConfiguration.getLength();
+	}
 	
 	
 	public double getCustomReferenceLength() {
@@ -290,6 +318,17 @@ public class Rocket extends ComponentAssembly {
 		if (refType == ReferenceType.CUSTOM) {
 			fireComponentChangeEvent(ComponentChangeEvent.NONFUNCTIONAL_CHANGE);
 		}
+	}
+
+	@Override
+	public double getBoundingRadius() {
+		double bounding = 0;
+		for (RocketComponent comp : children) {
+			if (comp instanceof ComponentAssembly) {
+				bounding = Math.max(bounding, ((ComponentAssembly) comp).getBoundingRadius());
+			}
+		}
+		return bounding;
 	}
 	
 	
@@ -333,7 +372,7 @@ public class Rocket extends ComponentAssembly {
 		final Rocket copyRocket = (Rocket) super.copyWithOriginalID();
 
 		// Rocket copy is cloned, so non-trivial members must be cloned as well:
-		copyRocket.stageMap = new HashMap<>();
+		copyRocket.stageMap = new ConcurrentHashMap<>();
 		for( Map.Entry<Integer,AxialStage> entry : this.stageMap.entrySet()){
 			final AxialStage stage = (AxialStage)copyRocket.findComponent(entry.getValue().getID());
 			copyRocket.stageMap.put(entry.getKey(), stage);
@@ -390,10 +429,12 @@ public class Rocket extends ComponentAssembly {
 		this.stageMap = r.stageMap;		
 
 		// these flight configurations need to reference the _this_ Rocket:
+		this.configSet.reset();
 		this.configSet.setDefault(new FlightConfiguration(this));
 		for (FlightConfigurationId key : r.configSet.map.keySet()) {
 			this.configSet.set(key, new FlightConfiguration(this, key));
 		}
+		this.selectedConfiguration = this.configSet.get(r.getSelectedConfiguration().getId());
 
 		this.perfectFinish = r.perfectFinish;
 		
@@ -483,9 +524,9 @@ public class Rocket extends ComponentAssembly {
 			// Notify all components first
 			Iterator<RocketComponent> iterator = this.iterator(true);
 			while (iterator.hasNext()) {
-				iterator.next().componentChanged(cce);
+				RocketComponent next = iterator.next();
+				next.componentChanged(cce);
 			}
-			
 			updateConfigurations();
 
 			notifyAllListeners(cce);
@@ -506,26 +547,21 @@ public class Rocket extends ComponentAssembly {
 	 * Update all the stage numbers based on their position in the component tree
 	 */
 	private void updateStageNumbers() {
-		for (RocketComponent component : getChildren()) {
-			if (component instanceof AxialStage) {
-				AxialStage stage = (AxialStage) component;
-				forgetStage(stage);
-				stage.setStageNumber(getChildPosition(stage));
-			}
+		int stageNr = 0;
+		for (AxialStage stage : getSubStages()) {
+			forgetStage(stage);
+			stage.setStageNumber(stageNr);
+			stageNr++;
 		}
 	}
 
 	private void updateStageMap(){
-		for( RocketComponent component : getChildren() ){
-			if (component instanceof AxialStage) {
-				AxialStage stage = (AxialStage) component;
-				trackStage(stage);
-			}
+		for (AxialStage stage : getSubStages() ){
+			trackStage(stage);
 		}
 	}
 	
 	private void updateConfigurations(){
-		this.selectedConfiguration.update();
 		for( FlightConfiguration config : configSet ){
 			config.update();
 		}
@@ -717,23 +753,31 @@ public class Rocket extends ComponentAssembly {
 	 * Return a flight configuration.  If the supplied id does not have a specific instance, the default is returned.  
 	 *
 	 * @param fcid the flight configuration id
-	 * @return	FlightConfiguration instance 
+	 * @return	FlightConfiguration instance
 	 */
-	public FlightConfigurationId createFlightConfiguration( final FlightConfigurationId fcid) {
+	public FlightConfiguration createFlightConfiguration( final FlightConfigurationId fcid) {
 		checkState();
 
         if( null == fcid ){
             // fall-through to the default case:
             // ...creating a FlightConfiguration( null ) just allocates a fresh new FCID
 		}else if( fcid.hasError() ){
-			return configSet.getDefault().getFlightConfigurationID();
+			return configSet.getDefault();
 		}else if( configSet.containsId(fcid)){
-			return fcid;
+			return configSet.get(fcid);
 		}
         FlightConfiguration nextConfig = new FlightConfiguration(this, fcid);
         this.configSet.set(nextConfig.getId(), nextConfig);
         fireComponentChangeEvent(ComponentChangeEvent.TREE_CHANGE);
-        return nextConfig.getFlightConfigurationID();
+        return nextConfig;
+	}
+
+	/**
+	 * Return all the flight configurations of this rocket.
+	 * @return all the flight configurations of this rocket.
+	 */
+	public FlightConfigurableParameterSet<FlightConfiguration> getFlightConfigurations() {
+		return this.configSet;
 	}
 	
 	
@@ -861,7 +905,7 @@ public class Rocket extends ComponentAssembly {
 			if( this.selectedConfiguration.equals( config)){
 				shortKey = "=>" + shortKey;
 			}
-			buf.append(String.format(fmt, shortKey, config.getName() ));
+			buf.append(String.format(fmt, shortKey, config.getNameRaw() ));
 		}
 		return buf.toString();
 	}

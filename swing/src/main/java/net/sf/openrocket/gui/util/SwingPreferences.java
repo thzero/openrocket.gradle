@@ -71,7 +71,7 @@ public class SwingPreferences extends net.sf.openrocket.startup.Preferences {
 	 */
 	private static final String NODENAME = (DEBUG ? "OpenRocket-debug" : "OpenRocket");
 	
-	private final Preferences PREFNODE;
+	private Preferences PREFNODE;
 	
 	
 	public SwingPreferences() {
@@ -93,7 +93,20 @@ public class SwingPreferences extends net.sf.openrocket.startup.Preferences {
 	
 	//////////////////////
 	
-	
+	public void clearPreferences() {
+		try {
+			Preferences root = Preferences.userRoot();
+			if (root.nodeExists(NODENAME)) {
+				root.node(NODENAME).removeNode();
+			}
+			PREFNODE = root.node(NODENAME);
+			UnitGroup.resetDefaultUnits();
+			storeDefaultUnits();
+			log.info("Cleared preferences");
+		} catch (BackingStoreException e) {
+			throw new BugException("Unable to clear preference node", e);
+		}
+	}
 	
 	/**
 	 * Store the current OpenRocket version into the preferences to allow for preferences migration.
@@ -331,7 +344,23 @@ public class SwingPreferences extends net.sf.openrocket.startup.Preferences {
 		// TODO: MEDIUM:  Motor fill color (settable?)
 		return new Color(0, 0, 0, 100);
 	}
-	
+
+
+	/**
+	 * Check whether to display the common name (false), or designation (true) in the motor selection table "Name" column
+	 * @return true to display designation, false to display common name
+	 */
+	public boolean getMotorNameColumn() {
+		return getBoolean(net.sf.openrocket.startup.Preferences.MOTOR_NAME_COLUMN, true);
+	}
+
+	/**
+	 * Set whether to display the common name, or designation in the motor selection table "Name" column
+	 * @param value if true, display designation, if false, display common name
+	 */
+	public void setMotorNameColumn(boolean value) {
+		putBoolean(net.sf.openrocket.startup.Preferences.MOTOR_NAME_COLUMN, value);
+	}
 	
 	
 	public static int getMaxThreadCount() {
@@ -400,6 +429,34 @@ public class SwingPreferences extends net.sf.openrocket.startup.Preferences {
 	public void setWindowMaximized(Class<?> c) {
 		PREFNODE.node("windows").put("size." + c.getCanonicalName(), "max");
 		storeVersion();
+	}
+
+	public Integer getTableColumnWidth(String keyName, int columnIdx) {
+		String pref = PREFNODE.node("tables").get(
+				"cw." + keyName + "." + columnIdx, null);
+		if (pref == null)
+			return null;
+
+
+		try {
+			return Integer.parseInt(pref);
+		} catch (NumberFormatException e) {
+			return null;
+		}
+	}
+
+	public Integer getTableColumnWidth(Class<?> c, int columnIdx) {
+		return getTableColumnWidth(c.getCanonicalName(), columnIdx);
+	}
+
+	public void setTableColumnWidth(String keyName, int columnIdx, Integer width) {
+		PREFNODE.node("tables").put(
+				"cw." + keyName + "." + columnIdx, width.toString());
+		storeVersion();
+	}
+
+	public void setTableColumnWidth(Class<?> c, int columnIdx, Integer width) {
+		setTableColumnWidth(c.getCanonicalName(), columnIdx, width);
 	}
 	
 	/**

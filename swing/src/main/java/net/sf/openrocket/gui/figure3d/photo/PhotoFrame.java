@@ -60,7 +60,7 @@ import com.google.inject.Module;
 @SuppressWarnings("serial")
 public class PhotoFrame extends JFrame {
 	private static final Logger log = LoggerFactory.getLogger(PhotoFrame.class);
-	private final int SHORTCUT_KEY = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
+	private final int SHORTCUT_KEY = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx();
 	private final Translator trans = Application.getTranslator();
 
 	private final PhotoPanel photoPanel;
@@ -69,6 +69,14 @@ public class PhotoFrame extends JFrame {
 	public PhotoFrame(OpenRocketDocument document, Window parent) {
 		this(false, document);
 		setTitle(trans.get("PhotoFrame.title") + " - " + document.getRocket().getName());
+
+		// Close this window when the parent is closed
+		parent.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				dispose();
+			}
+		});
 	}
 
 	public PhotoFrame(boolean app, OpenRocketDocument document) {
@@ -108,7 +116,7 @@ public class PhotoFrame extends JFrame {
 
 		settings = new JDialog(this, trans.get("PhotoSettingsConfig.title")) {
 			{
-				setContentPane(new PhotoSettingsConfig(p));
+				setContentPane(new PhotoSettingsConfig(p, document));
 				pack();
 				this.setLocationByPlatform(true);
 				GUIUtil.rememberWindowSize(this);

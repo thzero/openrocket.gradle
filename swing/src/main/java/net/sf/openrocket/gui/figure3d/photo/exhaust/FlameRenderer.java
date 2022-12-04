@@ -155,8 +155,6 @@ public final class FlameRenderer {
 
 		public Color getSmokeColor();
 
-		public double getSmokeAlpha();
-
 		public double getFlameAspectRatio();
 
 		public boolean isSparks();

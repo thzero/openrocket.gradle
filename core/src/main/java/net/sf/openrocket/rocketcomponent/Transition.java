@@ -44,7 +44,7 @@ public class Transition extends SymmetricComponent implements InsideColorCompone
 	// Used to cache the clip length
 	private double clipLength = -1;
 
-	private final InsideColorComponentHandler insideColorComponentHandler = new InsideColorComponentHandler(this);
+	private InsideColorComponentHandler insideColorComponentHandler = new InsideColorComponentHandler(this);
 
 	public Transition() {
 		super();
@@ -102,7 +102,12 @@ public class Transition extends SymmetricComponent implements InsideColorCompone
 		return foreRadius;
 	}
 
-	public void setForeRadius(double radius) {
+	/**
+	 * Set the new fore radius, with option to clamp the thickness to the new radius if it's too large.
+	 * @param radius new radius
+	 * @param doClamping whether to clamp the thickness
+	 */
+	public void setForeRadius(double radius, boolean doClamping) {
 		for (RocketComponent listener : configListeners) {
 			if (listener instanceof Transition) {
 				((Transition) listener).setForeRadius(radius);
@@ -115,11 +120,15 @@ public class Transition extends SymmetricComponent implements InsideColorCompone
 		this.autoForeRadius = false;
 		this.foreRadius = Math.max(radius, 0);
 
-		if (this.thickness > this.foreRadius && this.thickness > this.aftRadius)
+		if (doClamping && this.thickness > this.foreRadius && this.thickness > this.aftRadius)
 			this.thickness = Math.max(this.foreRadius, this.aftRadius);
 
 		clearPreset();
 		fireComponentChangeEvent(ComponentChangeEvent.BOTH_CHANGE);
+	}
+
+	public void setForeRadius(double radius) {
+		setForeRadius(radius, true);
 	}
 
 	@Override
@@ -170,7 +179,12 @@ public class Transition extends SymmetricComponent implements InsideColorCompone
 		return aftRadius;
 	}
 
-	public void setAftRadius(double radius) {
+	/**
+	 * Set the new aft radius, with option to clamp the thickness to the new radius if it's too large.
+	 * @param radius new radius
+	 * @param doClamping whether to clamp the thickness
+	 */
+	public void setAftRadius(double radius, boolean doClamping) {
 		for (RocketComponent listener : configListeners) {
 			if (listener instanceof Transition) {
 				((Transition) listener).setAftRadius(radius);
@@ -183,11 +197,15 @@ public class Transition extends SymmetricComponent implements InsideColorCompone
 		this.autoAftRadius2 = false;
 		this.aftRadius = Math.max(radius, 0);
 
-		if (this.thickness > this.foreRadius && this.thickness > this.aftRadius)
+		if (doClamping && this.thickness > this.foreRadius && this.thickness > this.aftRadius)
 			this.thickness = Math.max(this.foreRadius, this.aftRadius);
 
 		clearPreset();
 		fireComponentChangeEvent(ComponentChangeEvent.BOTH_CHANGE);
+	}
+
+	public void setAftRadius(double radius) {
+		setAftRadius(radius, true);
 	}
 
 	@Override
@@ -210,7 +228,6 @@ public class Transition extends SymmetricComponent implements InsideColorCompone
 		clearPreset();
 		fireComponentChangeEvent(ComponentChangeEvent.BOTH_CHANGE);
 	}
-
 
 
 	//// Radius automatics
@@ -257,11 +274,16 @@ public class Transition extends SymmetricComponent implements InsideColorCompone
 		if (type == null) {
 			throw new IllegalArgumentException("setType called with null argument");
 		}
+
 		if (this.type == type)
 			return;
 		this.type = type;
 		this.clipped = type.isClippable();
 		this.shapeParameter = type.defaultParameter();
+
+		// Need to clearPreset when shape type changes.
+		clearPreset();
+
 		fireComponentChangeEvent(ComponentChangeEvent.BOTH_CHANGE);
 	}
 
@@ -279,6 +301,10 @@ public class Transition extends SymmetricComponent implements InsideColorCompone
 		if (shapeParameter == n)
 			return;
 		this.shapeParameter = MathUtil.clamp(n, type.minParameter(), type.maxParameter());
+
+		// Need to clearPreset when shape parameter changes.
+		clearPreset();
+
 		fireComponentChangeEvent(ComponentChangeEvent.BOTH_CHANGE);
 	}
 
@@ -471,7 +497,7 @@ public class Transition extends SymmetricComponent implements InsideColorCompone
 	public double getRadius(double x) {
 		if ( x < 0 )
 			return getForeRadius();
-		if ( x > length)
+		if ( x >= length)
 			return getAftRadius();
 
 		double r1 = getForeRadius();
@@ -679,6 +705,8 @@ public class Transition extends SymmetricComponent implements InsideColorCompone
 		if ( preset.has(ComponentPreset.SHAPE) ) {
 			Shape s = preset.get(ComponentPreset.SHAPE);
 			this.setType(s);
+			this.setClipped(s.canClip);
+			this.setShapeParameter(s.defaultParameter());
 		}
 		if ( preset.has(ComponentPreset.AFT_OUTER_DIAMETER) )  {
 			double outerDiameter = preset.get(ComponentPreset.AFT_OUTER_DIAMETER);
@@ -722,6 +750,11 @@ public class Transition extends SymmetricComponent implements InsideColorCompone
 	@Override
 	public InsideColorComponentHandler getInsideColorComponentHandler() {
 		return this.insideColorComponentHandler;
+	}
+
+	@Override
+	public void setInsideColorComponentHandler(InsideColorComponentHandler handler) {
+		this.insideColorComponentHandler = handler;
 	}
 
 	/**

@@ -103,6 +103,7 @@ public class PhotoPanel extends JPanel implements GLEventListener {
 			@Override
 			public void documentChanged(DocumentChangeEvent event) {
 				log.debug("Repainting on document change");
+				configuration = doc.getSelectedConfiguration();
 				needUpdate = true;
 				PhotoPanel.this.repaint();
 			}
@@ -131,7 +132,7 @@ public class PhotoPanel extends JPanel implements GLEventListener {
 	}
 
 	PhotoPanel(OpenRocketDocument document, PhotoSettings p) {
-    this.p = p;
+    	this.p = p;
 		this.setLayout(new BorderLayout());
 		PhotoPanel.this.configuration = document.getSelectedConfiguration();
 
@@ -397,7 +398,7 @@ public class PhotoPanel extends JPanel implements GLEventListener {
 
 		gl.glTranslated(dx - p.getAdvance(), 0, 0);
 
-		if (p.isFlame()) {
+		if (p.isFlame() && configuration.hasMotors()) {
 			convertColor(p.getFlameColor(), color);
 
 			gl.glLightfv(GLLightingFunc.GL_LIGHT2, GLLightingFunc.GL_AMBIENT,

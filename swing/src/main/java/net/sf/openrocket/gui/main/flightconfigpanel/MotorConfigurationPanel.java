@@ -3,9 +3,6 @@ package net.sf.openrocket.gui.main.flightconfigpanel;
 import java.awt.CardLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -19,6 +16,7 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.KeyStroke;
@@ -33,6 +31,7 @@ import net.miginfocom.swing.MigLayout;
 import net.sf.openrocket.gui.dialogs.flightconfiguration.IgnitionSelectionDialog;
 import net.sf.openrocket.gui.dialogs.flightconfiguration.MotorMountConfigurationPanel;
 import net.sf.openrocket.gui.dialogs.motor.MotorChooserDialog;
+import net.sf.openrocket.gui.main.FlightConfigurationPanel;
 import net.sf.openrocket.gui.widgets.SelectColorButton;
 import net.sf.openrocket.motor.IgnitionEvent;
 import net.sf.openrocket.motor.Motor;
@@ -53,7 +52,7 @@ public class MotorConfigurationPanel extends FlightConfigurablePanel<MotorMount>
 	
 	private static final String NONE = trans.get("edtmotorconfdlg.tbl.None");
 
-	private final JButton selectMotorButton, removeMotorButton, selectIgnitionButton, resetIgnitionButton;
+	private final JButton selectMotorButton, deleteMotorButton, selectIgnitionButton, resetIgnitionButton;
 
 	private final JPanel cards;
 	private final static String HELP_LABEL = "help";
@@ -62,7 +61,10 @@ public class MotorConfigurationPanel extends FlightConfigurablePanel<MotorMount>
 	private final MotorChooserDialog motorChooserDialog;
 	protected FlightConfigurableTableModel<MotorMount> configurationTableModel;
 
-	MotorConfigurationPanel(final FlightConfigurationPanel flightConfigurationPanel, Rocket rocket) {
+	private final JPopupMenu popupMenuFull;		// popup menu containing all the options
+
+
+	public MotorConfigurationPanel(final FlightConfigurationPanel flightConfigurationPanel, Rocket rocket) {
 		super(flightConfigurationPanel, rocket);
 
 		motorChooserDialog = new MotorChooserDialog(SwingUtilities.getWindowAncestor(flightConfigurationPanel));
@@ -75,12 +77,33 @@ public class MotorConfigurationPanel extends FlightConfigurablePanel<MotorMount>
 					"<html><b>" + trans.get("lbl.motorMounts") + "</b></html>"));
 
 			MotorMountConfigurationPanel mountConfigPanel = new MotorMountConfigurationPanel(this, rocket);
-			subpanel.add(mountConfigPanel, "grow");
-			this.add(subpanel, "split, growy");
+			subpanel.add(mountConfigPanel, "grow, pushy");
+			this.add(subpanel, "split, growy, pushy");
 		}
 
 		cards = new JPanel(new CardLayout());
-		this.add(cards);
+		this.add(cards, "pushy");
+
+		// Get all the actions
+		AbstractAction selectMotorAction = new SelectMotorAction();
+		AbstractAction deleteMotorAction = new DeleteMotorAction();
+		AbstractAction selectIgnitionAction = new SelectIgnitionAction();
+		AbstractAction resetIgnitionAction = new ResetIgnitionAction();
+		AbstractAction renameConfigAction = flightConfigurationPanel.getRenameConfigAction();
+		AbstractAction deleteConfigAction = flightConfigurationPanel.getDeleteConfigAction();
+		AbstractAction duplicateConfigAction = flightConfigurationPanel.getDuplicateConfigAction();
+
+		// Populate the popup menu
+		popupMenuFull = new JPopupMenu();
+		popupMenuFull.add(selectMotorAction);
+		popupMenuFull.add(deleteMotorAction);
+		popupMenuFull.addSeparator();
+		popupMenuFull.add(selectIgnitionAction);
+		popupMenuFull.add(resetIgnitionAction);
+		popupMenuFull.addSeparator();
+		popupMenuFull.add(renameConfigAction);
+		popupMenuFull.add(deleteConfigAction);
+		popupMenuFull.add(duplicateConfigAction);
 
 		JLabel helpText = new JLabel(trans.get("MotorConfigurationPanel.lbl.nomotors"));
 		cards.add(helpText, HELP_LABEL );
@@ -90,51 +113,27 @@ public class MotorConfigurationPanel extends FlightConfigurablePanel<MotorMount>
 				BorderFactory.createEtchedBorder(),
 				"<html><b>" + trans.get("MotorConfigurationPanel.lbl.motorConfiguration") + "</b></html>"));
 		JScrollPane scroll = new JScrollPane(table);
-		configurationPanel.add(scroll, "spanx, grow, wrap");
+		configurationPanel.add(scroll, "spanx, grow, pushy, wrap");
 
 		//// Select motor
-		selectMotorButton = new SelectColorButton(trans.get("MotorConfigurationPanel.btn.selectMotor"));
-		selectMotorButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				selectMotor();
-			}
-		});
+		selectMotorButton = new SelectColorButton(selectMotorAction);
 		configurationPanel.add(selectMotorButton, "split, align right, sizegroup button");
 
-		//// Remove motor button
-		removeMotorButton = new SelectColorButton(trans.get("MotorConfigurationPanel.btn.removeMotor"));
-		removeMotorButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				removeMotor();
-			}
-		});
-		configurationPanel.add(removeMotorButton, "sizegroup button");
+		//// Delete motor button
+		deleteMotorButton = new SelectColorButton(deleteMotorAction);
+		configurationPanel.add(deleteMotorButton, "sizegroup button");
 
 		//// Select Ignition button
-		selectIgnitionButton = new SelectColorButton(trans.get("MotorConfigurationPanel.btn.selectIgnition"));
-		selectIgnitionButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				selectIgnition();
-			}
-		});
-		configurationPanel.add(selectIgnitionButton, "sizegroup button");
+		selectIgnitionButton = new SelectColorButton(selectIgnitionAction);
+		configurationPanel.add(selectIgnitionButton, "sizegroup button, gapleft para");
 
 		//// Reset Ignition button
-		resetIgnitionButton = new SelectColorButton(trans.get("MotorConfigurationPanel.btn.resetIgnition"));
-		resetIgnitionButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				resetIgnition();
-			}
-		});
+		resetIgnitionButton = new SelectColorButton(resetIgnitionAction);
 		configurationPanel.add(resetIgnitionButton, "sizegroup button, wrap");
 
 		cards.add(configurationPanel, TABLE_LABEL );
 
-		this.add(cards, "gapleft para, grow, wrap");
+		this.add(cards, "gapleft para, grow, pushy, wrap");
 
 		// Set 'Enter' key action to open the motor selection dialog
 		table.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(
@@ -194,14 +193,54 @@ public class MotorConfigurationPanel extends FlightConfigurablePanel<MotorMount>
 		configurationTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		configurationTable.setDefaultRenderer(Object.class, new MotorTableCellRenderer());
 
+		ListSelectionListener listener = new ListSelectionListener() {
+			private int previousRow = -1;
+			private int previousColumn = -1;
+
+			@Override
+			public void valueChanged(ListSelectionEvent event) {
+				if (table != null && (configurationTable.getSelectedRow() != previousRow ||
+						configurationTable.getSelectedColumn() != previousColumn)) {
+					updateButtonState();
+					previousRow = configurationTable.getSelectedRow();
+					previousColumn = configurationTable.getSelectedColumn();
+				}
+			}
+		};
+
+		configurationTable.getSelectionModel().addListSelectionListener(listener);
+		configurationTable.getColumnModel().getSelectionModel().addListSelectionListener(listener);
+
 		configurationTable.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				updateButtonState();
 				int selectedColumn = table.getSelectedColumn();
-				if (e.getClickCount() == 2) {
+
+				if (e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() == 2) {
 					if (selectedColumn > 0) {
 						selectMotor();
+					}
+				} else if (e.getButton() == MouseEvent.BUTTON3 && e.getClickCount() == 1) {
+					// Get the row and column of the selected cell
+					int r = configurationTable.rowAtPoint(e.getPoint());
+					int c = configurationTable.columnAtPoint(e.getPoint());
+
+					// Select new cell
+					if (!configurationTable.isCellSelected(r, c)) {
+						if (r >= 0 && r < configurationTable.getRowCount() &&
+								c >= 0 && c < configurationTable.getColumnCount()) {
+							configurationTable.setRowSelectionInterval(r, r);
+							configurationTable.setColumnSelectionInterval(c, c);
+						} else {
+							configurationTable.clearSelection();
+							return;
+						}
+					}
+
+					if (c > 0) {
+						doPopupFull(e);
+					} else {
+						flightConfigurationPanel.doPopupConfig(e);
 					}
 				}
 			}
@@ -210,31 +249,11 @@ public class MotorConfigurationPanel extends FlightConfigurablePanel<MotorMount>
 		return configurationTable;
 	}
 
-	@Override
-	protected void installTableListener() {
-		super.installTableListener();
-
-		table.getColumnModel().getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-			@Override
-			public void valueChanged(ListSelectionEvent e) {
-				updateComponentSelection(e);
-			}
-		});
-
-		table.addFocusListener(new FocusListener() {
-			@Override
-			public void focusGained(FocusEvent e) {
-				updateComponentSelection(new ListSelectionEvent(this, 0, 0, false));
-			}
-
-			@Override
-			public void focusLost(FocusEvent e) {
-
-			}
-		});
+	private void doPopupFull(MouseEvent e) {
+		popupMenuFull.show(e.getComponent(), e.getX(), e.getY());
 	}
 
-	public void updateComponentSelection(ListSelectionEvent e) {
+	public void updateRocketViewSelection(ListSelectionEvent e) {
 		if (e.getValueIsAdjusting()) {
 			return;
 		}
@@ -250,19 +269,19 @@ public class MotorConfigurationPanel extends FlightConfigurablePanel<MotorMount>
 		flightConfigurationPanel.setSelectedComponents(components);
 	}
 
-	protected void updateButtonState() {
+	public void updateButtonState() {
 		if( configurationTableModel.getColumnCount() > 1 ) {
 			showContent();
 			
 			boolean haveSelection = (null != getSelectedComponent());
 			selectMotorButton.setEnabled( haveSelection );
-			removeMotorButton.setEnabled( haveSelection );
+			deleteMotorButton.setEnabled( haveSelection );
 			selectIgnitionButton.setEnabled( haveSelection );
 			resetIgnitionButton.setEnabled( haveSelection );
 		} else {
 			showEmptyText();
 			selectMotorButton.setEnabled(false);
-			removeMotorButton.setEnabled(false);
+			deleteMotorButton.setEnabled(false);
 			selectIgnitionButton.setEnabled(false);
 			resetIgnitionButton.setEnabled(false);
 		}
@@ -288,7 +307,7 @@ public class MotorConfigurationPanel extends FlightConfigurablePanel<MotorMount>
         double initDelay = initMount.getMotorConfig(initFcId).getEjectionDelay();
 
 		motorChooserDialog.setMotorMountAndConfig(initFcId, initMount);
-		motorChooserDialog.setVisible(true);
+		motorChooserDialog.open();
 
         Motor mtr = motorChooserDialog.getSelectedMotor();
 		double d = motorChooserDialog.getSelectedDelay();
@@ -312,10 +331,12 @@ public class MotorConfigurationPanel extends FlightConfigurablePanel<MotorMount>
 
 		if (update) {
 			fireTableDataChanged(ComponentChangeEvent.MOTOR_CHANGE);
+		} else {
+			table.requestFocusInWindow();
 		}
 	}
 
-	private void removeMotor() {
+	private void deleteMotor() {
 		List<MotorMount> mounts = getSelectedComponents();
 		List<FlightConfigurationId> fcIds = getSelectedConfigurationIds();
 		if ((mounts == null) || (fcIds == null) || mounts.size() == 0 || fcIds.size() == 0) {
@@ -376,6 +397,8 @@ public class MotorConfigurationPanel extends FlightConfigurablePanel<MotorMount>
 
 		if (update) {
 			fireTableDataChanged(ComponentChangeEvent.MOTOR_CHANGE);
+		} else {
+			table.requestFocusInWindow();
 		}
 	}
 
@@ -404,9 +427,55 @@ public class MotorConfigurationPanel extends FlightConfigurablePanel<MotorMount>
 
 		if (update) {
 			fireTableDataChanged(ComponentChangeEvent.MOTOR_CHANGE);
+		} else {
+			table.requestFocusInWindow();
 		}
 	}
 
+
+	private class SelectMotorAction extends AbstractAction {
+		public SelectMotorAction() {
+			putValue(NAME, trans.get("MotorConfigurationPanel.btn.selectMotor"));
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			selectMotor();
+		}
+	}
+
+	private class DeleteMotorAction extends AbstractAction {
+		public DeleteMotorAction() {
+			putValue(NAME, trans.get("MotorConfigurationPanel.btn.deleteMotor"));
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			deleteMotor();
+		}
+	}
+
+	private class SelectIgnitionAction extends AbstractAction {
+		public SelectIgnitionAction() {
+			putValue(NAME, trans.get("MotorConfigurationPanel.btn.selectIgnition"));
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			selectIgnition();
+		}
+	}
+
+	private class ResetIgnitionAction extends AbstractAction {
+		public ResetIgnitionAction() {
+			putValue(NAME, trans.get("MotorConfigurationPanel.btn.resetIgnition"));
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			resetIgnition();
+		}
+	}
 
 	private class MotorTableCellRenderer extends FlightConfigurablePanel<MotorMount>.FlightConfigurableCellRenderer {
 

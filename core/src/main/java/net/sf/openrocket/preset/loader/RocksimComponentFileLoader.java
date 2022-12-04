@@ -9,17 +9,22 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.util.List;
 
+import com.opencsv.CSVParser;
+import com.opencsv.CSVParserBuilder;
+import com.opencsv.CSVReaderBuilder;
+import com.opencsv.exceptions.CsvValidationException;
 import net.sf.openrocket.preset.TypedPropertyMap;
 import net.sf.openrocket.unit.Unit;
 import net.sf.openrocket.unit.UnitGroup;
 import net.sf.openrocket.util.ArrayList;
+import net.sf.openrocket.util.BugException;
 import net.sf.openrocket.util.StringUtil;
 import com.opencsv.CSVReader;
 
 /**
  * Primary entry point for parsing component CSV files that are in Rocksim format.
  */
-public abstract class RocksimComponentFileLoader {
+public abstract class RockSimComponentFileLoader {
 	
 	private static final PrintStream LOGGER = System.err;
 	
@@ -27,14 +32,14 @@ public abstract class RocksimComponentFileLoader {
 	
 	private final File dir;
 	
-	protected List<RocksimComponentFileColumnParser> fileColumns = new ArrayList<RocksimComponentFileColumnParser>();
+	protected List<RockSimComponentFileColumnParser> fileColumns = new ArrayList<RockSimComponentFileColumnParser>();
 	
 	/**
 	 * Constructor.
 	 *
 	 * @param theBasePathToLoadFrom base path
 	 */
-	public RocksimComponentFileLoader(File theBasePathToLoadFrom) {
+	public RockSimComponentFileLoader(File theBasePathToLoadFrom) {
 		dir = theBasePathToLoadFrom;
 		basePath = dir.getAbsolutePath();
 	}
@@ -44,12 +49,12 @@ public abstract class RocksimComponentFileLoader {
 	 *
 	 * @param theBasePathToLoadFrom base path
 	 */
-	public RocksimComponentFileLoader(String theBasePathToLoadFrom) {
+	public RockSimComponentFileLoader(String theBasePathToLoadFrom) {
 		dir = new File(basePath);
 		basePath = theBasePathToLoadFrom;
 	}
 	
-	protected abstract RocksimComponentFileType getFileType();
+	protected abstract RockSimComponentFileType getFileType();
 	
 	public void load() {
 		try {
@@ -69,7 +74,7 @@ public abstract class RocksimComponentFileLoader {
 	 *         component data file; the element in the list itself is an array of String, where each item in the array
 	 *         is a column (cell) in the row.  The string array is in sequential order as it appeared in the file.
 	 */
-	private void load(RocksimComponentFileType type) throws FileNotFoundException {
+	private void load(RockSimComponentFileType type) throws FileNotFoundException {
 		if (!dir.exists()) {
 			throw new IllegalArgumentException(basePath + " does not exist");
 		}
@@ -115,11 +120,18 @@ public abstract class RocksimComponentFileLoader {
 			r = new InputStreamReader(is);
 			
 			// Create the CSV reader.  Use comma separator.
-			CSVReader reader = new CSVReader(r, ',', '\'', '\\');
-			
+			CSVParser parser = new CSVParserBuilder()
+					.withSeparator(',')
+					.withQuoteChar('\'')
+					.withEscapeChar('\\')
+					.build();
+			CSVReader reader = new CSVReaderBuilder(r)
+					.withCSVParser(parser)
+					.build();
+
 			//Read and throw away the header row.
 			parseHeaders(reader.readNext());
-			
+
 			String[] data = null;
 			while ((data = reader.readNext()) != null) {
 				// detect empty lines and skip:
@@ -133,20 +145,20 @@ public abstract class RocksimComponentFileLoader {
 			}
 			//Read the rest of the file as data rows.
 			return;
-		} catch (IOException e) {
+		} catch (IOException | CsvValidationException e) {
+			throw new BugException("Could not read component file", e);
 		} finally {
 			if (r != null) {
 				try {
 					r.close();
-				} catch (IOException e) {
-				}
+				} catch (IOException ignored) { }
 			}
 		}
 		
 	}
 	
 	protected void parseHeaders(String[] headers) {
-		for (RocksimComponentFileColumnParser column : fileColumns) {
+		for (RockSimComponentFileColumnParser column : fileColumns) {
 			column.configure(headers);
 		}
 	}
@@ -159,7 +171,7 @@ public abstract class RocksimComponentFileLoader {
 		
 		preProcess(data);
 		
-		for (RocksimComponentFileColumnParser column : fileColumns) {
+		for (RockSimComponentFileColumnParser column : fileColumns) {
 			column.parse(data, props);
 		}
 		postProcess(props);

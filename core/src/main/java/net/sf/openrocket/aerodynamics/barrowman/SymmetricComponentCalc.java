@@ -45,6 +45,7 @@ public class SymmetricComponentCalc extends RocketComponentCalc {
 	private final double frontalArea;
 	private final double fullVolume;
 	private final double planformArea, planformCenter;
+	private final double wetArea;
 	private final double sinphi;
 	
 	public SymmetricComponentCalc(RocketComponent c) {
@@ -53,16 +54,22 @@ public class SymmetricComponentCalc extends RocketComponentCalc {
 			throw new IllegalArgumentException("Illegal component type " + c);
 		}
 		SymmetricComponent component = (SymmetricComponent) c;
-		
 
 		length = component.getLength();
-		foreRadius = component.getForeRadius();
-		aftRadius = component.getAftRadius();
+		if (length > 0) {
+			foreRadius = component.getForeRadius();
+			aftRadius = component.getAftRadius();
+		} else {	// If length is zero, the component is a disk, i.e. a zero-length tube, so match the fore and aft diameter
+			final double componentMaxR = Math.max(component.getForeRadius(), component.getAftRadius());
+			foreRadius = aftRadius = componentMaxR;
+		}
 		
 		fineness = length / (2 * Math.abs(aftRadius - foreRadius));
 		fullVolume = component.getFullVolume();
 		planformArea = component.getComponentPlanformArea();
 		planformCenter = component.getComponentPlanformCenter();
+
+		wetArea = component.getComponentWetArea();
 		
 		if (component instanceof BodyTube) {
 			shape = null;
@@ -174,12 +181,15 @@ public class SymmetricComponentCalc extends RocketComponentCalc {
 				conditions.getSinAOA() * conditions.getSincAOA()); // sin(aoa)^2 / aoa
 	}
 	
-	
+	@Override
+	public double calculateFrictionCD(FlightConditions conditions, double componentCf, WarningSet warningSet) {
+		return componentCf * wetArea / conditions.getRefArea();
+	}
 
 	private LinearInterpolator interpolator = null;
 	
 	@Override
-	public double calculatePressureDragForce(FlightConditions conditions,
+	public double calculatePressureCD(FlightConditions conditions,
 			double stagnationCD, double baseCD, WarningSet warnings) {
 		
 		// Check for simple cases first
@@ -379,16 +389,6 @@ public class SymmetricComponentCalc extends RocketComponentCalc {
 			}
 		}
 
-		// dump transonic/supersonic knots, in a format easily imported into python
-		String vel = "vel = [ ";
-		String cd = "cd = [ ";
-		for (double m : interpolator.getXPoints()) {
-			vel = vel + m + ", ";
-			cd = cd + interpolator.getValue(m) + ", ";
-		}
-		log.debug(vel + "]");
-		log.debug(cd + "]");
-
 		/*
 		 * Now the transonic/supersonic region is ok.  We still need to interpolate
 		 * the subsonic region, if the values are non-zero.
@@ -403,9 +403,6 @@ public class SymmetricComponentCalc extends RocketComponentCalc {
 		
 		double cdMach0 = 0.8 * pow2(sinphi);
 		double minDeriv = (interpolator.getValue(min + 0.01) - minValue) / 0.01;
-
-		log.debug("cdMach0 = " + cdMach0);
-		log.debug("minDeriv = " + minDeriv);
 		
 		// These should not occur, but might cause havoc for the interpolation
 		if ((cdMach0 >= minValue - 0.01) || (minDeriv <= 0.01)) {

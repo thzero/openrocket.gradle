@@ -1,3 +1,4 @@
+// thzero
 package net.sf.openrocket.preset;
 
 import static org.junit.Assert.*;
@@ -5,7 +6,10 @@ import net.sf.openrocket.material.Material;
 import net.sf.openrocket.motor.Manufacturer;
 import net.sf.openrocket.rocketcomponent.BodyTube;
 import net.sf.openrocket.rocketcomponent.ExternalComponent.Finish;
+
+// thzero - begin
 import net.sf.openrocket.util.BaseTestCase;
+// thzero - end
 
 import org.junit.Before;
 import org.junit.Test;

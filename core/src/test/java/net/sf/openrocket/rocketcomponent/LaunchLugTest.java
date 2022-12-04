@@ -1,3 +1,4 @@
+// thzero
 package net.sf.openrocket.rocketcomponent;
 
 import static org.junit.Assert.assertEquals;
@@ -7,7 +8,9 @@ import org.junit.Test;
 import net.sf.openrocket.util.Coordinate;
 import net.sf.openrocket.util.MathUtil;
 import net.sf.openrocket.util.TestRockets;
+// thzero - begin
 import net.sf.openrocket.util.BaseTestCase;
+// thzero - end
 
 public class LaunchLugTest extends BaseTestCase {
 	protected final double EPSILON = MathUtil.EPSILON;

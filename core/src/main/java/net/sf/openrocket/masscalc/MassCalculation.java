@@ -71,6 +71,10 @@ public class MassCalculation {
 			this.centerOfMass = this.centerOfMass.average( pointMass);
 		}
 	}
+
+	public void addMass(double mass) {
+		this.centerOfMass = this.centerOfMass.setWeight(getMass() + mass);
+	}
 	
 	public MassCalculation copy( final RocketComponent _root, final Transformation _transform){
 		return new MassCalculation( this.type, this.config, this.simulationTime, this.activeMotorList, _root, _transform, this.analysisMap);
@@ -82,6 +86,10 @@ public class MassCalculation {
 	
 	public double getMass() {
 		return this.centerOfMass.weight;
+	}
+
+	public void setMass(double mass) {
+		this.centerOfMass = this.centerOfMass.setWeight(mass);
 	}
 	
 	public double getLongitudinalInertia() {
@@ -347,16 +355,16 @@ public class MassCalculation {
 			// setting zero as the CG position means the top of the component, which is component.getPosition()
 			final Coordinate compZero = parentTransform.transform( component.getPosition() );
 
-			if (component.getOverrideSubcomponents()) {
-				if( component.isMassive() ){
+			if (component.isSubcomponentsOverriddenMass() || component.isSubcomponentsOverriddenCG()) {
+				if (component.isMassive()) {
 					// if this component mass, merge it in before overriding:
 					this.addMass( compCM );
 				}
-				if (component.isMassOverridden()) {
+				if (component.isSubcomponentsOverriddenMass() && component.isMassOverridden()) {
 					this.setCM( this.getCM().setWeight(component.getOverrideMass()) );
 				}
-				if (component.isCGOverridden()) {
-					this.setCM( this.getCM().setX( compZero.x + component.getOverrideCGX()));
+				if (component.isSubcomponentsOverriddenCG() && component.isCGOverridden()) {
+					this.setCM( this.getCM().setX(compZero.x + component.getOverrideCGX()));
 				}
 			}else {
 				if (component.isMassOverridden()) {
@@ -448,6 +456,7 @@ public class MassCalculation {
 			this.merge( children );
 			//System.err.println(String.format( "%s....assembly mass (incl/children):  %s", prefix, this.toCMDebug()));
 		}
+
 		
 //		// vvv DEBUG
 //		if( this.config.isComponentActive(component) && 0 < this.getMass() ) {

@@ -13,8 +13,11 @@ public class BasicTumbleStepper extends AbstractSimulationStepper {
 	private static final double RECOVERY_TIME_STEP = 0.5;
 	
 	@Override
-	public SimulationStatus initialize(SimulationStatus status) {
-		return new BasicTumbleStatus(status);
+	public SimulationStatus initialize(SimulationStatus original) {
+		BasicTumbleStatus status = new BasicTumbleStatus(original);
+		status.setWarnings(original.getWarnings());
+
+		return status;
 	}
 	
 	@Override
@@ -101,7 +104,7 @@ public class BasicTumbleStepper extends AbstractSimulationStepper {
 			data.setValue(FlightDataType.TYPE_ACCELERATION_TOTAL, linearAcceleration.length());
 			
 			double Re = airSpeed.length() *
-					status.getConfiguration().getLength() /
+					status.getConfiguration().getLengthAerodynamic() /
 					atmosphere.getKinematicViscosity();
 			data.setValue(FlightDataType.TYPE_REYNOLDS_NUMBER, Re);
 		}

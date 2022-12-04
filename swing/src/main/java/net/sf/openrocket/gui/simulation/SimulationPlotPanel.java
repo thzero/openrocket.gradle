@@ -464,9 +464,9 @@ public class SimulationPlotPanel extends JPanel {
 			this.add(axisSelector);
 			
 			
-			JButton button = new SelectColorButton(Icons.DELETE);
+			JButton button = new SelectColorButton(Icons.EDIT_DELETE);
 			//// Remove this plot
-			button.setToolTipText(trans.get("simplotpanel.but.ttip.Removethisplot"));
+			button.setToolTipText(trans.get("simplotpanel.but.ttip.Deletethisplot"));
 			button.setBorderPainted(false);
 			button.addActionListener(new ActionListener() {
 				@Override
@@ -534,7 +534,7 @@ public class SimulationPlotPanel extends JPanel {
 		public Object getValueAt(int row, int column) {
 			switch (column) {
 			case 0:
-				return new Boolean(configuration.isEventActive(eventTypes[row]));
+				return Boolean.valueOf(configuration.isEventActive(eventTypes[row]));
 				
 			case 1:
 				return eventTypes[row].toString();

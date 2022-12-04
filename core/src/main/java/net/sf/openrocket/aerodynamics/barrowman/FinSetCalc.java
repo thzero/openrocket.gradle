@@ -188,7 +188,7 @@ public class FinSetCalc extends RocketComponentCalc {
 		//		forces.CrollForce = fins * (macSpan+r) * cna1 * component.getCantAngle() / 
 		//			conditions.getRefLength();
 		// With body-fin interference effect:
-		forces.setCrollForce(finCount * (macSpan + r) * cna1 * (1 + tau) * cantAngle / conditions.getRefLength());
+		forces.setCrollForce((macSpan + r) * cna1 * (1 + tau) * cantAngle / conditions.getRefLength());
 		
 		if (conditions.getAOA() > STALL_ANGLE) {
 			//			System.out.println("Fin stalling in roll");
@@ -481,17 +481,17 @@ public class FinSetCalc extends RocketComponentCalc {
 					(conditions.getRefArea() * conditions.getRefLength());
 			
 			//			System.out.println("SPECIAL: " + 
-			//					(MathUtil.sign(rollRate) *component.getFinCount() * sum));
-			return MathUtil.sign(rollRate) * finCount * sum;
+			//					(MathUtil.sign(rollRate) * sum));
+			return MathUtil.sign(rollRate) * sum;
 		}
 		
 		if (mach <= CNA_SUBSONIC) {
 			//			System.out.println("BASIC:   "+
-			//					(component.getFinCount() * 2*Math.PI * rollRate * rollSum / 
+			//					(2*Math.PI * rollRate * rollSum / 
 			//			(conditions.getRefArea() * conditions.getRefLength() * 
 			//					conditions.getVelocity() * conditions.getBeta())));
 			
-			return finCount * 2 * Math.PI * rollRate * rollSum /
+			return 2 * Math.PI * rollRate * rollSum /
 					(conditions.getRefArea() * conditions.getRefLength() *
 							conditions.getVelocity() * conditions.getBeta());
 		}
@@ -512,7 +512,7 @@ public class FinSetCalc extends RocketComponentCalc {
 						* chordLength[i] * (bodyRadius + y);
 			}
 			
-			return finCount * sum * span / (DIVISIONS - 1) /
+			return sum * span / (DIVISIONS - 1) /
 					(conditions.getRefArea() * conditions.getRefLength());
 		}
 		
@@ -621,13 +621,19 @@ public class FinSetCalc extends RocketComponentCalc {
 	//		}
 	//		
 	//	}
+
+	@Override
+	public double calculateFrictionCD(FlightConditions conditions, double componentCf, WarningSet warnings) {
+		double cd = componentCf * (1 + 2 * thickness / macLength) * 2 * finArea / conditions.getRefArea();
+		return cd;
+	}
 	
 	@Override
-	public double calculatePressureDragForce(FlightConditions conditions,
-			double stagnationCD, double baseCD, WarningSet warnings) {
+	public double calculatePressureCD(FlightConditions conditions,
+									  double stagnationCD, double baseCD, WarningSet warnings) {
 		
 		double mach = conditions.getMach();
-		double drag = 0;
+		double cd = 0;
 		
 		// Pressure fore-drag
 		if (crossSection == FinSet.CrossSection.AIRFOIL ||
@@ -635,34 +641,34 @@ public class FinSetCalc extends RocketComponentCalc {
 			
 			// Round leading edge
 			if (mach < 0.9) {
-				drag = Math.pow(1 - pow2(mach), -0.417) - 1;
+				cd = Math.pow(1 - pow2(mach), -0.417) - 1;
 			} else if (mach < 1) {
-				drag = 1 - 1.785 * (mach - 0.9);
+				cd = 1 - 1.785 * (mach - 0.9);
 			} else {
-				drag = 1.214 - 0.502 / pow2(mach) + 0.1095 / pow2(pow2(mach));
+				cd = 1.214 - 0.502 / pow2(mach) + 0.1095 / pow2(pow2(mach));
 			}
 			
 		} else if (crossSection == FinSet.CrossSection.SQUARE) {
-			drag = stagnationCD;
+			cd = stagnationCD;
 		} else {
 			throw new UnsupportedOperationException("Unsupported fin profile: " + crossSection);
 		}
 		
 		// Slanted leading edge
-		drag *= pow2(cosGammaLead);
+		cd *= pow2(cosGammaLead);
 		
 		// Trailing edge drag
 		if (crossSection == FinSet.CrossSection.SQUARE) {
-			drag += baseCD;
+			cd += baseCD;
 		} else if (crossSection == FinSet.CrossSection.ROUNDED) {
-			drag += baseCD / 2;
+			cd += baseCD / 2;
 		}
 		// Airfoil assumed to have zero base drag
 		
 		// Scale to correct reference area
-		drag *= span * thickness / conditions.getRefArea();
+		cd *= span * thickness / conditions.getRefArea();
 		
-		return drag;
+		return cd;
 	}
 	
 	private void calculateInterferenceFinCount(FinSet component) {

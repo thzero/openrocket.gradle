@@ -1,8 +1,5 @@
 package net.sf.openrocket.rocketcomponent;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 import net.sf.openrocket.l10n.Translator;
 import net.sf.openrocket.rocketcomponent.position.AxialMethod;
 import net.sf.openrocket.startup.Application;
@@ -11,8 +8,7 @@ import net.sf.openrocket.util.Coordinate;
 public class AxialStage extends ComponentAssembly implements FlightConfigurableComponent {
 	
 	private static final Translator trans = Application.getTranslator();
-	//private static final Logger log = LoggerFactory.getLogger(AxialStage.class);
-	
+
 	/** list of separations to be happening*/
 	protected FlightConfigurableParameterSet<StageSeparationConfiguration> separations;
 	/** number of stages */
@@ -67,6 +63,23 @@ public class AxialStage extends ComponentAssembly implements FlightConfigurableC
 	public boolean isCompatible(Class<? extends RocketComponent> type) {
 		 return BodyComponent.class.isAssignableFrom(type);
 	}
+
+	/**
+	 * Returns whether the current stage is active in the currently selected configuration.
+	 * @return true if the stage is active, false if not
+	 */
+	public boolean isStageActive() {
+		return getRocket().getSelectedConfiguration().isStageActive(getStageNumber());
+	}
+
+	/**
+	 * Returns whether the current stage is active in the flight configuration.
+	 * @param fc the flight configuration to check
+	 * @return true if the stage is active, false if not
+	 */
+	public boolean isStageActive(FlightConfiguration fc) {
+		return fc.isStageActive(getStageNumber());
+	}
 	
 	@Override
 	public void copyFlightConfiguration(FlightConfigurationId oldConfigId, FlightConfigurationId newConfigId) {
@@ -79,7 +92,6 @@ public class AxialStage extends ComponentAssembly implements FlightConfigurableC
 		copy.separations = new FlightConfigurableParameterSet<StageSeparationConfiguration>(separations);
 		return copy;
 	}
-
 	
 	/** 
 	 * Stages may be positioned relative to other stages. In that case, this will set the stage number 
@@ -113,11 +125,11 @@ public class AxialStage extends ComponentAssembly implements FlightConfigurableC
 
 	/**
 	 * returns if the object is a launch stage
+	 * @param config the flight configuration which will check which stages are active
 	 * @return	if the object is a launch stage
 	 */
-	public boolean isLaunchStage(){
-		return ( this instanceof ParallelStage )
-				||( getRocket().getBottomCoreStage().equals(this));
+	public boolean isLaunchStage(FlightConfiguration config) {
+		return (getRocket().getBottomCoreStage(config).equals(this));
 	}
 
 	/**
@@ -137,7 +149,7 @@ public class AxialStage extends ComponentAssembly implements FlightConfigurableC
 		//			Stage refStage = (Stage) this.parent;
 		//			System.err.println("      >>refStageName: " + refStage.getName() + "\n");
 		//			System.err.println("      ..refCenterX: " + refStage.position.x + "\n");
-		//			System.err.println("      ..refLength: " + refStage.getLength() + "\n");
+		//			System.err.println("      ..refLength: " + refStage.getLengthAerodynamic() + "\n");
 		//		}
 		return buf;
 	}

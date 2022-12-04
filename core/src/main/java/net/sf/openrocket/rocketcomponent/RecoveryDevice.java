@@ -19,25 +19,27 @@ import net.sf.openrocket.util.MathUtil;
  * @author Sampo Niskanen <sampo.niskanen@iki.fi>
  */
 public abstract class RecoveryDevice extends MassObject implements FlightConfigurableComponent {
-	
-	private double cd = Parachute.DEFAULT_CD;
-	private boolean cdAutomatic = true;
-	
+	////
+	protected double DragCoefficient;
+	protected double cd = Parachute.DEFAULT_CD;
+	protected boolean cdAutomatic = true;
+	////
+	private final Material.Surface defaultMaterial;
 	private Material.Surface material;
-	
+
 	private FlightConfigurableParameterSet<DeploymentConfiguration> deploymentConfigurations;
 	
 	public RecoveryDevice() {
-		this.deploymentConfigurations = new FlightConfigurableParameterSet<DeploymentConfiguration>( new DeploymentConfiguration());
+		this.deploymentConfigurations =
+				new FlightConfigurableParameterSet<DeploymentConfiguration>( new DeploymentConfiguration());
+		defaultMaterial = (Material.Surface) Application.getPreferences().getDefaultComponentMaterial(RecoveryDevice.class, Material.Type.SURFACE);
 		setMaterial(Application.getPreferences().getDefaultComponentMaterial(RecoveryDevice.class, Material.Type.SURFACE));
 	}
 	
 	public abstract double getArea();
 	
 	public abstract double getComponentCD(double mach);
-	
-	
-	
+
 	public double getCD() {
 		return getCD(0);
 	}
@@ -59,6 +61,7 @@ public abstract class RecoveryDevice extends MassObject implements FlightConfigu
 			return;
 		this.cd = cd;
 		this.cdAutomatic = false;
+		clearPreset();
 		fireComponentChangeEvent(ComponentChangeEvent.AERODYNAMIC_CHANGE);
 	}
 	
@@ -121,17 +124,27 @@ public abstract class RecoveryDevice extends MassObject implements FlightConfigu
 	public double getComponentMass() {
 		return getArea() * getMaterial().getDensity();
 	}
-	
+
 	@Override
 	protected void loadFromPreset(ComponentPreset preset) {
+	//	//	Set preset parachute line material
+		//	NEED a better way to set preset if field is empty ----
 		if (preset.has(ComponentPreset.MATERIAL)) {
-			Material m = preset.get(ComponentPreset.MATERIAL);
-			this.material = (Material.Surface) m;
+			String surfaceMaterialEmpty = preset.get(ComponentPreset.MATERIAL).toString();
+			int count = surfaceMaterialEmpty.length();
+			if (count > 12 ) {
+				Material m = preset.get(ComponentPreset.MATERIAL);
+				this.material = (Material.Surface) m;
+			} else {
+				this.material = defaultMaterial;
+			}
+		} else {
+			this.material = defaultMaterial;
 		}
 		super.loadFromPreset(preset);
 		fireComponentChangeEvent(ComponentChangeEvent.BOTH_CHANGE);
 	}
-	
+
 	@Override
 	protected RocketComponent copyWithOriginalID() {
 		RecoveryDevice copy = (RecoveryDevice) super.copyWithOriginalID();

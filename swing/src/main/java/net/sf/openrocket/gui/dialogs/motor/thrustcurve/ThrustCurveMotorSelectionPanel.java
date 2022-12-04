@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.prefs.Preferences;
 
+import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -25,6 +26,7 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTabbedPane;
@@ -112,14 +114,7 @@ public class ThrustCurveMotorSelectionPanel extends JPanel implements MotorSelec
 		setMotorMountAndConfig( fcid, mount );
 
 	}
-	
-	/**
-	 * Sole constructor.
-	 * 
-	 * @param current	the currently selected ThrustCurveMotor, or <code>null</code> for none.
-	 * @param delay		the currently selected ejection charge delay.
-	 * @param diameter	the diameter of the motor mount.
-	 */
+
 	public ThrustCurveMotorSelectionPanel() {
 		super(new MigLayout("fill", "[grow][]"));
 
@@ -235,6 +230,47 @@ public class ThrustCurveMotorSelectionPanel extends JPanel implements MotorSelec
 			
 		}
 
+		//// Motor name column
+		{
+			JLabel motorNameColumn = new JLabel(trans.get("TCMotorSelPan.lbl.motorNameColumn"));
+			motorNameColumn.setToolTipText(trans.get("TCMotorSelPan.lbl.motorNameColumn.ttip"));
+			JRadioButton commonName = new JRadioButton(trans.get("TCMotorSelPan.btn.commonName"));
+			JRadioButton designation = new JRadioButton(trans.get("TCMotorSelPan.btn.designation"));
+			ButtonGroup bg = new ButtonGroup();
+			bg.add(commonName);
+			bg.add(designation);
+			commonName.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					((SwingPreferences) Application.getPreferences()).setMotorNameColumn(false);
+					int selectedRow = table.getSelectedRow();
+					model.fireTableDataChanged();
+					if (selectedRow >= 0) {
+						table.setRowSelectionInterval(selectedRow, selectedRow);
+					}
+				}
+			});
+			designation.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					((SwingPreferences) Application.getPreferences()).setMotorNameColumn(true);
+					int selectedRow = table.getSelectedRow();
+					model.fireTableDataChanged();
+					if (selectedRow >= 0) {
+						table.setRowSelectionInterval(selectedRow, selectedRow);
+					}
+				}
+			});
+
+			boolean initValue = ((SwingPreferences) Application.getPreferences()).getMotorNameColumn();
+			commonName.setSelected(!initValue);
+			designation.setSelected(initValue);
+
+			panel.add(motorNameColumn, "gapleft para");
+			panel.add(commonName);
+			panel.add(designation, "spanx, growx, wrap");
+		}
+
 		//// Motor selection table
 		{
 			table = new JTable(model);
@@ -264,17 +300,7 @@ public class ThrustCurveMotorSelectionPanel extends JPanel implements MotorSelec
 			table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 				@Override
 				public void valueChanged(ListSelectionEvent e) {
-					int row = table.getSelectedRow();
-					if (row >= 0) {
-						row = table.convertRowIndexToModel(row);
-						ThrustCurveMotorSet motorSet = model.getMotorSet(row);
-						log.info(Markers.USER_MARKER, "Selected table row " + row + ": " + motorSet);
-						if (motorSet != selectedMotorSet) {
-							select(selectMotor(motorSet));
-						}
-					} else {
-						log.info(Markers.USER_MARKER, "Selected table row " + row + ", nothing selected");
-					}
+					selectMotorFromTable();
 				}
 			});
 			table.addMouseListener(new MouseAdapter() {
@@ -606,6 +632,23 @@ public class ThrustCurveMotorSelectionPanel extends JPanel implements MotorSelec
 		// No motor has been used
 		Collections.sort(list, MOTOR_COMPARATOR);
 		return list.get(0);
+	}
+
+	/**
+	 * Selects a new motor based on the selection in the motor table
+	 */
+	public void selectMotorFromTable() {
+		int row = table.getSelectedRow();
+		if (row >= 0) {
+			row = table.convertRowIndexToModel(row);
+			ThrustCurveMotorSet motorSet = model.getMotorSet(row);
+			log.info(Markers.USER_MARKER, "Selected table row " + row + ": " + motorSet);
+			if (motorSet != selectedMotorSet) {
+				select(selectMotor(motorSet));
+			}
+		} else {
+			log.info(Markers.USER_MARKER, "Selected table row " + row + ", nothing selected");
+		}
 	}
 
 

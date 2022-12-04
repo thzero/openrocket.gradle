@@ -1,5 +1,6 @@
 package net.sf.openrocket.document;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.EventListener;
 import java.util.EventObject;
 import java.util.List;
@@ -307,7 +308,7 @@ public class Simulation implements ChangeSource, Cloneable {
 	 */
 	public Status getStatus() {
 		mutex.verify();
-		if (status == Status.UPTODATE || status == Status.LOADED) {
+		if (isStatusUpToDate(status)) {
 			if (rocket.getFunctionalModID() != simulatedRocketID || !options.equals(simulatedConditions)) {
 				status = Status.OUTDATED;
 			}
@@ -328,6 +329,14 @@ public class Simulation implements ChangeSource, Cloneable {
 		}
 		
 		return status;
+	}
+
+	/**
+	 * Returns true is the status indicates that the simulation data is up-to-date.
+	 * @param status status of the simulation to check for if its data is up-to-date
+	 */
+	public static boolean isStatusUpToDate(Status status) {
+		return status == Status.UPTODATE || status == Status.LOADED || status == Status.EXTERNAL;
 	}
 	
 	
@@ -350,13 +359,15 @@ public class Simulation implements ChangeSource, Cloneable {
 			SimulationEngine simulator;
 			
 			try {
-				simulator = simulationEngineClass.newInstance();
+				simulator = simulationEngineClass.getConstructor().newInstance();
 			} catch (InstantiationException e) {
 				throw new IllegalStateException("Cannot instantiate simulator.", e);
 			} catch (IllegalAccessException e) {
 				throw new IllegalStateException("Cannot access simulator instance?! BUG!", e);
+			} catch (InvocationTargetException | NoSuchMethodException e) {
+				throw new RuntimeException(e);
 			}
-			
+
 			SimulationConditions simulationConditions = options.toSimulationConditions();
 			simulationConditions.setSimulation(this);
 			for (SimulationListener l : additionalListeners) {

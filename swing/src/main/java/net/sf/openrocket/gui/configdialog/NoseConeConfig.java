@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
@@ -15,7 +16,9 @@ import net.miginfocom.swing.MigLayout;
 import net.sf.openrocket.document.OpenRocketDocument;
 import net.sf.openrocket.gui.SpinnerEditor;
 import net.sf.openrocket.gui.adaptors.BooleanModel;
+import net.sf.openrocket.gui.adaptors.CustomFocusTraversalPolicy;
 import net.sf.openrocket.gui.adaptors.DoubleModel;
+import net.sf.openrocket.gui.adaptors.TransitionShapeModel;
 import net.sf.openrocket.gui.components.BasicSlider;
 import net.sf.openrocket.gui.components.DescriptionArea;
 import net.sf.openrocket.gui.components.UnitSelector;
@@ -43,8 +46,8 @@ public class NoseConeConfig extends RocketComponentConfig {
 	// Prepended to the description from NoseCone.DESCRIPTIONS
 	private static final String PREDESC = "<html>";
 	
-	public NoseConeConfig(OpenRocketDocument d, RocketComponent c) {
-		super(d, c);
+	public NoseConeConfig(OpenRocketDocument d, RocketComponent c, JDialog parent) {
+		super(d, c, parent);
 		
 		final JPanel panel = new JPanel(new MigLayout("", "[][65lp::][30lp::]"));
 		
@@ -52,22 +55,20 @@ public class NoseConeConfig extends RocketComponentConfig {
 		{//// Nose cone shape:
 			panel.add(new JLabel(trans.get("NoseConeCfg.lbl.Noseconeshape")));
 
-			Transition.Shape selected = ((NoseCone) component).getType();
-			Transition.Shape[] typeList = Transition.Shape.values();
-
-			final JComboBox<Transition.Shape> typeBox = new JComboBox<Transition.Shape>(typeList);
+			final JComboBox<Transition.Shape> typeBox = new JComboBox<>(new TransitionShapeModel(c));
 			typeBox.setEditable(false);
-			typeBox.setSelectedItem(selected);
 			typeBox.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					Transition.Shape s = (Transition.Shape) typeBox.getSelectedItem();
-					((NoseCone) component).setType(s);
-					description.setText(PREDESC + s.getNoseConeDescription());
+					if (s != null) {
+						description.setText(PREDESC + s.getNoseConeDescription());
+					}
 					updateEnabled();
 				}
 			});
 			panel.add(typeBox, "span, wrap rel");
+			order.add(typeBox);
 
 			////  Shape parameter:
 			this.shapeLabel = new JLabel(trans.get("NoseConeCfg.lbl.Shapeparam"));
@@ -78,6 +79,7 @@ public class NoseConeConfig extends RocketComponentConfig {
 			this.shapeSpinner = new JSpinner(parameterModel.getSpinnerModel());
 			shapeSpinner.setEditor(new SpinnerEditor(shapeSpinner));
 			panel.add(shapeSpinner, "growx");
+			order.add(((SpinnerEditor) shapeSpinner.getEditor()).getTextField());
 
 			DoubleModel min = new DoubleModel(component, "ShapeParameterMin");
 			DoubleModel max = new DoubleModel(component, "ShapeParameterMax");
@@ -94,6 +96,7 @@ public class NoseConeConfig extends RocketComponentConfig {
 			JSpinner spin = new JSpinner(lengthModel.getSpinnerModel());
 			spin.setEditor(new SpinnerEditor(spin));
 			panel.add(spin, "growx");
+			order.add(((SpinnerEditor) spin.getEditor()).getTextField());
 
 			panel.add(new UnitSelector(lengthModel), "growx");
 			panel.add(new BasicSlider(lengthModel.getSliderModel(0, 0.1, 0.7)), "w 100lp, wrap");
@@ -107,6 +110,7 @@ public class NoseConeConfig extends RocketComponentConfig {
 			final JSpinner radiusSpinner = new JSpinner(aftRadiusModel.getSpinnerModel());
 			radiusSpinner.setEditor(new SpinnerEditor(radiusSpinner));
 			panel.add(radiusSpinner, "growx");
+			order.add(((SpinnerEditor) radiusSpinner.getEditor()).getTextField());
 
 			panel.add(new UnitSelector(aftRadiusModel), "growx");
 			panel.add(new BasicSlider(aftRadiusModel.getSliderModel(0, 0.04, 0.2)), "w 100lp, wrap 0px");
@@ -115,6 +119,7 @@ public class NoseConeConfig extends RocketComponentConfig {
 			//// Automatic
 			checkAutoAftRadius.setText(trans.get("NoseConeCfg.checkbox.Automatic"));
 			panel.add(checkAutoAftRadius, "skip, span 2, wrap");
+			order.add(checkAutoAftRadius);
 			updateCheckboxAutoAftRadius();
 		}
 
@@ -125,15 +130,20 @@ public class NoseConeConfig extends RocketComponentConfig {
 			final JSpinner thicknessSpinner = new JSpinner(thicknessModel.getSpinnerModel());
 			thicknessSpinner.setEditor(new SpinnerEditor(thicknessSpinner));
 			panel.add(thicknessSpinner, "growx");
+			order.add(((SpinnerEditor) thicknessSpinner.getEditor()).getTextField());
 
 			panel.add(new UnitSelector(thicknessModel), "growx");
-			panel.add(new BasicSlider(thicknessModel.getSliderModel(0, 0.01)), "w 100lp, wrap 0px");
+			panel.add(new BasicSlider(thicknessModel.getSliderModel(0,
+							new DoubleModel(component, "MaxRadius", UnitGroup.UNITS_LENGTH))),
+					"w 100lp, wrap 0px");
 
 
 			final JCheckBox filledCheckbox = new JCheckBox(new BooleanModel(component, "Filled"));
 			//// Filled
-			filledCheckbox .setText(trans.get("NoseConeCfg.checkbox.Filled"));
+			filledCheckbox.setText(trans.get("NoseConeCfg.checkbox.Filled"));
+			filledCheckbox.setToolTipText(trans.get("NoseConeCfg.checkbox.Filled.ttip"));
 			panel.add(filledCheckbox, "skip, span 2, wrap");
+			order.add(filledCheckbox);
 		}
 
 		panel.add(new JLabel(""), "growy");
@@ -148,7 +158,8 @@ public class NoseConeConfig extends RocketComponentConfig {
 		
 
 		//// Material
-		panel2.add(materialPanel( Material.Type.BULK), "span, wrap");
+		MaterialPanel materialPanel = new MaterialPanel(component, document, Material.Type.BULK, order);
+		panel2.add(materialPanel, "span, wrap");
 		panel.add(panel2, "cell 4 0, gapleft paragraph, aligny 0%, spany");
 		
 
@@ -159,6 +170,11 @@ public class NoseConeConfig extends RocketComponentConfig {
 		tabbedPane.insertTab(trans.get("NoseConeCfg.tab.Shoulder"), null, shoulderTab(),
 				trans.get("NoseConeCfg.tab.ttip.Shoulder"), 1);
 		tabbedPane.setSelectedIndex(0);
+
+		// Apply the custom focus travel policy to this config dialog
+		order.add(closeButton);		// Make sure the close button is the last component
+		CustomFocusTraversalPolicy policy = new CustomFocusTraversalPolicy(order);
+		parent.setFocusTraversalPolicy(policy);
 	}
 	
 	

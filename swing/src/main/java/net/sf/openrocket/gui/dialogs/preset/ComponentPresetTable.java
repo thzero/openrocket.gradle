@@ -77,9 +77,11 @@ public class ComponentPresetTable extends JTable {
 				if ( columnIndex != 0 ) {
 					return;
 				}
+				int selectedRow = ComponentPresetTable.this.getSelectedRow();
 				ComponentPreset preset = ComponentPresetTable.this.presets.get(rowIndex);
 				Application.getComponentPresetDao().setFavorite(preset, presetType, (Boolean) aValue);
 				ComponentPresetTable.this.updateFavorites();
+				ComponentPresetTable.this.setRowSelectionInterval(selectedRow, selectedRow);
 			}
 
 			@Override
@@ -154,6 +156,7 @@ public class ComponentPresetTable extends JTable {
 		this.setModel(tableModel);
 		this.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		this.setRowSorter(sorter);
+		sorter.toggleSortOrder(2);		// Sort by the first column (manufacturer) by default
 
 		for ( TableColumn hiddenColumn : hiddenColumns ) {
 			tableColumnModel.setColumnVisible(hiddenColumn, false);

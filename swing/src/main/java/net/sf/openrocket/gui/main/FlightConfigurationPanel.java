@@ -1,15 +1,16 @@
-package net.sf.openrocket.gui.main.flightconfigpanel;
+package net.sf.openrocket.gui.main;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
 import java.util.EventObject;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
@@ -19,7 +20,12 @@ import net.miginfocom.swing.MigLayout;
 import net.sf.openrocket.document.OpenRocketDocument;
 import net.sf.openrocket.document.Simulation;
 import net.sf.openrocket.gui.dialogs.flightconfiguration.RenameConfigDialog;
-import net.sf.openrocket.gui.main.BasicFrame;
+import net.sf.openrocket.gui.main.flightconfigpanel.FlightConfigurablePanel;
+import net.sf.openrocket.gui.main.flightconfigpanel.MotorConfigurationPanel;
+import net.sf.openrocket.gui.main.flightconfigpanel.RecoveryConfigurationPanel;
+import net.sf.openrocket.gui.main.flightconfigpanel.SeparationConfigurationPanel;
+import net.sf.openrocket.gui.util.Icons;
+import net.sf.openrocket.gui.widgets.IconButton;
 import net.sf.openrocket.l10n.Translator;
 import net.sf.openrocket.rocketcomponent.ComponentChangeEvent;
 import net.sf.openrocket.rocketcomponent.FlightConfigurableComponent;
@@ -31,9 +37,7 @@ import net.sf.openrocket.rocketcomponent.RocketComponent;
 import net.sf.openrocket.rocketvisitors.ListComponents;
 import net.sf.openrocket.rocketvisitors.ListMotorMounts;
 import net.sf.openrocket.startup.Application;
-import net.sf.openrocket.util.ArrayList;
 import net.sf.openrocket.util.StateChangeListener;
-import net.sf.openrocket.gui.widgets.SelectColorButton;
 
 @SuppressWarnings("serial")
 public class FlightConfigurationPanel extends JPanel implements StateChangeListener {
@@ -43,12 +47,18 @@ public class FlightConfigurationPanel extends JPanel implements StateChangeListe
 	private final Rocket rocket;
 
 	private final BasicFrame basicFrame;
-	private final JButton newConfButton, renameConfButton, removeConfButton, copyConfButton;
+	private final JButton newConfButton, renameConfButton, removeConfButton, duplicateConfButton;
 	
 	private final JTabbedPane tabs;
 	private final MotorConfigurationPanel motorConfigurationPanel;
 	private final RecoveryConfigurationPanel recoveryConfigurationPanel;
 	private final SeparationConfigurationPanel separationConfigurationPanel;
+
+	private final JPopupMenu popupMenuConfig;
+	private final AbstractAction newConfigAction;
+	private final AbstractAction renameConfigAction;
+	private final AbstractAction deleteConfigAction;
+	private final AbstractAction duplicateConfigAction;
 
 	private final static int MOTOR_TAB_INDEX = 0;
 	private final static int RECOVERY_TAB_INDEX = 1;
@@ -61,8 +71,17 @@ public class FlightConfigurationPanel extends JPanel implements StateChangeListe
 		this.document = doc;
 		this.rocket = doc.getRocket();
 		this.rocket.addChangeListener(this);
-		
-		//JPanel panel = new JPanel(new MigLayout("fill","[grow][][][][][grow]"));
+
+		// Populate the popup menu
+		popupMenuConfig = new JPopupMenu();
+		newConfigAction = new NewConfigAction();
+		renameConfigAction = new RenameConfigAction();
+		deleteConfigAction = new DeleteConfigAction();
+		duplicateConfigAction = new DuplicateConfigAction();
+		popupMenuConfig.add(newConfigAction);
+		popupMenuConfig.add(renameConfigAction);
+		popupMenuConfig.add(deleteConfigAction);
+		popupMenuConfig.add(duplicateConfigAction);
 		
 		//// Tabs for advanced view.
 		tabs = new JTabbedPane();
@@ -79,101 +98,93 @@ public class FlightConfigurationPanel extends JPanel implements StateChangeListe
 		separationConfigurationPanel = new SeparationConfigurationPanel(this, rocket);
 		tabs.add(trans.get("edtmotorconfdlg.lbl.Stagetab"), separationConfigurationPanel);
 
-		newConfButton = new SelectColorButton(trans.get("edtmotorconfdlg.but.Newconfiguration"));
-		newConfButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				newOrCopyConfigAction(false);
-			}
-			
-		});
-		
+		//// New configuration
+		newConfButton = new IconButton();
+		RocketActions.tieActionToButton(newConfButton, newConfigAction);
 		this.add(newConfButton,"skip 1,gapright para");
-		
-		renameConfButton = new SelectColorButton(trans.get("edtmotorconfdlg.but.Renameconfiguration"));
-		renameConfButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				renameConfiguration();
-				configurationChanged(ComponentChangeEvent.NONFUNCTIONAL_CHANGE);
-			}
-		});
+
+		//// Rename configuration
+		renameConfButton = new IconButton();
+		RocketActions.tieActionToButton(renameConfButton, renameConfigAction);
 		this.add(renameConfButton,"gapright para");
-		
-		removeConfButton = new SelectColorButton(trans.get("edtmotorconfdlg.but.Removeconfiguration"));
-		removeConfButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				removeConfiguration();
-				configurationChanged(ComponentChangeEvent.NONFUNCTIONAL_CHANGE);
-			}
-		});
+
+		//// Remove configuration
+		removeConfButton = new IconButton();
+		RocketActions.tieActionToButton(removeConfButton, deleteConfigAction);
 		this.add(removeConfButton,"gapright para");
-		
-		copyConfButton = new SelectColorButton(trans.get("edtmotorconfdlg.but.Copyconfiguration"));
-		copyConfButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				newOrCopyConfigAction(true);
-			}
-		});
-		this.add(copyConfButton, "wrap");
+
+		//// Duplicate configuration
+		duplicateConfButton = new IconButton();
+		RocketActions.tieActionToButton(duplicateConfButton, duplicateConfigAction);
+		this.add(duplicateConfButton, "wrap");
 
 		tabs.addChangeListener(new ChangeListener() {
+			private FlightConfigurablePanel<?> previousPanel = motorConfigurationPanel;
 			@Override
 			public void stateChanged(ChangeEvent e) {
 				// Trigger a selection of the motor/recovery/configuration item
+				FlightConfigurablePanel<?> panel = null;
 				switch (tabs.getSelectedIndex()) {
 					case MOTOR_TAB_INDEX:
-						motorConfigurationPanel.updateButtonState();
+						panel = motorConfigurationPanel;
 						break;
 					case RECOVERY_TAB_INDEX:
-						recoveryConfigurationPanel.updateButtonState();
+						panel = recoveryConfigurationPanel;
 						break;
 					case SEPARATION_TAB_INDEX:
-						separationConfigurationPanel.updateButtonState();
+						panel = separationConfigurationPanel;
 						break;
 				}
+
+				// Update the panel selection, focus, and button state
+				if (panel == null) return;
+				synchronizePanelSelection(previousPanel, panel);
+				panel.updateButtonState();
+				panel.takeTheSpotlight();
+				panel.updateRocketViewSelection();
+				previousPanel = panel;
 			}
 		});
 
 		updateButtonState();
 
-		this.add(tabs, "spanx, grow, wrap rel");
+		this.add(tabs, "spanx, grow, pushy, wrap rel");
 	}
 
 	/**
-	 * Action for when the new configuration or copy configuration button is pressed.
-	 * @param copy if True, then copy configuration operation, if False then create a new configuration
+	 * Action for when the new configuration or duplicate configuration button is pressed.
+	 * @param duplicate if True, then duplicate configuration operation, if False then create a new configuration
 	 */
-	private void newOrCopyConfigAction(boolean copy) {
-		addOrCopyConfiguration(copy);
+	private void newOrDuplicateConfigAction(boolean duplicate) {
+		addOrDuplicateConfiguration(duplicate);
 		configurationChanged(ComponentChangeEvent.MOTOR_CHANGE);
 		stateChanged(null);
-		switch (tabs.getSelectedIndex()) {
-			case MOTOR_TAB_INDEX:
-				motorConfigurationPanel.selectMotor();
-				break;
-			case RECOVERY_TAB_INDEX:
-				recoveryConfigurationPanel.selectDeployment();
-				break;
-			case SEPARATION_TAB_INDEX:
-				separationConfigurationPanel.selectSeparation();
-				break;
+		if (!duplicate) {
+			switch (tabs.getSelectedIndex()) {
+				case MOTOR_TAB_INDEX:
+					motorConfigurationPanel.selectMotor();
+					break;
+				case RECOVERY_TAB_INDEX:
+					recoveryConfigurationPanel.selectDeployment();
+					break;
+				case SEPARATION_TAB_INDEX:
+					separationConfigurationPanel.selectSeparation();
+					break;
+			}
 		}
 		configurationChanged(ComponentChangeEvent.NONFUNCTIONAL_CHANGE);	// Trigger select
 	}
 
 	/**
-	 * either create or copy configuration
+	 * either create or duplicate configuration
 	 * set new configuration as current
 	 * create simulation for new configuration
 	 */
-	private void addOrCopyConfiguration(boolean copy) {
-		Map<FlightConfigurationId, FlightConfiguration> newConfigs = new LinkedHashMap<>();
+	private void addOrDuplicateConfiguration(boolean duplicate) {
+		final Map<FlightConfigurationId, FlightConfiguration> newConfigs = new LinkedHashMap<>();
 
-		// create or copy configuration
-		if (copy) {
+		// create or duplicate configuration
+		if (duplicate) {
 			List<FlightConfigurationId> oldIds = getSelectedConfigurationIds();
 			if (oldIds == null || oldIds.size() == 0) return;
 
@@ -198,35 +209,38 @@ public class FlightConfigurationPanel extends JPanel implements StateChangeListe
 			newConfigs.put(newId, newConfig);
 		}
 
-		for (FlightConfigurationId newId : newConfigs.keySet()) {
+		OpenRocketDocument doc = BasicFrame.findDocument(rocket);
+		if (doc == null) return;
+
+		for (Map.Entry<FlightConfigurationId, FlightConfiguration> config : newConfigs.entrySet()) {
 			// associate configuration with Id and select it
-			rocket.setFlightConfiguration(newId, newConfigs.get(newId));
+			rocket.setFlightConfiguration(config.getKey(), config.getValue());
+			rocket.setSelectedConfiguration(config.getKey());
 
 			// create simulation for configuration
 			Simulation newSim = new Simulation(rocket);
 
-			OpenRocketDocument doc = BasicFrame.findDocument(rocket);
-			if (doc != null) {
-				newSim.setName(doc.getNextSimulationName());
-				doc.addSimulation(newSim);
-			}
+			newSim.setName(doc.getNextSimulationName());
+			doc.addSimulation(newSim);
 		}
 
+		// Reset to first selected flight config
 		rocket.setSelectedConfiguration((FlightConfigurationId) newConfigs.keySet().toArray()[0]);
 	}
 	
-	private void renameConfiguration() {
+	private void renameConfigurationAction() {
 		List<FlightConfigurationId> fcIds = getSelectedConfigurationIds();
 		if (fcIds == null) return;
 		FlightConfigurationId initFcId = fcIds.get(0);
 		new RenameConfigDialog(SwingUtilities.getWindowAncestor(this), rocket, initFcId).setVisible(true);
-		String newName = rocket.getFlightConfiguration(initFcId).getName();
+		String newName = rocket.getFlightConfiguration(initFcId).getNameRaw();
 		for (int i = 1; i < fcIds.size(); i++) {
 			rocket.getFlightConfiguration(fcIds.get(i)).setName(newName);
 		}
+		configurationChanged(ComponentChangeEvent.NONFUNCTIONAL_CHANGE);
 	}
 	
-	private void removeConfiguration() {
+	private void removeConfigurationAction() {
 		List<FlightConfigurationId> fcIds = getSelectedConfigurationIds();
 		if (fcIds == null || fcIds.size() == 0)
 			return;
@@ -236,8 +250,29 @@ public class FlightConfigurationPanel extends JPanel implements StateChangeListe
 		}
 
 		configurationChanged(ComponentChangeEvent.NONFUNCTIONAL_CHANGE);
+		takeTheSpotlight();
 	}
-	
+
+	public void doPopupConfig(MouseEvent e) {
+		popupMenuConfig.show(e.getComponent(), e.getX(), e.getY());
+	}
+
+	public AbstractAction getNewConfigAction() {
+		return newConfigAction;
+	}
+
+	public AbstractAction getRenameConfigAction() {
+		return renameConfigAction;
+	}
+
+	public AbstractAction getDeleteConfigAction() {
+		return deleteConfigAction;
+	}
+
+	public AbstractAction getDuplicateConfigAction() {
+		return duplicateConfigAction;
+	}
+
 	private void configurationChanged(int cce) {
 		motorConfigurationPanel.fireTableDataChanged(cce);
 		recoveryConfigurationPanel.fireTableDataChanged(cce);
@@ -246,10 +281,11 @@ public class FlightConfigurationPanel extends JPanel implements StateChangeListe
 	
 	private void updateButtonState() {
 		FlightConfigurationId currentId = rocket.getSelectedConfiguration().getFlightConfigurationID();
-		// Enable the remove/rename/copy buttons only when a configuration is selected.
-		removeConfButton.setEnabled(currentId.isValid());
-		renameConfButton.setEnabled(currentId.isValid());
-		copyConfButton.setEnabled(currentId.isValid());
+		// Enable the remove/rename/duplicate buttons only when a configuration is selected.
+		boolean enabled = currentId.isValid() && !currentId.isDefaultId();
+		removeConfButton.setEnabled(enabled);
+		renameConfButton.setEnabled(enabled);
+		duplicateConfButton.setEnabled(enabled);
 		
 		// Count the number of motor mounts
 		int motorMountCount = rocket.accept(new ListMotorMounts()).size();
@@ -280,6 +316,19 @@ public class FlightConfigurationPanel extends JPanel implements StateChangeListe
 
 	}
 
+	/**
+	 * Synchronize the table row selection of a target panel with the selection in the source panel.
+	 */
+	private void synchronizePanelSelection(FlightConfigurablePanel<?> source, FlightConfigurablePanel<?> target) {
+		if (source == null || target == null) return;
+		List<FlightConfigurationId> fids = source.getSelectedConfigurationIds();
+		if (fids == null || fids.isEmpty()) {
+			target.clearSelection();
+		} else {
+			target.setSelectedConfigurationIds(fids);
+		}
+	}
+
 	private List<FlightConfigurationId> getSelectedConfigurationIds() {
 		switch (tabs.getSelectedIndex()) {
 			case MOTOR_TAB_INDEX:
@@ -307,5 +356,73 @@ public class FlightConfigurationPanel extends JPanel implements StateChangeListe
 		motorConfigurationPanel.synchronizeConfigurationSelection();
 		recoveryConfigurationPanel.synchronizeConfigurationSelection();
 		separationConfigurationPanel.synchronizeConfigurationSelection();
+	}
+
+	private class NewConfigAction extends AbstractAction {
+		public NewConfigAction() {
+			putValue(NAME, trans.get("edtmotorconfdlg.but.Newconfiguration"));
+			putValue(LARGE_ICON_KEY, Icons.FILE_NEW);
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			newOrDuplicateConfigAction(false);
+		}
+	}
+
+	private class RenameConfigAction extends AbstractAction {
+		public RenameConfigAction() {
+			putValue(NAME, trans.get("edtmotorconfdlg.but.Renameconfiguration"));
+			putValue(SMALL_ICON, Icons.EDIT_RENAME);
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			renameConfigurationAction();
+		}
+	}
+
+	private class DeleteConfigAction extends AbstractAction {
+		public DeleteConfigAction() {
+			putValue(NAME, trans.get("edtmotorconfdlg.but.Deleteconfiguration"));
+			putValue(SMALL_ICON, Icons.EDIT_DELETE);
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			removeConfigurationAction();
+		}
+	}
+
+	private class DuplicateConfigAction extends AbstractAction {
+		public DuplicateConfigAction() {
+			putValue(NAME, trans.get("edtmotorconfdlg.but.Duplicateconfiguration"));
+			putValue(SMALL_ICON, Icons.EDIT_DUPLICATE);
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			newOrDuplicateConfigAction(true);
+		}
+	}
+
+	/**
+	 * Focus on the table of the config panel that is currently opened.
+	 */
+	public void takeTheSpotlight() {
+		switch (tabs.getSelectedIndex()) {
+			case MOTOR_TAB_INDEX:
+				motorConfigurationPanel.takeTheSpotlight();
+				motorConfigurationPanel.updateRocketViewSelection();
+				break;
+			case RECOVERY_TAB_INDEX:
+				recoveryConfigurationPanel.takeTheSpotlight();
+				recoveryConfigurationPanel.updateRocketViewSelection();
+				break;
+			case SEPARATION_TAB_INDEX:
+				separationConfigurationPanel.takeTheSpotlight();
+				separationConfigurationPanel.updateRocketViewSelection();
+				break;
+		}
 	}
 }

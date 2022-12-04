@@ -6,9 +6,11 @@ import javax.swing.*;
 import net.miginfocom.swing.MigLayout;
 import net.sf.openrocket.document.OpenRocketDocument;
 import net.sf.openrocket.gui.SpinnerEditor;
+import net.sf.openrocket.gui.adaptors.CustomFocusTraversalPolicy;
 import net.sf.openrocket.gui.adaptors.DoubleModel;
 import net.sf.openrocket.gui.adaptors.EnumModel;
 import net.sf.openrocket.gui.components.BasicSlider;
+import net.sf.openrocket.gui.components.StyledLabel;
 import net.sf.openrocket.gui.components.UnitSelector;
 import net.sf.openrocket.l10n.Translator;
 import net.sf.openrocket.material.Material;
@@ -26,16 +28,19 @@ import java.awt.event.ActionListener;
 public class ShockCordConfig extends RocketComponentConfig {
 	private static final Translator trans = Application.getTranslator();
 	
-	public ShockCordConfig(OpenRocketDocument d, RocketComponent component) {
-		super(d, component);
-		
-		JPanel panel = new JPanel(new MigLayout("gap rel unrel", "[][65lp::][30lp::]", ""));
+	public ShockCordConfig(OpenRocketDocument d, RocketComponent component, JDialog parent) {
+		super(d, component, parent);
+
 		JLabel label;
 		DoubleModel m;
 		JSpinner spin;	
 
 		//////  Left side
-		
+		JPanel panel = new JPanel(new MigLayout("gap rel unrel", "[][65lp::][30lp::]", ""));
+
+		////	Attributes
+		panel.add(new StyledLabel(trans.get("ShockCordCfg.lbl.ShockcordAttributes"), StyledLabel.Style.BOLD), "wrap unrel");
+
 		// Cord length
 		//// Shock cord length
 		label = new JLabel(trans.get("ShockCordCfg.lbl.Shockcordlength"));
@@ -46,14 +51,16 @@ public class ShockCordConfig extends RocketComponentConfig {
 		spin = new JSpinner(m.getSpinnerModel());
 		spin.setEditor(new SpinnerEditor(spin));
 		panel.add(spin, "growx");
+		order.add(((SpinnerEditor) spin.getEditor()).getTextField());
 		
 		panel.add(new UnitSelector(m), "growx");
 		panel.add(new BasicSlider(m.getSliderModel(0, 1, 10)), "w 100lp, wrap");
-		
 
 		// Material
 		//// Shock cord material:
-		panel.add(materialPanel(Material.Type.LINE, trans.get("ShockCordCfg.lbl.Shockcordmaterial"), null, "Material"), "span, wrap");
+		MaterialPanel materialPanel = new MaterialPanel(component, document, Material.Type.LINE,
+				trans.get("ShockCordCfg.lbl.Shockcordmaterial"), null, "Material", order);
+		panel.add(materialPanel, "spanx 4, wrap");
 		
 
 
@@ -61,14 +68,16 @@ public class ShockCordConfig extends RocketComponentConfig {
 		JPanel panel2 = new JPanel(new MigLayout("gap rel unrel", "[][65lp::][30lp::]", ""));
 		panel.add(panel2, "cell 4 0, gapleft paragraph, aligny 0%, spany");
 		
+		////  Placement
+		panel2.add(new StyledLabel(trans.get("ShockCordCfg.lbl.ShockcordPlacement"), StyledLabel.Style.BOLD), "wrap unrel");
 
-		////  Position
 		//// Position relative to:
 		panel2.add(new JLabel(trans.get("ShockCordCfg.lbl.Posrelativeto")));
 		
 		final EnumModel<AxialMethod> methodModel = new EnumModel<AxialMethod>(component, "AxialMethod", AxialMethod.axialOffsetMethods );
         final JComboBox<AxialMethod> combo = new JComboBox<AxialMethod>( methodModel );
 		panel2.add(combo, "spanx, growx, wrap");
+		order.add(combo);
 		
 		//// plus
 		panel2.add(new JLabel(trans.get("ShockCordCfg.lbl.plus")), "right");
@@ -76,7 +85,9 @@ public class ShockCordConfig extends RocketComponentConfig {
 		m = new DoubleModel(component, "AxialOffset", UnitGroup.UNITS_LENGTH);
 		spin = new JSpinner(m.getSpinnerModel());
 		spin.setEditor(new SpinnerEditor(spin));
+		focusElement = spin;
 		panel2.add(spin, "growx");
+		order.add(((SpinnerEditor) spin.getEditor()).getTextField());
 		
 		panel2.add(new UnitSelector(m), "growx");
 		panel2.add(new BasicSlider(m.getSliderModel(
@@ -94,6 +105,7 @@ public class ShockCordConfig extends RocketComponentConfig {
 		spin = new JSpinner(m.getSpinnerModel());
 		spin.setEditor(new SpinnerEditor(spin));
 		panel2.add(spin, "growx");
+		order.add(((SpinnerEditor) spin.getEditor()).getTextField());
 		
 		panel2.add(new UnitSelector(m), "growx");
 		panel2.add(new BasicSlider(m.getSliderModel(0, 0.1, 0.5)), "w 100lp, wrap");
@@ -109,11 +121,17 @@ public class ShockCordConfig extends RocketComponentConfig {
 		spin = new JSpinner(od.getSpinnerModel());
 		spin.setEditor(new SpinnerEditor(spin));
 		panel2.add(spin, "growx");
+		order.add(((SpinnerEditor) spin.getEditor()).getTextField());
 		
 		panel2.add(new UnitSelector(od), "growx");
 		panel2.add(new BasicSlider(od.getSliderModel(0, 0.04, 0.2)), "w 100lp, wrap");
-		
 
+		////// Automatic
+		JCheckBox checkAutoPackedRadius = new JCheckBox(od.getAutomaticAction());
+		checkAutoPackedRadius.setText(trans.get("ParachuteCfg.checkbox.AutomaticPacked"));
+		checkAutoPackedRadius.setToolTipText(trans.get("ParachuteCfg.checkbox.AutomaticPacked.ttip"));
+		panel2.add(checkAutoPackedRadius, "skip, span 2, wrap");
+		order.add(checkAutoPackedRadius);
 
 		//// General and General properties
 		tabbedPane.insertTab(trans.get("ShockCordCfg.tab.General"), null, panel,
@@ -122,6 +140,11 @@ public class ShockCordConfig extends RocketComponentConfig {
 		tabbedPane.insertTab(trans.get("ShockCordCfg.tab.Radialpos"), null, positionTab(),
 				trans.get("ShockCordCfg.tab.ttip.Radialpos"), 1);
 		tabbedPane.setSelectedIndex(0);
+
+		// Apply the custom focus travel policy to this config dialog
+		order.add(closeButton);		// Make sure the close button is the last component
+		CustomFocusTraversalPolicy policy = new CustomFocusTraversalPolicy(order);
+		parent.setFocusTraversalPolicy(policy);
 	}
 
 	// TODO: LOW: there is a lot of duplicate code here with other mass components... (e.g. in MassComponentConfig or ParachuteConfig)
@@ -137,6 +160,7 @@ public class ShockCordConfig extends RocketComponentConfig {
 		JSpinner spin = new JSpinner(m.getSpinnerModel());
 		spin.setEditor(new SpinnerEditor(spin));
 		panel.add(spin, "growx");
+		order.add(((SpinnerEditor) spin.getEditor()).getTextField());
 
 		panel.add(new UnitSelector(m), "growx");
 		panel.add(new BasicSlider(m.getSliderModel(0, 0.1, 1.0)), "w 100lp, wrap");
@@ -150,6 +174,7 @@ public class ShockCordConfig extends RocketComponentConfig {
 		spin = new JSpinner(m.getSpinnerModel());
 		spin.setEditor(new SpinnerEditor(spin));
 		panel.add(spin, "growx");
+		order.add(((SpinnerEditor) spin.getEditor()).getTextField());
 
 		panel.add(new UnitSelector(m), "growx");
 		panel.add(new BasicSlider(m.getSliderModel(-Math.PI, Math.PI)), "w 100lp, wrap");
@@ -165,6 +190,7 @@ public class ShockCordConfig extends RocketComponentConfig {
 			}
 		});
 		panel.add(button, "spanx, right");
+		order.add(button);
 
 		return panel;
 	}

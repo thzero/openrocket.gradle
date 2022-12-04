@@ -21,6 +21,7 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
@@ -31,10 +32,12 @@ import net.miginfocom.swing.MigLayout;
 import net.sf.openrocket.document.OpenRocketDocument;
 import net.sf.openrocket.gui.Resettable;
 import net.sf.openrocket.gui.SpinnerEditor;
+import net.sf.openrocket.gui.adaptors.CustomFocusTraversalPolicy;
 import net.sf.openrocket.gui.adaptors.DoubleModel;
 import net.sf.openrocket.gui.adaptors.EnumModel;
 import net.sf.openrocket.gui.components.BasicSlider;
 import net.sf.openrocket.gui.components.DescriptionArea;
+import net.sf.openrocket.gui.components.StyledLabel;
 import net.sf.openrocket.gui.components.UnitSelector;
 import net.sf.openrocket.gui.widgets.SelectColorButton;
 import net.sf.openrocket.l10n.Translator;
@@ -58,14 +61,18 @@ public class InnerTubeConfig extends RocketComponentConfig {
 	private static final Translator trans = Application.getTranslator();
 
 
-	public InnerTubeConfig(OpenRocketDocument d, RocketComponent c) {
-		super(d, c);
+	public InnerTubeConfig(OpenRocketDocument d, RocketComponent c, JDialog parent) {
+		super(d, c, parent);
 
 		//// General and General properties
 		JPanel panel = new JPanel(new MigLayout("gap rel unrel", "[][65lp::][30lp::][]", ""));
+
 		DoubleModel m;
 		JSpinner spin;
 		DoubleModel od = null;
+
+		//// Attributes ----
+		panel.add(new StyledLabel(trans.get("InnerTubeCfg.lbl.Attributes"), StyledLabel.Style.BOLD), "wrap unrel");
 
 		//// Outer diameter
 		panel.add(new JLabel(trans.get("ThicknessRingCompCfg.tab.Outerdiam")));
@@ -77,9 +84,10 @@ public class InnerTubeConfig extends RocketComponentConfig {
 		spin = new JSpinner(od.getSpinnerModel());
 		spin.setEditor(new SpinnerEditor(spin));
 		panel.add(spin, "growx");
+		order.add(((SpinnerEditor) spin.getEditor()).getTextField());
 
 		panel.add(new UnitSelector(od), "growx");
-		panel.add(new BasicSlider(od.getSliderModel(0, 0.04, 0.2)), "w 100lp, wrap");
+		panel.add(new BasicSlider(od.getSliderModel(0, 0.04, 0.2)), "wmin 100lp, growx, wrap");
 
 		if (od.isAutomaticAvailable()) {
 			JCheckBox check = new JCheckBox(od.getAutomaticAction());
@@ -97,9 +105,10 @@ public class InnerTubeConfig extends RocketComponentConfig {
 		spin = new JSpinner(m.getSpinnerModel());
 		spin.setEditor(new SpinnerEditor(spin));
 		panel.add(spin, "growx");
+		order.add(((SpinnerEditor) spin.getEditor()).getTextField());
 
 		panel.add(new UnitSelector(m), "growx");
-		panel.add(new BasicSlider(m.getSliderModel(new DoubleModel(0), od)), "w 100lp, wrap");
+		panel.add(new BasicSlider(m.getSliderModel(new DoubleModel(0), od)), "wmin 100lp, growx, wrap");
 
 		if (m.isAutomaticAvailable()) {
 			JCheckBox check = new JCheckBox(m.getAutomaticAction());
@@ -118,9 +127,10 @@ public class InnerTubeConfig extends RocketComponentConfig {
 		spin = new JSpinner(m.getSpinnerModel());
 		spin.setEditor(new SpinnerEditor(spin));
 		panel.add(spin, "growx");
+		order.add(((SpinnerEditor) spin.getEditor()).getTextField());
 
 		panel.add(new UnitSelector(m), "growx");
-		panel.add(new BasicSlider(m.getSliderModel(0, 0.01)), "w 100lp, wrap");
+		panel.add(new BasicSlider(m.getSliderModel(0, 0.01)), "wmin 100lp, growx, wrap");
 
 
 		////  Inner tube length
@@ -131,43 +141,55 @@ public class InnerTubeConfig extends RocketComponentConfig {
 
 		spin = new JSpinner(m.getSpinnerModel());
 		spin.setEditor(new SpinnerEditor(spin));
+		focusElement = spin;
 		panel.add(spin, "growx");
+		order.add(((SpinnerEditor) spin.getEditor()).getTextField());
 
 		panel.add(new UnitSelector(m), "growx");
-		panel.add(new BasicSlider(m.getSliderModel(0, 0.1, 1.0)), "w 100lp, wrap");
+		panel.add(new BasicSlider(m.getSliderModel(0, 0.1, 1.0)), "wmin 100lp, growx, wrap");
+
+		//// Material
+		MaterialPanel materialPanel = new MaterialPanel(component, document, Material.Type.BULK, order);
+		panel.add(materialPanel, "spanx 4, growx, wrap 15lp");
 
 
-		////  Position
+		//// Right side of panel ----
+		JPanel panel2 = new JPanel(new MigLayout("gap rel unrel", "[][65lp::][30lp::]", ""));
+		panel.add(panel2, "cell 4 0, gapleft paragraph, aligny 0%, spany");
+
+		//// Placement
+		panel2.add(new StyledLabel(trans.get("InnerTubeCfg.lbl.Placement"), StyledLabel.Style.BOLD), "wrap unrel");
 
 		//// Position relative to:
-		panel.add(new JLabel(trans.get("ringcompcfg.Positionrelativeto")));
+		panel2.add(new JLabel(trans.get("ringcompcfg.Positionrelativeto")));
 
 		JComboBox<?> combo = new JComboBox<AxialMethod>( new EnumModel<AxialMethod>(component, "AxialMethod", AxialMethod.axialOffsetMethods ));
-		panel.add(combo, "spanx 3, growx, wrap");
+		panel2.add(combo, "spanx 3, growx, wrap");
+		order.add(combo);
 
 		//// plus
-		panel.add(new JLabel(trans.get("ringcompcfg.plus")), "right");
+		panel2.add(new JLabel(trans.get("ringcompcfg.plus")), "right");
 
 		//// PositionValue
 		m = new DoubleModel(component, "AxialOffset", UnitGroup.UNITS_LENGTH);
 		spin = new JSpinner(m.getSpinnerModel());
 		spin.setEditor(new SpinnerEditor(spin));
-		panel.add(spin, "growx");
+		panel2.add(spin, "growx");
+		order.add(((SpinnerEditor) spin.getEditor()).getTextField());
 
-		panel.add(new UnitSelector(m), "growx");
-		panel.add(new BasicSlider(m.getSliderModel(
-				new DoubleModel(component.getParent(), "Length", -1.0, UnitGroup.UNITS_NONE),
-				new DoubleModel(component.getParent(), "Length"))),
-				"w 100lp, wrap");
+		panel2.add(new UnitSelector(m), "growx");
+		panel2.add(new BasicSlider(m.getSliderModel(
+						new DoubleModel(component.getParent(), "Length", -1.0, UnitGroup.UNITS_NONE),
+						new DoubleModel(component.getParent(), "Length"))),
+				"wmin 100lp, growx, wrap");
 
-		//// Material
-		panel.add(materialPanel(Material.Type.BULK),
-				"cell 4 0, gapleft paragraph, aligny 0%, spany");
+
+
 
 		tabbedPane.insertTab(trans.get("ThicknessRingCompCfg.tab.General"), null, panel,
 				trans.get("ThicknessRingCompCfg.tab.Generalprop"), 0);
 
-		MotorConfig motorConfig = new MotorConfig((MotorMount)c);
+		MotorConfig motorConfig = new MotorConfig((MotorMount)c, order);
 
 		tabbedPane.insertTab(trans.get("InnerTubeCfg.tab.Motor"), null, motorConfig,
 				trans.get("InnerTubeCfg.tab.ttip.Motor"), 1);
@@ -183,6 +205,11 @@ public class InnerTubeConfig extends RocketComponentConfig {
 				trans.get("InnerTubeCfg.tab.ttip.Radialpos"), 3);
 
 		tabbedPane.setSelectedIndex(0);
+
+		// Apply the custom focus travel policy to this config dialog
+		order.add(closeButton);		// Make sure the close button is the last component
+		CustomFocusTraversalPolicy policy = new CustomFocusTraversalPolicy(order);
+		parent.setFocusTraversalPolicy(policy);
 	}
 
 	protected JPanel positionTab() {
@@ -202,6 +229,7 @@ public class InnerTubeConfig extends RocketComponentConfig {
 		//// Distance from the rocket centerline
 		spin.setToolTipText(trans.get("ringcompcfg.Distancefrom"));
 		panel.add(spin, "growx");
+		order.add(((SpinnerEditor) spin.getEditor()).getTextField());
 
 		panel.add(new UnitSelector(m), "growx");
 		BasicSlider bs = new BasicSlider(m.getSliderModel(0, 0.1, 1.0));
@@ -223,6 +251,7 @@ public class InnerTubeConfig extends RocketComponentConfig {
 		//// The radial direction from the rocket centerline
 		spin.setToolTipText(trans.get("ringcompcfg.radialdirectionfrom"));
 		panel.add(spin, "growx");
+		order.add(((SpinnerEditor) spin.getEditor()).getTextField());
 
 		panel.add(new UnitSelector(m), "growx");
 		bs = new BasicSlider(m.getSliderModel(-Math.PI, Math.PI));
@@ -243,13 +272,13 @@ public class InnerTubeConfig extends RocketComponentConfig {
 			}
 		});
 		panel.add(button, "spanx, right, wrap para");
+		order.add(button);
 
 
 		DescriptionArea note = new DescriptionArea(3);
-		//// Note: An inner tube will not affect the aerodynamics of the rocket even if it is located outside of the body tube.
+		//// Note: An inner tube will not affect the aerodynamics of the rocket even if located outside the body tube.
 		note.setText(trans.get("ringcompcfg.note.desc"));
 		panel.add(note, "spanx, growx");
-
 
 		return panel;
 	}
@@ -286,6 +315,7 @@ public class InnerTubeConfig extends RocketComponentConfig {
 		//// The separation of the tubes, 1.0 = touching each other
 		spin.setToolTipText(trans.get("InnerTubeCfg.lbl.ttip.TubeSep"));
 		subPanel.add(spin, "growx");
+		order.add(((SpinnerEditor) spin.getEditor()).getTextField());
 
 		BasicSlider bs = new BasicSlider(dm.getSliderModel(0, 1, 4));
 		//// The separation of the tubes, 1.0 = touching each other
@@ -305,6 +335,7 @@ public class InnerTubeConfig extends RocketComponentConfig {
 		//// Rotation angle of the cluster configuration
 		spin.setToolTipText(trans.get("InnerTubeCfg.lbl.ttip.Rotation"));
 		subPanel.add(spin, "growx");
+		order.add(((SpinnerEditor) spin.getEditor()).getTextField());
 
 		subPanel.add(new UnitSelector(dm), "growx");
 		bs = new BasicSlider(dm.getSliderModel(-Math.PI, 0, Math.PI));
@@ -363,7 +394,7 @@ public class InnerTubeConfig extends RocketComponentConfig {
 			}
 		});
 		subPanel.add(split, "spanx, split 2, gapright para, sizegroup buttons, right");
-
+		order.add(split);
 
 		// Reset button
 		///// Reset settings
@@ -378,13 +409,12 @@ public class InnerTubeConfig extends RocketComponentConfig {
 			}
 		});
 		subPanel.add(reset, "sizegroup buttons, right");
+		order.add(reset);
 
 		panel.add(subPanel, "grow");
 
-
 		return panel;
 	}
-
 
 }
 

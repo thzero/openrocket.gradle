@@ -7,8 +7,6 @@ import java.util.Collection;
 import java.util.List;
 
 import net.sf.openrocket.preset.ComponentPreset;
-import net.sf.openrocket.rocketcomponent.PodSet;
-import net.sf.openrocket.rocketcomponent.position.AxialMethod;
 import net.sf.openrocket.util.BoundingBox;
 import net.sf.openrocket.util.Coordinate;
 import net.sf.openrocket.util.MathUtil;
@@ -94,8 +92,14 @@ public abstract class SymmetricComponent extends BodyComponent implements BoxBou
 	public final double getInnerRadius(double x, double theta) {
 		return getInnerRadius(x);
 	}
-	
-	
+
+	/**
+	 * Returns the largest radius of the component (either the aft radius, or the fore radius).
+	 */
+	public double getMaxRadius() {
+		return MathUtil.max(getForeRadius(), getAftRadius());
+	}
+
 
 	/**
 	 * Return the component wall thickness.
@@ -103,15 +107,15 @@ public abstract class SymmetricComponent extends BodyComponent implements BoxBou
 	public double getThickness() {
 		if (filled)
 			return Math.max(getForeRadius(), getAftRadius());
-		return Math.min(thickness, Math.max(getForeRadius(), getAftRadius()));
+		return thickness;
 	}
-	
-	
+
 	/**
-	 * Set the component wall thickness.  Values greater than the maximum radius are not
-	 * allowed, and will result in setting the thickness to the maximum radius.
+	 * Set the component wall thickness.  If <code>doClamping</code> is true, values greater than
+	 * the maximum radius will be clamped the thickness to the maximum radius.
+	 * @param doClamping If true, the thickness will be clamped to the maximum radius.
 	 */
-	public void setThickness(double thickness) {
+	public void setThickness(double thickness, boolean doClamping) {
 		for (RocketComponent listener : configListeners) {
 			if (listener instanceof SymmetricComponent) {
 				((SymmetricComponent) listener).setThickness(thickness);
@@ -120,10 +124,19 @@ public abstract class SymmetricComponent extends BodyComponent implements BoxBou
 
 		if ((this.thickness == thickness) && !filled)
 			return;
-		this.thickness = MathUtil.clamp(thickness, 0, Math.max(getForeRadius(), getAftRadius()));
+		this.thickness = doClamping ? MathUtil.clamp(thickness, 0, getMaxRadius()) : thickness;
 		filled = false;
 		fireComponentChangeEvent(ComponentChangeEvent.MASS_CHANGE);
 		clearPreset();
+	}
+	
+	
+	/**
+	 * Set the component wall thickness.  Values greater than the maximum radius are not
+	 * allowed, and will result in setting the thickness to the maximum radius.
+	 */
+	public void setThickness(double thickness) {
+		setThickness(thickness, true);
 	}
 	
 	
@@ -311,14 +324,16 @@ public abstract class SymmetricComponent extends BodyComponent implements BoxBou
 	private void integrate() {
 		double x, r1, r2;
 		double cgx;
-		
+
+		wetArea = 0;
+		planArea = 0;
+		planCenter = 0;
+		fullVolume = 0;
+		volume = 0;
+		cg = Coordinate.NUL;
+
 		// Check length > 0
 		if (length <= 0) {
-			wetArea = 0;
-			planArea = 0;
-			planCenter = 0;
-			volume = 0;
-			cg = Coordinate.NUL;
 			return;
 		}
 		
@@ -329,11 +344,6 @@ public abstract class SymmetricComponent extends BodyComponent implements BoxBou
 		final double pi3 = Math.PI / 3.0;
 		r1 = getRadius(0);
 		x = 0;
-		wetArea = 0;
-		planArea = 0;
-		planCenter = 0;
-		fullVolume = 0;
-		volume = 0;
 		cgx = 0;
 		
 		for (int n = 1; n <= DIVISIONS; n++) {
@@ -422,15 +432,18 @@ public abstract class SymmetricComponent extends BodyComponent implements BoxBou
 	 */
 	private void integrateInertiaVolume() {
 		double x, r1, r2;
-		
+
+		longitudinalInertia = 0;
+		rotationalInertia = 0;
+
+		if (length <= 0) return;
+
 		final double l = length / DIVISIONS;
 		final double pil = Math.PI * l; // PI * l
 		final double pil3 = Math.PI * l / 3; // PI * l/3
 		
 		r1 = getRadius(0);
 		x = 0;
-		longitudinalInertia = 0;
-		rotationalInertia = 0;
 		
 		double vol = 0;
 		
@@ -489,15 +502,16 @@ public abstract class SymmetricComponent extends BodyComponent implements BoxBou
 	 */
 	private void integrateInertiaSurface() {
 		double x, r1, r2;
-		
+
+		longitudinalInertia = 0;
+		rotationalInertia = 0;
+
+		if (length <= 0) return;
+
 		final double l = length / DIVISIONS;
 		
 		r1 = getRadius(0);
-		//System.out.println(r1);
 		x = 0;
-		
-		longitudinalInertia = 0;
-		rotationalInertia = 0;
 		
 		double surface = 0;
 		

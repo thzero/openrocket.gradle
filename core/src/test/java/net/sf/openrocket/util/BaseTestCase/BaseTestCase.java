@@ -1,4 +1,4 @@
-package net.sf.openrocket.util;
+package net.sf.openrocket.util.BaseTestCase;
 
 import net.sf.openrocket.ServicesForTesting;
 import net.sf.openrocket.l10n.DebugTranslator;
@@ -15,6 +15,7 @@ import com.google.inject.Module;
 import com.google.inject.util.Modules;
 
 public class BaseTestCase {
+	
 	@BeforeClass
 	public static void setUp() throws Exception {
 		Module applicationModule = new ServicesForTesting();

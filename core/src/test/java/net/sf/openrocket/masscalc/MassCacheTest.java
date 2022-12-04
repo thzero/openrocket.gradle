@@ -1,3 +1,4 @@
+// thzero
 package net.sf.openrocket.masscalc;
 
 import static org.junit.Assert.assertTrue;
@@ -6,7 +7,9 @@ import org.junit.Test;
 
 import net.sf.openrocket.rocketcomponent.Rocket;
 import net.sf.openrocket.util.TestRockets;
+// thzero - begin
 import net.sf.openrocket.util.BaseTestCase;
+// thzero - end
 
 public class MassCacheTest extends BaseTestCase {
 	

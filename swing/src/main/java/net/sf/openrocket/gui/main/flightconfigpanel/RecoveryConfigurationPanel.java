@@ -1,10 +1,10 @@
 package net.sf.openrocket.gui.main.flightconfigpanel;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.AbstractAction;
@@ -12,14 +12,18 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import net.sf.openrocket.formatting.RocketDescriptor;
 import net.sf.openrocket.gui.dialogs.flightconfiguration.DeploymentSelectionDialog;
+import net.sf.openrocket.gui.main.FlightConfigurationPanel;
 import net.sf.openrocket.l10n.Translator;
 import net.sf.openrocket.rocketcomponent.*;
 import net.sf.openrocket.rocketcomponent.DeploymentConfiguration.DeployEvent;
@@ -35,34 +39,39 @@ public class RecoveryConfigurationPanel extends FlightConfigurablePanel<Recovery
 	private FlightConfigurableTableModel<RecoveryDevice> recoveryTableModel;
 	private final JButton selectDeploymentButton;
 	private final JButton resetDeploymentButton;
+	private final JPopupMenu popupMenuFull;		// popup menu containing all the options
 
 
-	RecoveryConfigurationPanel(FlightConfigurationPanel flightConfigurationPanel, Rocket rocket) {
+	public RecoveryConfigurationPanel(FlightConfigurationPanel flightConfigurationPanel, Rocket rocket) {
 		super(flightConfigurationPanel,rocket);
 
 		JScrollPane scroll = new JScrollPane(table);
-		this.add(scroll, "span, grow, wrap");
+		this.add(scroll, "span, grow, pushy, wrap");
+
+		// Get all the actions
+		AbstractAction selectDeploymentAction = new SelectDeploymentAction();
+		AbstractAction resetDeploymentAction = new ResetDeploymentAction();
+		AbstractAction renameConfigAction = flightConfigurationPanel.getRenameConfigAction();
+		AbstractAction removeConfigAction = flightConfigurationPanel.getDeleteConfigAction();
+		AbstractAction duplicateConfigAction = flightConfigurationPanel.getDuplicateConfigAction();
+
+		// Populate the popup menu
+		popupMenuFull = new JPopupMenu();
+		popupMenuFull.add(selectDeploymentAction);
+		popupMenuFull.add(resetDeploymentAction);
+		popupMenuFull.addSeparator();
+		popupMenuFull.add(renameConfigAction);
+		popupMenuFull.add(removeConfigAction);
+		popupMenuFull.add(duplicateConfigAction);
 
 		//// Select deployment
-		selectDeploymentButton = new SelectColorButton(trans.get("edtmotorconfdlg.but.Selectdeployment"));
+		selectDeploymentButton = new SelectColorButton(selectDeploymentAction);
 		selectDeploymentButton.setEnabled(false);
-		selectDeploymentButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				selectDeployment();
-			}
-		});
 		this.add(selectDeploymentButton, "split, align right, sizegroup button");
 
 		//// Reset deployment
-		resetDeploymentButton = new SelectColorButton(trans.get("edtmotorconfdlg.but.Resetdeployment"));
+		resetDeploymentButton = new SelectColorButton(resetDeploymentAction);
 		resetDeploymentButton.setEnabled(false);
-		resetDeploymentButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				resetDeployment();
-			}
-		});
 		this.add(resetDeploymentButton, "sizegroup button, wrap");
 
 		// Set 'Enter' key action to open the recovery selection dialog
@@ -84,17 +93,60 @@ public class RecoveryConfigurationPanel extends FlightConfigurablePanel<Recovery
 		recoveryTable.getTableHeader().setReorderingAllowed(false);
 		recoveryTable.setCellSelectionEnabled(true);
 		recoveryTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+
+		ListSelectionListener listener = new ListSelectionListener() {
+			private int previousRow = -1;
+			private int previousColumn = -1;
+
+			@Override
+			public void valueChanged(ListSelectionEvent event) {
+				if (table != null && (recoveryTable.getSelectedRow() != previousRow ||
+						recoveryTable.getSelectedColumn() != previousColumn)) {
+					updateButtonState();
+					previousRow = recoveryTable.getSelectedRow();
+					previousColumn = recoveryTable.getSelectedColumn();
+				}
+			}
+		};
+
+		recoveryTable.getSelectionModel().addListSelectionListener(listener);
+		recoveryTable.getColumnModel().getSelectionModel().addListSelectionListener(listener);
+
 		recoveryTable.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				updateButtonState();
+				int selectedColumn = table.getSelectedColumn();
 
-				if (e.getClickCount() == 2) {
-					// Double-click edits 
-					selectDeployment();
+				if (e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() == 2) {
+					if (selectedColumn > 0) {
+						selectDeployment();
+					}
+				} else if (e.getButton() == MouseEvent.BUTTON3 && e.getClickCount() == 1) {
+					// Get the row and column of the selected cell
+					int r = recoveryTable.rowAtPoint(e.getPoint());
+					int c = recoveryTable.columnAtPoint(e.getPoint());
+
+					// Select new cell
+					if (!recoveryTable.isCellSelected(r, c)) {
+						if (r >= 0 && r < recoveryTable.getRowCount() &&
+								c >= 0 && c < recoveryTable.getColumnCount()) {
+							recoveryTable.setRowSelectionInterval(r, r);
+							recoveryTable.setColumnSelectionInterval(c, c);
+						} else {
+							recoveryTable.clearSelection();
+							return;
+						}
+					}
+
+					if (c > 0) {
+						doPopupFull(e);
+					} else {
+						flightConfigurationPanel.doPopupConfig(e);
+					}
 				}
 			}
 		});
+
 		rocket.addComponentChangeListener(cce -> {
 			final RocketComponent source = cce.getSource();
 			if(source instanceof FlightConfigurableComponent) {
@@ -158,6 +210,8 @@ public class RecoveryConfigurationPanel extends FlightConfigurablePanel<Recovery
 
 		if (update) {
 			fireTableDataChanged(ComponentChangeEvent.AERODYNAMIC_CHANGE);
+		} else {
+			table.requestFocusInWindow();
 		}
 
 	}
@@ -182,7 +236,23 @@ public class RecoveryConfigurationPanel extends FlightConfigurablePanel<Recovery
 		}
 		if (update) {
 			fireTableDataChanged(ComponentChangeEvent.AERODYNAMIC_CHANGE);
+		} else {
+			table.requestFocusInWindow();
 		}
+	}
+
+	private void doPopupFull(MouseEvent e) {
+		popupMenuFull.show(e.getComponent(), e.getX(), e.getY());
+	}
+
+	public void updateRocketViewSelection(ListSelectionEvent e) {
+		if (e.getValueIsAdjusting() || getSelectedComponents() == null) {
+			return;
+		}
+		List<RocketComponent> components = new ArrayList<>(getSelectedComponents());
+		if (components.size() == 0) return;
+
+		flightConfigurationPanel.setSelectedComponents(components);
 	}
 
 	public void updateButtonState() {
@@ -218,6 +288,27 @@ public class RecoveryConfigurationPanel extends FlightConfigurablePanel<Recovery
 			}
 
 			return str;
+		}
+	}
+
+	private class SelectDeploymentAction extends AbstractAction {
+		public SelectDeploymentAction() {
+			putValue(NAME, trans.get("edtmotorconfdlg.but.Selectdeployment"));
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			selectDeployment();
+		}
+	}
+	private class ResetDeploymentAction extends AbstractAction {
+		public ResetDeploymentAction() {
+			putValue(NAME, trans.get("edtmotorconfdlg.but.Resetdeployment"));
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			resetDeployment();
 		}
 	}
 

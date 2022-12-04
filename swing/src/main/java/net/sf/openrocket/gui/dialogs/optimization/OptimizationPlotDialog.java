@@ -28,7 +28,6 @@ import net.sf.openrocket.unit.Unit;
 import net.sf.openrocket.unit.UnitGroup;
 import net.sf.openrocket.unit.Value;
 import net.sf.openrocket.util.LinearInterpolator;
-// thzero
 import net.sf.openrocket.util.MathUtil;
 import net.sf.openrocket.gui.widgets.SelectColorButton;
 
@@ -50,10 +49,8 @@ import org.jfree.chart.title.PaintScaleLegend;
 import org.jfree.data.xy.DefaultXYZDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
-// thzero - begin
-import org.jfree.chart.ui.RectangleEdge;
-import org.jfree.chart.ui.TextAnchor;
-// thzero - end
+import org.jfree.ui.RectangleEdge;
+import org.jfree.ui.TextAnchor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -83,7 +80,7 @@ public class OptimizationPlotDialog extends JDialog {
 	
 	
 	public OptimizationPlotDialog(List<Point> path, Map<Point, FunctionEvaluationData> evaluations,
-			List<SimulationModifier> modifiers, OptimizableParameter parameter, UnitGroup stabilityUnit, Window parent) {
+			List<SimulationModifier> modifiers, OptimizableParameter parameter, Unit parameterUnit, UnitGroup stabilityUnit, Window parent) {
 		super(parent, trans.get("title"), ModalityType.APPLICATION_MODAL);
 		
 
@@ -91,13 +88,21 @@ public class OptimizationPlotDialog extends JDialog {
 		
 		ChartPanel chart;
 		if (modifiers.size() == 1) {
-			chart = create1DPlot(path, evaluations, modifiers, parameter, stabilityUnit);
+			chart = create1DPlot(path, evaluations, modifiers, parameter, parameterUnit, stabilityUnit);
 		} else if (modifiers.size() == 2) {
-			chart = create2DPlot(path, evaluations, modifiers, parameter, stabilityUnit);
+			chart = create2DPlot(path, evaluations, modifiers, parameter, parameterUnit, stabilityUnit);
 		} else {
 			throw new IllegalArgumentException("Invalid dimensionality, dim=" + modifiers.size());
 		}
 		chart.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		Color backgroundColor = new Color(240, 240, 240);
+		chart.getChart().setBackgroundPaint(backgroundColor);
+		if (chart.getChart().getLegend() != null) {
+			chart.getChart().getLegend().setBackgroundPaint(Color.WHITE);
+		}
+		chart.getChart().getXYPlot().setBackgroundPaint(Color.WHITE);
+		chart.getChart().getXYPlot().setRangeGridlinePaint(Color.lightGray);
+		chart.getChart().getXYPlot().setDomainGridlinePaint(Color.lightGray);
 		panel.add(chart, "span, grow, wrap para");
 		
 
@@ -119,6 +124,8 @@ public class OptimizationPlotDialog extends JDialog {
 		
 		GUIUtil.setDisposableDialogOptions(this, close);
 		GUIUtil.rememberWindowSize(this);
+		this.setLocationByPlatform(true);
+		GUIUtil.rememberWindowPosition(this);
 	}
 	
 	
@@ -127,11 +134,11 @@ public class OptimizationPlotDialog extends JDialog {
 	 * Create a 1D plot of the optimization path.
 	 */
 	private ChartPanel create1DPlot(List<Point> path, Map<Point, FunctionEvaluationData> evaluations,
-			List<SimulationModifier> modifiers, OptimizableParameter parameter, UnitGroup stabilityUnit) {
+			List<SimulationModifier> modifiers, OptimizableParameter parameter, Unit parameterUnit, UnitGroup stabilityUnit) {
 		
 		SimulationModifier modX = modifiers.get(0);
 		Unit xUnit = modX.getUnitGroup().getDefaultUnit();
-		Unit yUnit = parameter.getUnitGroup().getDefaultUnit();
+		Unit yUnit = parameterUnit;
 		
 		// Create the optimization path (with autosort)
 		XYSeries series = new XYSeries(trans.get("plot1d.series"), true, true);
@@ -201,9 +208,7 @@ public class OptimizationPlotDialog extends JDialog {
 		
 
 		XYLineAndShapeRenderer lineRenderer = new XYLineAndShapeRenderer(true, true);
-// thzero - begin
-		lineRenderer.setDefaultShapesVisible(true);
-// thzero - end
+		lineRenderer.setBaseShapesVisible(true);
 		lineRenderer.setSeriesShapesFilled(0, false);
 		//lineRenderer.setSeriesShape(0, shapeRenderer.getBaseShape());
 		lineRenderer.setSeriesOutlinePaint(0, PATH_COLOR);
@@ -211,9 +216,7 @@ public class OptimizationPlotDialog extends JDialog {
 		lineRenderer.setUseOutlinePaint(true);
 		CustomXYToolTipGenerator tooltipGenerator = new CustomXYToolTipGenerator();
 		tooltipGenerator.addToolTipSeries(tooltips);
-// thzero - begin
-		lineRenderer.setDefaultToolTipGenerator(tooltipGenerator);
-// thzero - end
+		lineRenderer.setBaseToolTipGenerator(tooltipGenerator);
 		
 		XYPlot plot = chart.getXYPlot();
 		
@@ -229,10 +232,7 @@ public class OptimizationPlotDialog extends JDialog {
 	 * Create a 2D plot of the optimization path.
 	 */
 	private ChartPanel create2DPlot(List<Point> path, Map<Point, FunctionEvaluationData> evaluations,
-			List<SimulationModifier> modifiers, OptimizableParameter parameter, UnitGroup stabilityUnit) {
-		
-		Unit parameterUnit = parameter.getUnitGroup().getDefaultUnit();
-		
+			List<SimulationModifier> modifiers, OptimizableParameter parameter, Unit parameterUnit, UnitGroup stabilityUnit) {
 		SimulationModifier modX = modifiers.get(0);
 		SimulationModifier modY = modifiers.get(1);
 		
@@ -350,29 +350,22 @@ public class OptimizationPlotDialog extends JDialog {
 		shapeRenderer.setUseFillPaint(true);
 		CustomXYToolTipGenerator tooltipGenerator = new CustomXYToolTipGenerator();
 		tooltipGenerator.addToolTipSeries(evalTooltips);
-// thzero - begin
-		shapeRenderer.setDefaultToolTipGenerator(tooltipGenerator);
-// thzero - end		
+		shapeRenderer.setBaseToolTipGenerator(tooltipGenerator);
+		
 
 		shapeRenderer.getLegendItem(0, 0);
 		
 
 		XYLineAndShapeRenderer lineRenderer = new XYLineAndShapeRenderer(true, true);
-// thzero - begin
-		lineRenderer.setDefaultShapesVisible(true);
-// thzero - end		
+		lineRenderer.setBaseShapesVisible(true);
 		lineRenderer.setSeriesShapesFilled(0, false);
-// thzero - begin
-		lineRenderer.setSeriesShape(0, shapeRenderer.getDefaultShape());
-// thzero - end		
+		lineRenderer.setSeriesShape(0, shapeRenderer.getBaseShape());
 		lineRenderer.setSeriesOutlinePaint(0, PATH_COLOR);
 		lineRenderer.setSeriesPaint(0, PATH_COLOR);
 		lineRenderer.setUseOutlinePaint(true);
 		tooltipGenerator = new CustomXYToolTipGenerator();
 		tooltipGenerator.addToolTipSeries(pathTooltips);
-// thzero - begin
-		lineRenderer.setDefaultToolTipGenerator(tooltipGenerator);
-// thzero - end		
+		lineRenderer.setBaseToolTipGenerator(tooltipGenerator);
 		
 
 		XYPlot plot = chart.getXYPlot();

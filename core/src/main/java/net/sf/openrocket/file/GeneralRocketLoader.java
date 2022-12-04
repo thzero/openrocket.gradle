@@ -16,7 +16,7 @@ import net.sf.openrocket.aerodynamics.WarningSet;
 import net.sf.openrocket.document.OpenRocketDocument;
 import net.sf.openrocket.document.OpenRocketDocumentFactory;
 import net.sf.openrocket.file.openrocket.importt.OpenRocketLoader;
-import net.sf.openrocket.file.rocksim.importt.RocksimLoader;
+import net.sf.openrocket.file.rocksim.importt.RockSimLoader;
 import net.sf.openrocket.util.ArrayUtils;
 import net.sf.openrocket.util.TextUtil;
 
@@ -41,7 +41,7 @@ public class GeneralRocketLoader {
 	
 	private final OpenRocketLoader openRocketLoader = new OpenRocketLoader();
 	
-	private final RocksimLoader rocksimLoader = new RocksimLoader();
+	private final RockSimLoader rocksimLoader = new RockSimLoader();
 	
 	private final File baseFile;
 	private final URL jarURL;
@@ -104,7 +104,7 @@ public class GeneralRocketLoader {
 	}
 	
 	/**
-	 * This method determines the type file contained in the stream then calls the appropriate loading mecahnism.
+	 * This method determines the type file contained in the stream then calls the appropriate loading mechanism.
 	 * 
 	 * If the stream is a gzip file, the argument is wrapped in a GzipInputStream and the rocket loaded.
 	 * 

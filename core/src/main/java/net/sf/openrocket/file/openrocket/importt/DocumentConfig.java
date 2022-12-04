@@ -129,8 +129,16 @@ class DocumentConfig {
 		setters.put("RocketComponent:overridecd", new OverrideSetter(
 				Reflection.findMethod(RocketComponent.class, "setOverrideCD", double.class),
 				Reflection.findMethod(RocketComponent.class, "setCDOverridden", boolean.class)));
+		// TODO: delete overridesubcomponents setters if no compatibility is needed anymore with OR 15.03
 		setters.put("RocketComponent:overridesubcomponents", new BooleanSetter(
-				Reflection.findMethod(RocketComponent.class, "setOverrideSubcomponents", boolean.class)));
+				Reflection.findMethod(RocketComponent.class, "setSubcomponentsOverridden", boolean.class)));
+
+		setters.put("RocketComponent:overridesubcomponentsmass", new BooleanSetter(
+				Reflection.findMethod(RocketComponent.class, "setSubcomponentsOverriddenMass", boolean.class)));
+		setters.put("RocketComponent:overridesubcomponentscg", new BooleanSetter(
+				Reflection.findMethod(RocketComponent.class, "setSubcomponentsOverriddenCG", boolean.class)));
+		setters.put("RocketComponent:overridesubcomponentscd", new BooleanSetter(
+				Reflection.findMethod(RocketComponent.class, "setSubcomponentsOverriddenCD", boolean.class)));
 		setters.put("RocketComponent:comment", new StringSetter(
 				Reflection.findMethod(RocketComponent.class, "setComment", String.class)));
 		setters.put("RocketComponent:preset", new ComponentPresetSetter(
@@ -163,9 +171,10 @@ class DocumentConfig {
        
 		// SymmetricComponent
 		setters.put("SymmetricComponent:thickness", new DoubleSetter(
-				Reflection.findMethod(SymmetricComponent.class, "setThickness", double.class),
+				Reflection.findMethod(SymmetricComponent.class, "setThickness", double.class, boolean.class),
 				"filled",
-				Reflection.findMethod(SymmetricComponent.class, "setFilled", boolean.class)));
+				Reflection.findMethod(SymmetricComponent.class, "setFilled", boolean.class),
+				false));
 		
 		// LaunchLug
 		setters.put("LaunchLug:instancecount", new IntSetter(
@@ -190,8 +199,15 @@ class DocumentConfig {
 		setters.put("RailButton:angleoffset",  new AnglePositionSetter() );
 		setters.put("RailButton:height",  new DoubleSetter(
 				Reflection.findMethod( RailButton.class, "setTotalHeight", double.class)));
+		setters.put("RailButton:baseheight",  new DoubleSetter(
+				Reflection.findMethod( RailButton.class, "setBaseHeight", double.class)));
+		setters.put("RailButton:flangeheight",  new DoubleSetter(
+				Reflection.findMethod( RailButton.class, "setFlangeHeight", double.class)));
 		setters.put("RailButton:outerdiameter",  new DoubleSetter(
 				Reflection.findMethod( RailButton.class, "setOuterDiameter", double.class)));
+		setters.put("RailButton:innerdiameter",  new DoubleSetter(
+				Reflection.findMethod( RailButton.class, "setInnerDiameter", double.class)));
+
 			
 		// Transition
 		setters.put("Transition:shape", new EnumSetter<Transition.Shape>(
@@ -203,13 +219,15 @@ class DocumentConfig {
 				Reflection.findMethod(Transition.class, "setShapeParameter", double.class)));
 		
 		setters.put("Transition:foreradius", new DoubleSetter(
-				Reflection.findMethod(Transition.class, "setForeRadius", double.class),
+				Reflection.findMethod(Transition.class, "setForeRadius", double.class, boolean.class),
 				"auto", " ",
-				Reflection.findMethod(Transition.class, "setForeRadiusAutomatic", boolean.class)));
+				Reflection.findMethod(Transition.class, "setForeRadiusAutomatic", boolean.class),
+				false));
 		setters.put("Transition:aftradius", new DoubleSetter(
-				Reflection.findMethod(Transition.class, "setAftRadius", double.class),
+				Reflection.findMethod(Transition.class, "setAftRadius", double.class, boolean.class),
 				"auto", " ",
-				Reflection.findMethod(Transition.class, "setAftRadiusAutomatic", boolean.class)));
+				Reflection.findMethod(Transition.class, "setAftRadiusAutomatic", boolean.class),
+				false));
 		
 		setters.put("Transition:foreshoulderradius", new DoubleSetter(
 				Reflection.findMethod(Transition.class, "setForeShoulderRadius", double.class)));
@@ -367,9 +385,11 @@ class DocumentConfig {
 		
 		// MassObject
 		setters.put("MassObject:packedlength", new DoubleSetter(
-				Reflection.findMethod(MassObject.class, "setLength", double.class)));
+				Reflection.findMethod(MassObject.class, "setLengthNoAuto", double.class)));
 		setters.put("MassObject:packedradius", new DoubleSetter(
-				Reflection.findMethod(MassObject.class, "setRadius", double.class)));
+				Reflection.findMethod(MassObject.class, "setRadius", double.class),
+				"auto", " ",
+				Reflection.findMethod(MassObject.class, "setRadiusAutomatic", boolean.class)));
 		setters.put("MassObject:radialposition", new DoubleSetter(
 				Reflection.findMethod(MassObject.class, "setRadialPosition", double.class)));
 		setters.put("MassObject:radialdirection", new DoubleSetter(

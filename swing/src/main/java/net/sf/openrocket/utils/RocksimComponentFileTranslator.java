@@ -23,13 +23,13 @@ import net.sf.openrocket.preset.loader.TubeCouplerLoader;
 import net.sf.openrocket.preset.xml.OpenRocketComponentSaver;
 import net.sf.openrocket.util.ArrayList;
 
-public class RocksimComponentFileTranslator {
+public class RockSimComponentFileTranslator {
 
     private static PrintStream LOGGER = System.err;
 
     private static void printUsage() {
-        LOGGER.println("RocksimComponentFileLoader <dir> <file>");
-        LOGGER.println("<dir> is base directory for a set of Rocksim component csv files");
+        LOGGER.println("RockSimComponentFileLoader <dir> <file>");
+        LOGGER.println("<dir> is base directory for a set of RockSim component csv files");
         LOGGER.println("<file> is where the orc file is written");
     }
 
@@ -51,7 +51,7 @@ public class RocksimComponentFileTranslator {
 
         MaterialHolder materialMap = loadAll(allPresets, new File(args[0]));
         LOGGER.println("\tMarshalling to XML");
-        String xml = new OpenRocketComponentSaver().marshalToOpenRocketComponent(new ArrayList<Material>(materialMap.values()), allPresets);
+        String xml = new OpenRocketComponentSaver().marshalToOpenRocketComponent(new ArrayList<Material>(materialMap.values()), allPresets, true);
 
         // Try parsing the file
         LOGGER.println("\tValidating XML");

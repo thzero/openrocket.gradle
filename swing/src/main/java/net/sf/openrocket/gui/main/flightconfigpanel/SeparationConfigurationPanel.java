@@ -1,10 +1,10 @@
 package net.sf.openrocket.gui.main.flightconfigpanel;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.AbstractAction;
@@ -12,19 +12,24 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import net.sf.openrocket.formatting.RocketDescriptor;
 import net.sf.openrocket.gui.dialogs.flightconfiguration.SeparationSelectionDialog;
+import net.sf.openrocket.gui.main.FlightConfigurationPanel;
 import net.sf.openrocket.l10n.Translator;
 import net.sf.openrocket.rocketcomponent.AxialStage;
 import net.sf.openrocket.rocketcomponent.ComponentChangeEvent;
 import net.sf.openrocket.rocketcomponent.FlightConfigurationId;
 import net.sf.openrocket.rocketcomponent.Rocket;
+import net.sf.openrocket.rocketcomponent.RocketComponent;
 import net.sf.openrocket.rocketcomponent.StageSeparationConfiguration;
 import net.sf.openrocket.rocketcomponent.StageSeparationConfiguration.SeparationEvent;
 import net.sf.openrocket.startup.Application;
@@ -39,34 +44,39 @@ public class SeparationConfigurationPanel extends FlightConfigurablePanel<AxialS
 	private FlightConfigurableTableModel<AxialStage> separationTableModel;
 	private final JButton selectSeparationButton;
 	private final JButton resetDeploymentButton;
-	
-	
-	SeparationConfigurationPanel(FlightConfigurationPanel flightConfigurationPanel, Rocket rocket) {
+	private final JPopupMenu popupMenuFull;		// popup menu containing all the options
+
+
+	public SeparationConfigurationPanel(FlightConfigurationPanel flightConfigurationPanel, Rocket rocket) {
 		super(flightConfigurationPanel,rocket);
 		
 		JScrollPane scroll = new JScrollPane(table);
-		this.add(scroll, "span, grow, wrap");
+		this.add(scroll, "span, grow, pushy, wrap");
+
+		// Get all the actions
+		AbstractAction selectSeparationAction = new SelectSeparationAction();
+		AbstractAction resetSeparationAction = new ResetSeparationAction();
+		AbstractAction renameConfigAction = flightConfigurationPanel.getRenameConfigAction();
+		AbstractAction deleteConfigAction = flightConfigurationPanel.getDeleteConfigAction();
+		AbstractAction duplicateConfigAction = flightConfigurationPanel.getDuplicateConfigAction();
+
+		// Populate the popup menu
+		popupMenuFull = new JPopupMenu();
+		popupMenuFull.add(selectSeparationAction);
+		popupMenuFull.add(resetSeparationAction);
+		popupMenuFull.addSeparator();
+		popupMenuFull.add(renameConfigAction);
+		popupMenuFull.add(deleteConfigAction);
+		popupMenuFull.add(duplicateConfigAction);
 		
-		//// Select deployment
-		selectSeparationButton = new SelectColorButton(trans.get("edtmotorconfdlg.but.Selectseparation"));
+		//// Select separation
+		selectSeparationButton = new SelectColorButton(selectSeparationAction);
 		selectSeparationButton.setEnabled(false);
-		selectSeparationButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				selectSeparation();
-			}
-		});
 		this.add(selectSeparationButton, "split, align right, sizegroup button");
 		
-		//// Reset deployment
-		resetDeploymentButton = new SelectColorButton(trans.get("edtmotorconfdlg.but.Resetseparation"));
+		//// Reset separation
+		resetDeploymentButton = new SelectColorButton(resetSeparationAction);
 		resetDeploymentButton.setEnabled(false);
-		resetDeploymentButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				resetSeparation();
-			}
-		});
 		this.add(resetDeploymentButton, "sizegroup button, wrap");
 
 		// Set 'Enter' key action to open the separation selection dialog
@@ -104,16 +114,60 @@ public class SeparationConfigurationPanel extends FlightConfigurablePanel<AxialS
 		separationTable.getTableHeader().setReorderingAllowed(false);
 		separationTable.setCellSelectionEnabled(true);
 		separationTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+
+		ListSelectionListener listener = new ListSelectionListener() {
+			private int previousRow = -1;
+			private int previousColumn = -1;
+
+			@Override
+			public void valueChanged(ListSelectionEvent event) {
+				if (table != null && (separationTable.getSelectedRow() != previousRow ||
+						separationTable.getSelectedColumn() != previousColumn)) {
+					updateButtonState();
+					previousRow = separationTable.getSelectedRow();
+					previousColumn = separationTable.getSelectedColumn();
+				}
+			}
+		};
+
+		separationTable.getSelectionModel().addListSelectionListener(listener);
+		separationTable.getColumnModel().getSelectionModel().addListSelectionListener(listener);
+
 		separationTable.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				updateButtonState();
-				if (e.getClickCount() == 2) {
-					// Double-click edits 
-					selectSeparation();
+				int selectedColumn = table.getSelectedColumn();
+
+				if (e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() == 2) {
+					if (selectedColumn > 0) {
+						selectSeparation();
+					}
+				} else if (e.getButton() == MouseEvent.BUTTON3 && e.getClickCount() == 1) {
+					// Get the row and column of the selected cell
+					int r = separationTable.rowAtPoint(e.getPoint());
+					int c = separationTable.columnAtPoint(e.getPoint());
+
+					// Select new cell
+					if (!separationTable.isCellSelected(r, c)) {
+						if (r >= 0 && r < separationTable.getRowCount() &&
+								c >= 0 && c < separationTable.getColumnCount()) {
+							separationTable.setRowSelectionInterval(r, r);
+							separationTable.setColumnSelectionInterval(c, c);
+						} else {
+							separationTable.clearSelection();
+							return;
+						}
+					}
+
+					if (c > 0) {
+						doPopupFull(e);
+					} else {
+						flightConfigurationPanel.doPopupConfig(e);
+					}
 				}
 			}
 		});
+
 		separationTable.setDefaultRenderer(Object.class, new SeparationTableCellRenderer());
 		
 		return separationTable;
@@ -166,6 +220,8 @@ public class SeparationConfigurationPanel extends FlightConfigurablePanel<AxialS
 
 		if (update) {
 			fireTableDataChanged(ComponentChangeEvent.AEROMASS_CHANGE);
+		} else {
+			table.requestFocusInWindow();
 		}
 	}
 	
@@ -190,8 +246,25 @@ public class SeparationConfigurationPanel extends FlightConfigurablePanel<AxialS
 
 		if (update) {
 			fireTableDataChanged(ComponentChangeEvent.AEROMASS_CHANGE);
+		} else {
+			table.requestFocusInWindow();
 		}
 	}
+
+	private void doPopupFull(MouseEvent e) {
+		popupMenuFull.show(e.getComponent(), e.getX(), e.getY());
+	}
+
+	public void updateRocketViewSelection(ListSelectionEvent e) {
+		if (e.getValueIsAdjusting() || getSelectedComponents() == null) {
+			return;
+		}
+		List<RocketComponent> components = new ArrayList<>(getSelectedComponents());
+		if (components.size() == 0) return;
+
+		flightConfigurationPanel.setSelectedComponents(components);
+	}
+
 	public void updateButtonState() {
 		boolean componentSelected = getSelectedComponent() != null;
 		selectSeparationButton.setEnabled(componentSelected);
@@ -226,6 +299,26 @@ public class SeparationConfigurationPanel extends FlightConfigurablePanel<AxialS
 
 		}
 	}
-	
+
+	private class SelectSeparationAction extends AbstractAction {
+		public SelectSeparationAction() {
+			putValue(NAME, trans.get("edtmotorconfdlg.but.Selectseparation"));
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			selectSeparation();
+		}
+	}
+	private class ResetSeparationAction extends AbstractAction {
+		public ResetSeparationAction() {
+			putValue(NAME, trans.get("edtmotorconfdlg.but.Resetseparation"));
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			resetSeparation();
+		}
+	}
 	
 }
