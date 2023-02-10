@@ -55,10 +55,12 @@ public abstract class Preferences implements ChangeSource {
 	public static final String USER_LOCAL = "locale";
 	
 	public static final String PLOT_SHOW_POINTS = "ShowPlotPoints";
-	
+
+	private static final String IGNORE_WELCOME = "IgnoreWelcome";
+
 	private static final String CHECK_UPDATES = "CheckUpdates";
 
-	private static final String IGNORE_VERSIONS = "IgnoreVersions";
+	private static final String IGNORE_UPDATE_VERSIONS = "IgnoreUpdateVersions";
 	private static final String CHECK_BETA_UPDATES = "CheckBetaUpdates";
 	
 	public static final String MOTOR_DIAMETER_FILTER = "MotorDiameterMatch";
@@ -74,6 +76,8 @@ public abstract class Preferences implements ChangeSource {
 	public static final String PREFERRED_THRUST_CURVE_MOTOR_NODE = "preferredThrustCurveMotors";
 	private static final String AUTO_OPEN_LAST_DESIGN = "AUTO_OPEN_LAST_DESIGN";
 	private static final String OPEN_LEFTMOST_DESIGN_TAB = "OPEN_LEFTMOST_DESIGN_TAB";
+	private static final String SHOW_DISCARD_CONFIRMATION = "IgnoreDiscardEditingWarning";
+	public static final String MARKER_STYLE_ICON = "MARKER_STYLE_ICON";
 	private static final String SHOW_MARKERS = "SHOW_MARKERS";
 	private static final String SHOW_ROCKSIM_FORMAT_WARNING = "SHOW_ROCKSIM_FORMAT_WARNING";
 	
@@ -141,9 +145,31 @@ public abstract class Preferences implements ChangeSource {
 	public abstract void putString(String directory, String key, String value);
 	
 	public abstract java.util.prefs.Preferences getNode(String nodeName);
-	
+
 	/*
-	 * ******************************************************************************************
+	 * Welcome dialog
+	 */
+
+	/**
+	 * Sets to ignore opening the welcome dialog for the supplied OpenRocket build version.
+	 * @param version build version to ignore opening the welcome dialog for (e.g. "22.02")
+	 * @param ignore true to ignore, false to show the welcome dialog
+	 */
+	public final void setIgnoreWelcome(String version, boolean ignore) {
+		this.putBoolean(IGNORE_WELCOME + "_" + version, ignore);
+	}
+
+	/**
+	 * Returns whether to ignore opening the welcome dialog for the supplied OpenRocket build version.
+	 * @param version build version (e.g. "22.02")
+	 * @return true if no welcome dialog should be opened for the supplied version
+	 */
+	public final boolean getIgnoreWelcome(String version) {
+		return this.getBoolean(IGNORE_WELCOME + "_" + version, false);
+	}
+
+	/*
+	 * Software updater
 	 */
 	public final boolean getCheckUpdates() {
 		return this.getBoolean(CHECK_UPDATES, BuildProperties.getDefaultCheckUpdates());
@@ -153,12 +179,12 @@ public abstract class Preferences implements ChangeSource {
 		this.putBoolean(CHECK_UPDATES, check);
 	}
 
-	public final List<String> getIgnoreVersions() {
-		return List.of(this.getString(IGNORE_VERSIONS, "").split("\n"));
+	public final List<String> getIgnoreUpdateVersions() {
+		return List.of(this.getString(IGNORE_UPDATE_VERSIONS, "").split("\n"));
 	}
 
-	public final void setIgnoreVersions(List<String> versions) {
-		this.putString(IGNORE_VERSIONS, String.join("\n", versions));
+	public final void setIgnoreUpdateVersions(List<String> versions) {
+		this.putString(IGNORE_UPDATE_VERSIONS, String.join("\n", versions));
 	}
 
 	public final boolean getCheckBetaUpdates() {
@@ -168,6 +194,11 @@ public abstract class Preferences implements ChangeSource {
 	public final void setCheckBetaUpdates(boolean check) {
 		this.putBoolean(CHECK_BETA_UPDATES, check);
 	}
+
+
+	/*
+	 * ******************************************************************************************
+	 */
 	
 	public final boolean getConfirmSimDeletion() {
 		return this.getBoolean(CONFIRM_DELETE_SIMULATION, true);
@@ -474,6 +505,22 @@ public abstract class Preferences implements ChangeSource {
 	 */
 	public final void setAlwaysOpenLeftmostTab(boolean enabled) {
 		this.putBoolean(OPEN_LEFTMOST_DESIGN_TAB, enabled);
+	}
+
+	/**
+	 * Answer if a confirmation dialog should be shown when canceling a component config operation.
+	 *
+	 * @return true if the confirmation dialog should be shown.
+	 */
+	public final boolean isShowDiscardConfirmation() {
+		return this.getBoolean(SHOW_DISCARD_CONFIRMATION, true);
+	}
+
+	/**
+	 * Enable/Disable showing a confirmation warning when canceling a component config operation.
+	 */
+	public final void setShowDiscardConfirmation(boolean enabled) {
+		this.putBoolean(SHOW_DISCARD_CONFIRMATION, enabled);
 	}
 
 	/**

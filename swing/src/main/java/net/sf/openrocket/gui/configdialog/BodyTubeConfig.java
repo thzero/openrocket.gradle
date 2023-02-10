@@ -107,7 +107,7 @@ public class BodyTubeConfig extends RocketComponentConfig {
 
 		//// Material
 		MaterialPanel materialPanel = new MaterialPanel(component, document, Material.Type.BULK, order);
-		panel.add(materialPanel, "cell 4 0, gapleft paragraph, aligny 0%, spany");
+		panel.add(materialPanel, "cell 4 0, gapleft 40lp, aligny 0%, spany");
 
 		//// General and General properties
 		tabbedPane.insertTab(trans.get("BodyTubecfg.tab.General"), null, panel,
@@ -121,7 +121,9 @@ public class BodyTubeConfig extends RocketComponentConfig {
 				trans.get("BodyTubecfg.tab.Motormountconf"), 1);
 
 		// Apply the custom focus travel policy to this config dialog
-		order.add(closeButton);		// Make sure the close button is the last component
+		//// Make sure the cancel & ok button is the last component
+		order.add(cancelButton);
+		order.add(okButton);
 		CustomFocusTraversalPolicy policy = new CustomFocusTraversalPolicy(order);
 		parent.setFocusTraversalPolicy(policy);
 	}

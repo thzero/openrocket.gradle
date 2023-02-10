@@ -43,7 +43,7 @@ public class SwingPreferences extends net.sf.openrocket.startup.Preferences {
 	private static final List<Locale> SUPPORTED_LOCALES;
 	static {
 		List<Locale> list = new ArrayList<Locale>();
-		for (String lang : new String[] { "en", "de", "es", "fr", "it", "nl", "ru", "cs", "pl", "ja", "pt", "tr" }) {
+		for (String lang : new String[] { "en", "ar", "de", "es", "fr", "it", "nl", "ru", "cs", "pl", "ja", "pt", "tr" }) {
 			list.add(new Locale(lang));
 		}
 		list.add(new Locale("zh", "CN"));
@@ -303,6 +303,24 @@ public class SwingPreferences extends net.sf.openrocket.startup.Preferences {
 		}
 		
 		return list;
+	}
+
+	/**
+	 * Returns the files/directories to be loaded as custom thrust curves, formatting as a string. If there are multiple
+	 * locations, they are separated by a semicolon.
+	 *
+	 * @return a list of files to load as thrust curves, formatted as a semicolon separated string.
+	 */
+	public String getUserThrustCurveFilesAsString() {
+		List<File> files = getUserThrustCurveFiles();
+		StringBuilder sb = new StringBuilder();
+		for (File file : files) {
+			if (sb.length() > 0) {
+				sb.append(";");
+			}
+			sb.append(file.getAbsolutePath());
+		}
+		return sb.toString();
 	}
 	
 	public File getDefaultUserThrustCurveFile() {

@@ -1,4 +1,4 @@
-package net.sf.openrocket.simulation.extension.impl;
+package net.sf.openrocket.simulation.extension.example;
 
 import net.sf.openrocket.l10n.L10N;
 import net.sf.openrocket.simulation.SimulationConditions;
@@ -28,9 +28,14 @@ public class AirStart extends AbstractSimulationExtension {
 		name = L10N.replace(name, "{vel}", UnitGroup.UNITS_VELOCITY.toStringUnit(getLaunchVelocity()));
 		return name;
 	}
+
+	@Override
+	public String getDescription() {
+		return "Start simulation with a configurable altitude and velocity";
+	}
 	
 	public double getLaunchAltitude() {
-		return config.getDouble("launchAltitude", 0.0);
+		return config.getDouble("launchAltitude", 100.0);
 	}
 	
 	public void setLaunchAltitude(double launchAltitude) {
@@ -39,7 +44,7 @@ public class AirStart extends AbstractSimulationExtension {
 	}
 	
 	public double getLaunchVelocity() {
-		return config.getDouble("launchVelocity", 0.0);
+		return config.getDouble("launchVelocity", 50.0);
 	}
 	
 	public void setLaunchVelocity(double launchVelocity) {

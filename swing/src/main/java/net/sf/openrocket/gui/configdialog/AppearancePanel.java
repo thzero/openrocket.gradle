@@ -2,6 +2,7 @@ package net.sf.openrocket.gui.configdialog;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.lang.reflect.Method;
@@ -31,6 +32,8 @@ import net.sf.openrocket.appearance.AppearanceBuilder;
 import net.sf.openrocket.appearance.Decal.EdgeMode;
 import net.sf.openrocket.appearance.DecalImage;
 import net.sf.openrocket.appearance.defaults.DefaultAppearance;
+import net.sf.openrocket.arch.SystemInfo;
+import net.sf.openrocket.arch.SystemInfo.Platform;
 import net.sf.openrocket.document.OpenRocketDocument;
 import net.sf.openrocket.gui.SpinnerEditor;
 import net.sf.openrocket.gui.adaptors.BooleanModel;
@@ -210,7 +213,7 @@ public class AppearancePanel extends JPanel {
 	 * @param order component traversal order object of the component config dialog
 	 */
 	public AppearancePanel(final OpenRocketDocument document, final RocketComponent c, final JDialog parent, List<Component> order) {
-		super(new MigLayout("fill", "[150][grow][150][grow]"));
+		super(new MigLayout("fillx", "[150][grow][150][grow]"));
 
 		this.order = order;
 		defaultAppearance = DefaultAppearance.getDefaultAppearance(c);
@@ -427,6 +430,8 @@ public class AppearancePanel extends JPanel {
 					edgesComboBox.setEnabled(customInside.isSelected());
 					if (customInside.isSelected()) {
 						remove(outsidePanel);
+						MigLayout layout = (MigLayout) outsidePanel.getLayout();
+						layout.setLayoutConstraints("fill");
 						outsideInsidePane.insertTab(trans.get(tr_outside), null, outsidePanel,
 								"Outside Tool Tip", 0);
 						outsideInsidePane.setSelectedIndex(0);
@@ -434,8 +439,12 @@ public class AppearancePanel extends JPanel {
 					}
 					else {
 						remove(outsideInsidePane);
+						MigLayout layout = (MigLayout) outsidePanel.getLayout();
+						layout.setLayoutConstraints("fill, ins 0");
 						add(outsidePanel, "span 4, growx, wrap");
 					}
+
+					// Repaint to fit to the new size
 					if (parent != null) {
 						parent.pack();
 					} else {
@@ -488,13 +497,11 @@ public class AppearancePanel extends JPanel {
 		if (!insideBuilder) {
 			builder = ab;
 			mDefault = new BooleanModel(c.getAppearance() == null || defaultAppearance.equals(c.getAppearance()));
-		}
-		else if (c instanceof InsideColorComponent) {
+		} else if (c instanceof InsideColorComponent) {
 			builder = insideAb;
-			Appearance appearance = ((InsideColorComponent)c).getInsideColorComponentHandler().getInsideAppearance();
+			Appearance appearance = ((InsideColorComponent) c).getInsideColorComponentHandler().getInsideAppearance();
 			mDefault = new BooleanModel(appearance == null || defaultAppearance.equals(appearance));
-		}
-		else return;
+		} else return;
 
 		DecalModel decalModel = new DecalModel(panel, document, builder);
 		JComboBox<DecalImage> textureDropDown = new JComboBox<DecalImage>(decalModel);
@@ -503,6 +510,7 @@ public class AppearancePanel extends JPanel {
 		// for multi-comp edits, the listeners' decals may not be updated otherwise
 		textureDropDown.addActionListener(new ActionListener() {
 			private DecalImage previousSelection = (DecalImage) decalModel.getSelectedItem();
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				DecalImage decal = (DecalImage) textureDropDown.getSelectedItem();
@@ -528,8 +536,7 @@ public class AppearancePanel extends JPanel {
 					if (!insideBuilder) {
 						previousUserSelectedAppearance = (builder == null) ? null
 								: builder.getAppearance();
-					}
-					else {
+					} else {
 						previousUserSelectedInsideAppearance = (builder == null) ? null
 								: builder.getAppearance();
 					}
@@ -550,8 +557,7 @@ public class AppearancePanel extends JPanel {
 							listener.setAppearance(previousUserSelectedAppearance);
 						}
 						builder.setAppearance(previousUserSelectedAppearance);
-					}
-					else {
+					} else {
 						// Set the listeners' inside appearance to the previous user selected appearance
 						for (AppearanceBuilder listener : builder.getConfigListeners().values()) {
 							listener.setAppearance(previousUserSelectedInsideAppearance);
@@ -570,38 +576,48 @@ public class AppearancePanel extends JPanel {
 		JPanel p = new JPanel(new MigLayout("fill, ins 0", "[grow][]"));
 		mDefault.addEnableComponent(textureDropDown, false);
 		p.add(textureDropDown, "grow");
-		panel.add(p, "span 3, growx, wrap");
+		panel.add(p, "spanx 3, growx, wrap");
 		order.add(textureDropDown);
-		JButton editBtn = new SelectColorButton(
-				trans.get("AppearanceCfg.but.edit"));
-		editBtn.setEnabled(builder.getImage() != null);
-		// Enable the editBtn only when the appearance builder has an Image
-		// assigned to it.
-		builder.addChangeListener(new StateChangeListener() {
-			@Override
-			public void stateChanged(EventObject e) {
-				editBtn.setEnabled(builder.getImage() != null);
-			}
-		});
-
-		editBtn.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				try {
-					DecalImage newImage = editDecalHelper.editDecal(
-							SwingUtilities
-									.getWindowAncestor(panel),
-							document, c, builder.getImage(), insideBuilder);
-					builder.setImage(newImage);
-				} catch (EditDecalHelperException ex) {
-					JOptionPane.showMessageDialog(panel,
-							ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
+			
+		//// Edit button
+		if ((SystemInfo.getPlatform() != Platform.UNIX) || !SystemInfo.isConfined()) {
+			JButton editBtn = new SelectColorButton(
+					trans.get("AppearanceCfg.but.edit"));
+			// Enable the editBtn only when the appearance builder has an Image
+			// assigned to it.
+			editBtn.setEnabled(!materialDefault.isSelected() && builder.getImage() != null);
+			builder.addChangeListener(new StateChangeListener() {
+				@Override
+				public void stateChanged(EventObject e) {
+					editBtn.setEnabled(!materialDefault.isSelected() && builder.getImage() != null);
 				}
-			}
+			});
+			materialDefault.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					editBtn.setEnabled(!materialDefault.isSelected() && builder.getImage() != null);
+				}
+			});
 
-		});
-		p.add(editBtn);
+			editBtn.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					try {
+						DecalImage newImage = editDecalHelper.editDecal(
+								SwingUtilities
+										.getWindowAncestor(panel),
+								document, c, builder.getImage(), insideBuilder);
+						builder.setImage(newImage);
+					} catch (EditDecalHelperException ex) {
+						JOptionPane.showMessageDialog(panel,
+								ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
+					}
+				}
+			});
+			p.add(editBtn);
+		}
 
+		// TODO: move the separate columns in two separate panels instead of adding them in a zig-zag way
 		// Color
 		panel.add(new JLabel(trans.get("AppearanceCfg.lbl.color.Color")));
 		mDefault.addEnableComponent(colorButton, false);
@@ -609,14 +625,14 @@ public class AppearancePanel extends JPanel {
 		order.add(colorButton);
 
 		// Scale
-		panel.add(new JLabel(trans.get("AppearanceCfg.lbl.texture.scale")));
+		panel.add(new JLabel(trans.get("AppearanceCfg.lbl.texture.scale")), "gapleft para");
 
 		panel.add(new JLabel("x:"), "split 4");
 		JSpinner scaleU = new JSpinner(new DoubleModel(builder, "ScaleX",
 				TEXTURE_UNIT).getSpinnerModel());
 		scaleU.setEditor(new SpinnerEditor(scaleU));
 		mDefault.addEnableComponent(scaleU, false);
-		panel.add(scaleU, "w 40");
+		panel.add(scaleU, "w 50lp");
 		order.add(((SpinnerEditor) scaleU.getEditor()).getTextField());
 
 		panel.add(new JLabel("y:"));
@@ -624,7 +640,7 @@ public class AppearancePanel extends JPanel {
 				TEXTURE_UNIT).getSpinnerModel());
 		scaleV.setEditor(new SpinnerEditor(scaleV));
 		mDefault.addEnableComponent(scaleV, false);
-		panel.add(scaleV, "wrap, w 40");
+		panel.add(scaleV, "wrap, w 50lp");
 		order.add(((SpinnerEditor) scaleV.getEditor()).getTextField());
 
 		// Shine
@@ -645,18 +661,18 @@ public class AppearancePanel extends JPanel {
 
 		panel.add(spinShine, "split 3, w 60");
 		panel.add(unitShine);
-		panel.add(slideShine, "w 50, growx");
+		panel.add(slideShine, "w 100lp");
 		order.add(order.indexOf(colorButton) + 1, ((SpinnerEditor) spinShine.getEditor()).getTextField());
 
 		// Offset
-		panel.add(new JLabel(trans.get("AppearanceCfg.lbl.texture.offset")));
+		panel.add(new JLabel(trans.get("AppearanceCfg.lbl.texture.offset")), "gapleft para");
 
 		panel.add(new JLabel("x:"), "split 4");
 		JSpinner offsetU = new JSpinner(new DoubleModel(builder, "OffsetU",
 				TEXTURE_UNIT).getSpinnerModel());
 		offsetU.setEditor(new SpinnerEditor(offsetU));
 		mDefault.addEnableComponent(offsetU, false);
-		panel.add(offsetU, "w 40");
+		panel.add(offsetU, "w 50lp");
 		order.add(((SpinnerEditor) offsetU.getEditor()).getTextField());
 
 		panel.add(new JLabel("y:"));
@@ -664,7 +680,7 @@ public class AppearancePanel extends JPanel {
 				TEXTURE_UNIT).getSpinnerModel());
 		offsetV.setEditor(new SpinnerEditor(offsetV));
 		mDefault.addEnableComponent(offsetV, false);
-		panel.add(offsetV, "wrap, w 40");
+		panel.add(offsetV, "wrap, w 50lp");
 		order.add(((SpinnerEditor) offsetV.getEditor()).getTextField());
 
 		// Opacity
@@ -682,12 +698,12 @@ public class AppearancePanel extends JPanel {
 
 		panel.add(spinOpacity, "split 3, w 60");
 		panel.add(unitOpacity);
-		panel.add(slideOpacity, "w 50, growx");
+		panel.add(slideOpacity, "w 100lp");
 		order.add(order.indexOf(((SpinnerEditor) spinShine.getEditor()).getTextField()) + 1,
 				((SpinnerEditor) spinOpacity.getEditor()).getTextField());
 
 		// Rotation
-		panel.add(new JLabel(trans.get("AppearanceCfg.lbl.texture.rotation")));
+		panel.add(new JLabel(trans.get("AppearanceCfg.lbl.texture.rotation")), "gapleft para");
 		DoubleModel rotationModel = new DoubleModel(builder, "Rotation",
 				UnitGroup.UNITS_ANGLE);
 		JSpinner rotation = new JSpinner(rotationModel.getSpinnerModel());
@@ -699,10 +715,10 @@ public class AppearancePanel extends JPanel {
 		BasicSlider bs = new BasicSlider(rotationModel.getSliderModel(
 				-Math.PI, Math.PI));
 		mDefault.addEnableComponent(bs, false);
-		panel.add(bs, "w 50, wrap");
+		panel.add(bs, "w 100lp, wrap");
 
 		// Repeat
-		panel.add(new JLabel(trans.get("AppearanceCfg.lbl.texture.repeat")), "skip 2");
+		panel.add(new JLabel(trans.get("AppearanceCfg.lbl.texture.repeat")), "skip 2, gapleft para");
 		EdgeMode[] list = new EdgeMode[EdgeMode.values().length];
 		System.arraycopy(EdgeMode.values(), 0, list, 0,
 				EdgeMode.values().length);

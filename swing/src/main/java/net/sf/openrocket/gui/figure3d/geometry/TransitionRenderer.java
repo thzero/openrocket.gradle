@@ -1,4 +1,3 @@
-// thzero
 /*
  ** License Applicability. Except to the extent portions of this file are
  ** made subject to an alternative license as permitted in the SGI Free
@@ -115,9 +114,7 @@
  */
 package net.sf.openrocket.gui.figure3d.geometry;
 
-// thzero - begin
 import com.jogamp.opengl.GL2;
-// thzero - end
 
 import net.sf.openrocket.rocketcomponent.Transition;
 

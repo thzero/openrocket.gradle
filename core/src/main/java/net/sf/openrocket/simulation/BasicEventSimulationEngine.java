@@ -7,7 +7,9 @@ import java.util.Deque;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import net.sf.openrocket.aerodynamics.FlightConditions;
 import net.sf.openrocket.aerodynamics.Warning;
+import net.sf.openrocket.aerodynamics.WarningSet;
 import net.sf.openrocket.l10n.Translator;
 import net.sf.openrocket.motor.IgnitionEvent;
 import net.sf.openrocket.motor.MotorConfiguration;
@@ -58,17 +60,19 @@ public class BasicEventSimulationEngine implements SimulationEngine {
 	
 	// this is just a list of simulation branches to 
 	Deque<SimulationStatus> toSimulate = new ArrayDeque<SimulationStatus>();
+
+	FlightData flightData;
 	
 	@Override
 	public FlightData simulate(SimulationConditions simulationConditions) throws SimulationException {
 		
 		// Set up flight data
-		FlightData flightData = new FlightData();
+		flightData = new FlightData();
 		
 		// Set up rocket configuration
 		this.fcid = simulationConditions.getFlightConfigurationID();
 		FlightConfiguration origConfig = simulationConditions.getRocket().getFlightConfiguration(this.fcid);
-		FlightConfiguration simulationConfig = origConfig.clone();
+		FlightConfiguration simulationConfig = origConfig.clone(simulationConditions.getRocket().copyWithOriginalID());
 		simulationConfig.copyStages(origConfig);	// Clone the stage activation configuration
 		
 		currentStatus = new SimulationStatus(simulationConfig, simulationConditions);
@@ -81,6 +85,13 @@ public class BasicEventSimulationEngine implements SimulationEngine {
 		if (!simulationConfig.hasMotors() ) {
 			throw new MotorIgnitionException(trans.get("BasicEventSimulationEngine.error.noMotorsDefined"));
 		}
+
+		// Can't calculate stability
+		if (currentStatus.getSimulationConditions().getAerodynamicCalculator()
+			.getCP(currentStatus.getConfiguration(),
+				   new FlightConditions(currentStatus.getConfiguration()),
+				   new WarningSet()).weight < MathUtil.EPSILON)
+			throw new SimulationException(trans.get("BasicEventSimulationEngine.error.cantCalculateStability"));
 
 		// Problems that let us simulate, but result is likely bad
 			
@@ -139,6 +150,7 @@ public class BasicEventSimulationEngine implements SimulationEngine {
 			currentStepper = flightStepper;
 		
 		currentStatus = currentStepper.initialize(currentStatus);
+		double previousSimulationTime = currentStatus.getSimulationTime();
 		
 		// Get originating position (in case listener has modified launch position)
 		Coordinate origin = currentStatus.getRocketPosition();
@@ -219,8 +231,8 @@ public class BasicEventSimulationEngine implements SimulationEngine {
 				
 				// Check for apogee
 				if (!currentStatus.isApogeeReached() && currentStatus.getRocketPosition().z < currentStatus.getMaxAlt() - 0.01) {
-					currentStatus.setMaxAltTime(currentStatus.getSimulationTime());
-					addEvent(new FlightEvent(FlightEvent.Type.APOGEE, currentStatus.getSimulationTime(),
+					currentStatus.setMaxAltTime(previousSimulationTime);
+					addEvent(new FlightEvent(FlightEvent.Type.APOGEE, previousSimulationTime,
 							currentStatus.getConfiguration().getRocket()));
 				}
 				
@@ -258,6 +270,8 @@ public class BasicEventSimulationEngine implements SimulationEngine {
 				// If I'm on the ground and have no events in the queue, I'm done
 				if (currentStatus.isLanded() && currentStatus.getEventQueue().isEmpty())
 					addEvent(new FlightEvent(FlightEvent.Type.SIMULATION_END, currentStatus.getSimulationTime()));
+
+				previousSimulationTime = currentStatus.getSimulationTime();
 			}
 			
 		} catch (SimulationException e) {
@@ -265,6 +279,11 @@ public class BasicEventSimulationEngine implements SimulationEngine {
 
 			// Add FlightEvent for Abort.
 			currentStatus.getFlightData().addEvent(new FlightEvent(FlightEvent.Type.EXCEPTION, currentStatus.getSimulationTime(), currentStatus.getConfiguration().getRocket(), e.getLocalizedMessage()));
+
+			flightData.addBranch(currentStatus.getFlightData());
+			flightData.getWarningSet().addAll(currentStatus.getWarnings());
+
+			e.setFlightData(flightData);
 			
 			throw e;
 		}
@@ -377,7 +396,13 @@ public class BasicEventSimulationEngine implements SimulationEngine {
 			
 			case IGNITION: {
 				MotorClusterState motorState = (MotorClusterState) event.getData();
-				
+
+				// If there are multiple ignition events (as is the case if the preceding stage has several burnout events, for instance)
+				// We get multiple ignition events for the upper stage motor.  Ignore are all after the first.
+				if (motorState.getIgnitionTime() < currentStatus.getSimulationTime()) {
+					log.info("Ignoring motor " +motorState.toDescription()+" ignition event @"+currentStatus.getSimulationTime());
+					continue;
+				}
 				log.info("  Igniting motor: "+motorState.toDescription()+" @"+currentStatus.getSimulationTime());
 				motorState.ignite( event.getTime());
 

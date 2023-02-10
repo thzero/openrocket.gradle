@@ -358,6 +358,21 @@ public abstract class Warning {
 	/** A <code>Warning</code> that the body diameter is discontinuous. */
 	////Discontinuity in rocket body diameter.
 	public static final Warning DIAMETER_DISCONTINUITY = new Other(trans.get("Warning.DISCONTINUITY"));
+
+	/** A <code>Warning</code> that a ComponentAssembly has an open forward end */	
+	public static final Warning OPEN_AIRFRAME_FORWARD = new Other(trans.get("Warning.OPEN_AIRFRAME_FORWARD"));
+
+	/** A <code>Warning</code> that there is a gap in the airframe */
+	public static final Warning AIRFRAME_GAP = new Other(trans.get("Warning.AIRFRAME_GAP"));
+
+	/** A <code>Warning</code> that there are overlapping airframe components */
+	public static final Warning AIRFRAME_OVERLAP = new Other(trans.get("Warning.AIRFRAME_OVERLAP"));
+
+	/** A <code>Warning</code> that an inline podset is completely forward of its parent component */
+	public static final Warning PODSET_FORWARD = new Other(trans.get("Warning.PODSET_FORWARD"));
+
+	/** A <code>Warning</code> that an inline podset overlaps its parent component */
+	public static final Warning PODSET_OVERLAP = new Other(trans.get("Warning.PODSET_OVERLAP"));
 	
 	/** A <code>Warning</code> that the fins are thick compared to the rocket body. */
 	////Thick fins may not be modeled accurately.
@@ -390,8 +405,7 @@ public abstract class Warning {
 
 	public static final Warning EVENT_AFTER_LANDING = new Other(trans.get("Warning.EVENT_AFTER_LANDING"));
 
-	public static final Warning ZERO_LENGTH_BODY = new Other(trans.get("Warning.ZERO_LENGTH_BODY"));
-	public static final Warning ZERO_RADIUS_BODY = new Other(trans.get("Warning.ZERO_RADIUS_BODY"));
+	public static final Warning ZERO_VOLUME_BODY = new Other(trans.get("Warning.ZERO_VOLUME_BODY"));
 
 	public static final Warning TUBE_SEPARATION = new Other(trans.get("Warning.TUBE_SEPARATION"));
 	public static final Warning TUBE_OVERLAP = new Other(trans.get("Warning.TUBE_OVERLAP"));

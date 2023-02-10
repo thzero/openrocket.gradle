@@ -8,6 +8,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.awt.geom.Point2D;
 
@@ -435,7 +436,11 @@ public class FreeformFinSetTest extends BaseTestCase {
 		//   /    |
 		//  +=====+
 		Point2D.Double toAdd = new Point2D.Double(1.01, 0.8);
-		fin.addPoint(3, toAdd);
+		try {
+			fin.addPoint(3, toAdd);
+		} catch (IllegalFinPointException e) {
+			fail("IllegalFinPointException thrown");
+		}
 		
         assertEquals(5, fin.getPointCount());
         final Coordinate added = fin.getFinPoints()[3];
@@ -444,7 +449,7 @@ public class FreeformFinSetTest extends BaseTestCase {
 	}
 
     @Test
-    public void testSetFirstPoint() {
+    public void testSetFirstPoint() throws IllegalFinPointException {
     	// more transitions trigger more complicated positioning math:  
 		final Rocket rkt = createTemplateRocket();
 		final Transition tailCone = (Transition) rkt.getChild(0).getChild(2);
@@ -608,7 +613,7 @@ public class FreeformFinSetTest extends BaseTestCase {
     }
 
     @Test
-    public void testSetLastPoint() {
+    public void testSetLastPoint() throws IllegalFinPointException {
     	final Rocket rkt = createTemplateRocket();
 		final Transition tailCone = (Transition) rkt.getChild(0).getChild(2);
 		final FreeformFinSet fins = createFinOnConicalTransition(tailCone);
@@ -774,7 +779,7 @@ public class FreeformFinSetTest extends BaseTestCase {
 	}
 
     @Test
-    public void testSetInteriorPoint() {
+    public void testSetInteriorPoint() throws IllegalFinPointException {
     	final Rocket rkt = createTemplateRocket();
     	final Transition tailCone = (Transition) rkt.getChild(0).getChild(2);
 		final FreeformFinSet fins = this.createFinOnConicalTransition(tailCone);
@@ -878,7 +883,7 @@ public class FreeformFinSetTest extends BaseTestCase {
 	}
 
     @Test
-    public void testSetFirstPoint_clampToLast() {
+    public void testSetFirstPoint_clampToLast() throws IllegalFinPointException {
     	final Rocket rkt = createTemplateRocket();
     	final Transition tailCone = (Transition) rkt.getChild(0).getChild(2);
 		final FreeformFinSet fins = this.createFinOnConicalTransition(tailCone);
@@ -909,7 +914,7 @@ public class FreeformFinSetTest extends BaseTestCase {
     }
     
     @Test
-    public void testSetPoint_otherPoint(){
+    public void testSetPoint_otherPoint() throws IllegalFinPointException {
     	// combine the simple case with the complicated to ensure that the simple case is flagged, tested, and debugged before running the more complicated case...
     	{ // setting points on a Tube Body is the simpler case. Test this first: 
 	    	final Rocket rkt = createTemplateRocket();
@@ -1310,6 +1315,129 @@ public class FreeformFinSetTest extends BaseTestCase {
 							nose.getRadius(rootPoints[testIndex].x + finFront.x) - finFront.y, rootPoints[testIndex].y, EPSILON);
 			    }
 			}
+		}
+	}
+
+	@Test
+	public void testGenerateBodyPointsWhenFinOutsideParentBounds() throws IllegalFinPointException {
+		final Rocket rkt = createTemplateRocket();
+		final Transition tailCone = (Transition) rkt.getChild(0).getChild(2);
+		final FreeformFinSet fins = this.createFinOnConicalTransition(tailCone);
+		final Coordinate[] initialPoints = fins.getFinPoints();
+
+		assertEquals(1.0, tailCone.getLength(), EPSILON);
+
+		{ // move first point out of bounds, keep last point in bounds
+			fins.setAxialOffset(AxialMethod.TOP, 0);
+			fins.setPoints(initialPoints);
+			assertEquals(0f, fins.getFinFront().x, EPSILON);
+			assertEquals(1f, fins.getFinFront().y, EPSILON);
+
+			// Move first point
+			fins.setPoint(0, -0.1, 0.1f);
+
+			final Coordinate[] rootPoints = fins.getRootPoints();
+			assertEquals(3, rootPoints.length);
+
+			assertEquals("incorrect body points! ", 0f, rootPoints[0].x, EPSILON);
+			assertEquals("incorrect body points! ", 0f, rootPoints[0].y, EPSILON);
+
+			assertEquals("incorrect body points! ", 0.1f, rootPoints[1].x, EPSILON);
+			assertEquals("incorrect body points! ", 0f, rootPoints[1].y, EPSILON);
+
+			assertEquals("incorrect body points! ", 0.5f, rootPoints[2].x, EPSILON);
+			assertEquals("incorrect body points! ", -0.2f, rootPoints[2].y, EPSILON);
+
+			assertEquals("incorrect fin mass! ", 0.306, fins.getMass(), EPSILON);
+		} { // move both first and last point out of bounds to the left
+			fins.setAxialOffset(AxialMethod.TOP, 0);
+			fins.setPoints(initialPoints);
+			assertEquals(0f, fins.getFinFront().x, EPSILON);
+			assertEquals(1f, fins.getFinFront().y, EPSILON);
+
+			// Move first and last point
+			fins.setPoint(0, -0.2, 0.1f);
+			fins.setPoint(fins.getPointCount()-1, 0.1, 0.1f);
+
+			final Coordinate[] rootPoints = fins.getRootPoints();
+			assertEquals(2, rootPoints.length);
+
+			assertEquals("incorrect body points! ", 0f, rootPoints[0].x, EPSILON);
+			assertEquals("incorrect body points! ", 0f, rootPoints[0].y, EPSILON);
+
+			assertEquals("incorrect body points! ", 0.1f, rootPoints[1].x, EPSILON);
+			assertEquals("incorrect body points! ", 0f, rootPoints[1].y, EPSILON);
+
+			assertEquals("incorrect fin mass! ", 0.034, fins.getMass(), EPSILON);
+		} { // move last point out of bounds, keep first point in bounds
+			fins.setPoints(initialPoints);
+			fins.setAxialOffset(AxialMethod.BOTTOM, fins.getLength());
+			assertEquals(1f, fins.getFinFront().x, EPSILON);
+			assertEquals(0.5f, fins.getFinFront().y, EPSILON);
+
+			// Move first point
+			fins.setPoint(0, -0.1f, 0.1f);
+			fins.setPoint(fins.getPointCount()-1, 0.2f, 0f);
+
+			final Coordinate[] rootPoints = fins.getRootPoints();
+			assertEquals(3, rootPoints.length);
+
+			assertEquals("incorrect body points! ", 0f, rootPoints[0].x, EPSILON);
+			assertEquals("incorrect body points! ", 0f, rootPoints[0].y, EPSILON);
+
+			assertEquals("incorrect body points! ", 0.1f, rootPoints[1].x, EPSILON);
+			assertEquals("incorrect body points! ", -0.05f, rootPoints[1].y, EPSILON);
+
+			assertEquals("incorrect body points! ", 0.2f, rootPoints[2].x, EPSILON);
+			assertEquals("incorrect body points! ", -0.05f, rootPoints[2].y, EPSILON);
+
+			assertEquals("incorrect fin mass! ", 0.102, fins.getMass(), EPSILON);
+		} { // move both first and last point out of bounds to the right
+			fins.setPoints(initialPoints);
+			fins.setAxialOffset(AxialMethod.BOTTOM, fins.getLength());
+			assertEquals(1f, fins.getFinFront().x, EPSILON);
+			assertEquals(0.5f, fins.getFinFront().y, EPSILON);
+
+			// Move first and last point
+			fins.setPoint(0, 0.1, 0.1f);
+			fins.setPoint(fins.getPointCount()-1, 0.2, 0.1f);
+
+			final Coordinate[] rootPoints = fins.getRootPoints();
+			assertEquals(2, rootPoints.length);
+
+			assertEquals("incorrect body points! ", 0f, rootPoints[0].x, EPSILON);
+			assertEquals("incorrect body points! ", 0f, rootPoints[0].y, EPSILON);
+
+			assertEquals("incorrect body points! ", 0.2f, rootPoints[1].x, EPSILON);
+			assertEquals("incorrect body points! ", 0f, rootPoints[1].y, EPSILON);
+
+			assertEquals("incorrect fin mass! ", 0.068, fins.getMass(), EPSILON);
+		}  { // move first point out of bounds to the left, and last point out of bounds to the right
+			fins.setAxialOffset(AxialMethod.TOP, 0);
+			fins.setPoints(initialPoints);
+			assertEquals(0, fins.getFinFront().x, EPSILON);
+			assertEquals(1, fins.getFinFront().y, EPSILON);
+
+			// Move first and last point
+			fins.setPoint(0, -0.1, 0.1f);
+			fins.setPoint(fins.getPointCount()-1, 1.2, -0.1f);
+
+			final Coordinate[] rootPoints = fins.getRootPoints();
+			assertEquals(4, rootPoints.length);
+
+			assertEquals("incorrect body points! ", 0f, rootPoints[0].x, EPSILON);
+			assertEquals("incorrect body points! ", 0f, rootPoints[0].y, EPSILON);
+
+			assertEquals("incorrect body points! ", 0.1f, rootPoints[1].x, EPSILON);
+			assertEquals("incorrect body points! ", 0f, rootPoints[1].y, EPSILON);
+
+			assertEquals("incorrect body points! ", 1.1f, rootPoints[2].x, EPSILON);
+			assertEquals("incorrect body points! ", -0.5f, rootPoints[2].y, EPSILON);
+
+			assertEquals("incorrect body points! ", 1.2f, rootPoints[3].x, EPSILON);
+			assertEquals("incorrect body points! ", -0.5f, rootPoints[3].y, EPSILON);
+
+			assertEquals("incorrect fin mass! ", 0.833, fins.getMass(), EPSILON);
 		}
 	}
 

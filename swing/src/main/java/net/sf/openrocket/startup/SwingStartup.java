@@ -1,10 +1,10 @@
-// thzero
 package net.sf.openrocket.startup;
 
 import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.stream.IntStream;
@@ -20,10 +20,11 @@ import net.sf.openrocket.arch.SystemInfo.Platform;
 import net.sf.openrocket.communication.UpdateInfo;
 import net.sf.openrocket.communication.UpdateInfoRetriever;
 import net.sf.openrocket.communication.UpdateInfoRetriever.ReleaseStatus;
+import net.sf.openrocket.communication.WelcomeInfoRetriever;
 import net.sf.openrocket.database.Databases;
 import net.sf.openrocket.gui.dialogs.UpdateInfoDialog;
+import net.sf.openrocket.gui.dialogs.WelcomeDialog;
 import net.sf.openrocket.gui.main.BasicFrame;
-import net.sf.openrocket.gui.main.MRUDesignFile;
 import net.sf.openrocket.gui.main.Splash;
 import net.sf.openrocket.gui.main.SwingExceptionHandler;
 import net.sf.openrocket.gui.util.GUIUtil;
@@ -75,12 +76,10 @@ public class SwingStartup {
 		checkHead();
 		
 		// If running on a MAC set up OSX UI Elements.
-// thzero - begin - osx
-//		if (SystemInfo.getPlatform() == Platform.MAC_OS) {
-//			OSXSetup.setupOSX();
-//		}
-// thzero - end - osx
-
+		if (SystemInfo.getPlatform() == Platform.MAC_OS) {
+			OSXSetup.setupOSX();
+		}
+		
 		final SwingStartup runner = new SwingStartup();
 		
 		// Run the actual startup method in the EDT since it can use progress dialogs etc.
@@ -210,18 +209,17 @@ public class SwingStartup {
 		
 		Databases.fakeMethod();
 
-// thzero - begin - osx
-//		// Set up the OSX file open handler here so that it can handle files that are opened when OR is not yet running.
-//		if (SystemInfo.getPlatform() == Platform.MAC_OS) {
-//			OSXSetup.setupOSXOpenFileHandler();
-//		}
-// thzero - end - osx
+		// Set up the OSX file open handler here so that it can handle files that are opened when OR is not yet running.
+		if (SystemInfo.getPlatform() == Platform.MAC_OS) {
+			OSXSetup.setupOSXOpenFileHandler();
+		}
 		
 		// Starting action (load files or open new document)
 		log.info("Opening main application window");
 		if (!handleCommandLine(args)) {
 			BasicFrame startupFrame = BasicFrame.reopen();
 			BasicFrame.setStartupFrame(startupFrame);
+			showWelcomeDialog();
 		}
 		
 		// Check whether update info has been fetched or whether it needs more time
@@ -282,7 +280,7 @@ public class SwingStartup {
 
 					// Only display something when an update is found
 					if (info != null && info.getException() == null && info.getReleaseStatus() == ReleaseStatus.OLDER &&
-						!preferences.getIgnoreVersions().contains(info.getLatestRelease().getReleaseName())) {
+						!preferences.getIgnoreUpdateVersions().contains(info.getLatestRelease().getReleaseName())) {
 						UpdateInfoDialog infoDialog = new UpdateInfoDialog(info);
 						infoDialog.setVisible(true);
 					}
@@ -294,6 +292,34 @@ public class SwingStartup {
 		};
 		timer.addActionListener(listener);
 		timer.start();
+	}
+
+	/**
+	 * Shows a welcome dialog displaying the release notes for this build version.
+	 */
+	public static void showWelcomeDialog() {
+		// Don't show if this build version is ignored
+		if (Application.getPreferences().getIgnoreWelcome(BuildProperties.getVersion())) {
+			log.debug("Welcome dialog ignored");
+			return;
+		}
+
+		// Fetch this version's release notes
+		String releaseNotes;
+		try {
+			releaseNotes = WelcomeInfoRetriever.retrieveWelcomeInfo();
+		} catch (IOException e) {
+			log.error("Error retrieving welcome info", e);
+			return;
+		}
+		if (releaseNotes == null) {
+			log.debug("No release notes found");
+			return;
+		}
+
+		// Show the dialog
+		WelcomeDialog dialog = new WelcomeDialog(releaseNotes);
+		dialog.setVisible(true);
 	}
 	
 	/**

@@ -16,7 +16,6 @@ import net.sf.openrocket.gui.components.StyledLabel;
 import net.sf.openrocket.gui.components.StyledLabel.Style;
 import net.sf.openrocket.l10n.Translator;
 import net.sf.openrocket.rocketcomponent.AxialStage;
-import net.sf.openrocket.rocketcomponent.FlightConfiguration;
 import net.sf.openrocket.rocketcomponent.RocketComponent;
 import net.sf.openrocket.rocketcomponent.StageSeparationConfiguration;
 import net.sf.openrocket.rocketcomponent.StageSeparationConfiguration.SeparationEvent;
@@ -38,39 +37,42 @@ public class AxialStageConfig extends ComponentAssemblyConfig {
 		}
 
 		// Apply the custom focus travel policy to this config dialog
-		order.add(closeButton);		// Make sure the close button is the last component
+		//// Make sure the cancel & ok button is the last component
+		order.add(cancelButton);
+		order.add(okButton);
 		CustomFocusTraversalPolicy policy = new CustomFocusTraversalPolicy(order);
 		parent.setFocusTraversalPolicy(policy);
 	}
 	
 	
 	private JPanel separationTab(AxialStage stage) {
-		JPanel panel = new JPanel(new MigLayout("fill"));
+		JPanel panel = new JPanel(new MigLayout());
 		
 		// Select separation event
-		panel.add(new StyledLabel(trans.get("StageConfig.separation.lbl.title") + " " + CommonStrings.dagger, Style.BOLD), "spanx, wrap rel");
+		panel.add(new StyledLabel(trans.get("StageConfig.separation.lbl.title") + " " + CommonStrings.dagger, Style.BOLD),
+				"spanx, gaptop unrel, wrap 30lp");
 
 		StageSeparationConfiguration sepConfig = stage.getSeparationConfiguration();
 		
 		JComboBox<?> combo = new JComboBox<>(new EnumModel<>( sepConfig, "SeparationEvent", SeparationEvent.values()));
 		
 		//combo.setSelectedItem(sepConfig);
-		panel.add(combo, "");
+		panel.add(combo);
 		order.add(combo);
 		
 		// ... and delay
-		panel.add(new JLabel(trans.get("StageConfig.separation.lbl.plus")), "");
+		panel.add(new JLabel(trans.get("StageConfig.separation.lbl.plus")));
 		
 		DoubleModel dm = new DoubleModel( sepConfig, "SeparationDelay", 0);
 		JSpinner spin = new JSpinner(dm.getSpinnerModel());
 		spin.setEditor(new SpinnerEditor(spin));
-		panel.add(spin, "width 45");
+		panel.add(spin, "width 65lp");
 		order.add(((SpinnerEditor)spin.getEditor()).getTextField());
 		
 		//// seconds
 		panel.add(new JLabel(trans.get("StageConfig.separation.lbl.seconds")), "wrap unrel");
 		
-		panel.add(new StyledLabel(CommonStrings.override_description, -1), "spanx, wrap para");
+		panel.add(new StyledLabel(CommonStrings.override_description, -1), "spanx, pushy, wrap para");
 
 		return panel;
 	}

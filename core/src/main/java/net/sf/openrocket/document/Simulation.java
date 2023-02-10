@@ -69,13 +69,14 @@ public class Simulation implements ChangeSource, Cloneable {
 	
 	
 	private SafetyMutex mutex = SafetyMutex.newInstance();
-	
+
+	private final OpenRocketDocument document;
 	private final Rocket rocket;
 	FlightConfigurationId configId = FlightConfigurationId.ERROR_FCID;
 	
 	private String name = "";
 	
-	private Status status = Status.NOT_SIMULATED;
+	private Status status;
 	
 	/** The conditions to use */
 	// TODO: HIGH: Change to use actual conditions class??
@@ -98,7 +99,7 @@ public class Simulation implements ChangeSource, Cloneable {
 	private SimulationOptions simulatedConditions = null;
 	private String simulatedConfigurationDescription = null;
 	private FlightData simulatedData = null;
-	private int simulatedRocketID = -1;
+	private int simulatedConfigurationID = -1;
 	
 	
 	/**
@@ -107,21 +108,33 @@ public class Simulation implements ChangeSource, Cloneable {
 	 *
 	 * @param rocket	the rocket associated with the simulation.
 	 */
-	public Simulation(Rocket rocket) {
+	public Simulation(OpenRocketDocument document, Rocket rocket) {
+		this.document = document;
 		this.rocket = rocket;
 		this.status = Status.NOT_SIMULATED;
-		
+
 		DefaultSimulationOptionFactory f = Application.getInjector().getInstance(DefaultSimulationOptionFactory.class);
 		options.copyConditionsFrom(f.getDefault());
-		
+
 		FlightConfigurationId fcid = rocket.getSelectedConfiguration().getFlightConfigurationID();
 		setFlightConfigurationId(fcid);
-		
+
 		options.addChangeListener(new ConditionListener());
+		addChangeListener(document);
+	}
+
+	/**
+	 * Create a new simulation for the rocket. Parent document should also be provided.
+	 * The initial motor configuration is taken from the default rocket configuration.
+	 *
+	 * @param rocket	the rocket associated with the simulation.
+	 */
+	public Simulation(Rocket rocket) {
+		this(null, rocket);
 	}
 	
 	
-	public Simulation(Rocket rocket, Status status, String name, SimulationOptions options,
+	public Simulation(OpenRocketDocument document, Rocket rocket, Status status, String name, SimulationOptions options,
 			List<SimulationExtension> extensions, FlightData data) {
 		
 		if (rocket == null)
@@ -132,7 +145,8 @@ public class Simulation implements ChangeSource, Cloneable {
 			throw new IllegalArgumentException("name cannot be null");
 		if (options == null)
 			throw new IllegalArgumentException("options cannot be null");
-		
+
+		this.document = document;
 		this.rocket = rocket;
 
 		if (status == Status.UPTODATE) {
@@ -147,9 +161,11 @@ public class Simulation implements ChangeSource, Cloneable {
 		
 		this.options = options;
 
-		this.setFlightConfigurationId( rocket.getSelectedConfiguration().getFlightConfigurationID());
+		final FlightConfiguration config = rocket.getSelectedConfiguration();
+		this.setFlightConfigurationId(config.getFlightConfigurationID());
 				
 		options.addChangeListener(new ConditionListener());
+		addChangeListener(document);
 		
 		if (extensions != null) {
 			this.simulationExtensions.addAll(extensions);
@@ -160,7 +176,7 @@ public class Simulation implements ChangeSource, Cloneable {
 			simulatedData = data;
 			if (this.status == Status.LOADED) {
 				simulatedConditions = options.clone();
-				simulatedRocketID = rocket.getModID();
+				simulatedConfigurationID = config.getModID();
 			}
 		}
 		
@@ -308,8 +324,10 @@ public class Simulation implements ChangeSource, Cloneable {
 	 */
 	public Status getStatus() {
 		mutex.verify();
+		final FlightConfiguration config = rocket.getFlightConfiguration(this.getId()).clone();
+
 		if (isStatusUpToDate(status)) {
-			if (rocket.getFunctionalModID() != simulatedRocketID || !options.equals(simulatedConditions)) {
+			if (config.getModID() != simulatedConfigurationID || !options.equals(simulatedConditions)) {
 				status = Status.OUTDATED;
 			}
 		}
@@ -320,8 +338,6 @@ public class Simulation implements ChangeSource, Cloneable {
 			status = Status.CANT_RUN;
 			return status;
 		}
-		
-		FlightConfiguration config = rocket.getFlightConfiguration( this.getId()).clone();
 				
 		//Make sure this simulation has motors.
 		if ( ! config.hasMotors() ){
@@ -338,7 +354,13 @@ public class Simulation implements ChangeSource, Cloneable {
 	public static boolean isStatusUpToDate(Status status) {
 		return status == Status.UPTODATE || status == Status.LOADED || status == Status.EXTERNAL;
 	}
-	
+
+	/**
+	 * Syncs the modID with its flight configuration.
+	 */
+	public void syncModID() {
+		this.simulatedConfigurationID = getActiveConfiguration().getModID();
+	}
 	
 	
 	/**
@@ -384,15 +406,19 @@ public class Simulation implements ChangeSource, Cloneable {
 			simulatedData = simulator.simulate(simulationConditions);
 			t2 = System.currentTimeMillis();
 			log.debug("Simulation: returning from simulator, simulation took " + (t2 - t1) + "ms");
-			
-			// Set simulated info after simulation, will not be set in case of exception
+
+		} catch (SimulationException e) {
+			simulatedData = e.getFlightData();
+			throw e;
+		} finally {
+			// Set simulated info after simulation
 			simulatedConditions = options.clone();
 			simulatedConfigurationDescription = descriptor.format( this.rocket, getId());
-			simulatedRocketID = rocket.getFunctionalModID();
+			simulatedConfigurationID = getActiveConfiguration().getModID();
 			
 			status = Status.UPTODATE;
 			fireChangeEvent();
-		} finally {
+
 			mutex.unlock("simulate");
 		}
 	}
@@ -488,7 +514,7 @@ public class Simulation implements ChangeSource, Cloneable {
 			copy.simulatedConditions = null;
 			copy.simulatedConfigurationDescription = null;
 			copy.simulatedData = null;
-			copy.simulatedRocketID = -1;
+			copy.simulatedConfigurationID = -1;
 			
 			return copy;
 			
@@ -514,7 +540,7 @@ public class Simulation implements ChangeSource, Cloneable {
 	public Simulation duplicateSimulation(Rocket newRocket) {
 		mutex.lock("duplicateSimulation");
 		try {
-			final Simulation newSim = new Simulation(newRocket);
+			final Simulation newSim = new Simulation(this.document, newRocket);
 			newSim.name = this.name;
 			newSim.configId = this.configId;
 			newSim.options.copyFrom(this.options);

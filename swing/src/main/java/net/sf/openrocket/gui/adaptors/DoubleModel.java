@@ -220,6 +220,19 @@ public class DoubleModel implements StateChangeListener, ChangeSource, Invalidat
 
 			quad2 = quad1 = quad0 = 0; // Not used
 		}
+
+		public ValueSliderModel(DoubleModel min, double max) {
+			this.islinear = true;
+			linearPosition = 1.0;
+
+			this.min = min;
+			this.mid = new DoubleModel(max); // Never use exponential scale
+			this.max = new DoubleModel(max);
+
+			min.addChangeListener(this);
+
+			quad2 = quad1 = quad0 = 0; // Not used
+		}
 		
 		
 		
@@ -308,7 +321,7 @@ public class DoubleModel implements StateChangeListener, ChangeSource, Invalidat
 				return MAX;
 			
 			double x;
-			if (value <= mid.getValue()) {
+			if ((value <= mid.getValue()) || (quad2 == 0)) {		// If quad 2 is 0, the midpoint is perfectly in center
 				// Use linear scale
 				//linear0 = min;
 				//linear1 = (mid-min)/pos;
@@ -430,8 +443,14 @@ public class DoubleModel implements StateChangeListener, ChangeSource, Invalidat
 				fireStateChanged();
 		}
 	}
-	
-	
+
+	public BoundedRangeModel getSliderModel() {
+		if (minValue == Double.NEGATIVE_INFINITY || maxValue == Double.POSITIVE_INFINITY) {
+			throw new IllegalArgumentException("Cannot create slider model for unbounded range");
+		}
+		return new ValueSliderModel(minValue, maxValue);
+	}
+
 	public BoundedRangeModel getSliderModel(DoubleModel min, DoubleModel max) {
 		return new ValueSliderModel(min, max);
 	}
@@ -443,9 +462,16 @@ public class DoubleModel implements StateChangeListener, ChangeSource, Invalidat
 	public BoundedRangeModel getSliderModel(double min, DoubleModel max) {
 		return new ValueSliderModel(min, max);
 	}
+
+	public BoundedRangeModel getSliderModel(DoubleModel min, double max) {
+		return new ValueSliderModel(min, max);
+	}
 	
 	public BoundedRangeModel getSliderModel(double min, double mid, double max) {
-		return new ValueSliderModel(min, mid, max);
+		if (MathUtil.equals(mid, (max + min)/2.0))
+			return new ValueSliderModel(min, max);
+		else
+			return new ValueSliderModel(min, mid, max);
 	}
 	
 	public BoundedRangeModel getSliderModel(double min, double mid, DoubleModel max) {

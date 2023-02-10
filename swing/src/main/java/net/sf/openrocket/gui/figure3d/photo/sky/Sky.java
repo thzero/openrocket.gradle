@@ -1,9 +1,6 @@
-// thzero
 package net.sf.openrocket.gui.figure3d.photo.sky;
 
-// thzero - begin
 import com.jogamp.opengl.GL2;
-// thzero - end
 
 import net.sf.openrocket.gui.figure3d.TextureCache;
 

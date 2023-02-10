@@ -1,4 +1,3 @@
-// thzero
 package net.sf.openrocket.gui.figure3d;
 
 import java.awt.Point;
@@ -9,13 +8,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-// thzero - begin
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GL2GL3;
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.fixedfunc.GLLightingFunc;
-// thzero - end
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

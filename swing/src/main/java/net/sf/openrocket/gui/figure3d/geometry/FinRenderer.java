@@ -1,7 +1,5 @@
-// thzero
 package net.sf.openrocket.gui.figure3d.geometry;
 
-// thzero - begin
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.fixedfunc.GLLightingFunc;
@@ -10,7 +8,6 @@ import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.glu.GLUtessellator;
 import com.jogamp.opengl.glu.GLUtessellatorCallback;
 import com.jogamp.opengl.glu.GLUtessellatorCallbackAdapter;
-// thzero - end
 
 import net.sf.openrocket.rocketcomponent.EllipticalFinSet;
 import net.sf.openrocket.rocketcomponent.FinSet;
@@ -84,7 +81,7 @@ public class FinRenderer {
 			GLU.gluTessCallback(tess, GLU.GLU_TESS_COMBINE, cb);
 
 			// fin side: +z
-			if (finSet.getSpan() > 0 && finSet.getLength() > 0 && which == Surface.INSIDE) {		// Right side
+			if (finSet.getSpan() > 0 && which == Surface.INSIDE) {		// Right side
 				GLU.gluTessBeginPolygon(tess, null);
 				GLU.gluTessBeginContour(tess);
 				gl.glNormal3f(0, 0, 1);
@@ -113,7 +110,7 @@ public class FinRenderer {
 			}
 			
 			// fin side: -z
-			if (finSet.getSpan() > 0 && finSet.getLength() > 0 && which == Surface.OUTSIDE) {		// Left side
+			if (finSet.getSpan() > 0 && which == Surface.OUTSIDE) {		// Left side
 				GLU.gluTessBeginPolygon(tess, null);
 				GLU.gluTessBeginContour(tess);
 				gl.glNormal3f(0, 0, -1);
@@ -145,7 +142,7 @@ public class FinRenderer {
 			GLU.gluDeleteTess(tess);
 			
 			// Fin strip around the edge
-			if (finSet.getSpan() > 0 && finSet.getLength() > 0 && which == Surface.EDGES) {
+			if (finSet.getSpan() > 0 && which == Surface.EDGES) {
 				if (!(finSet instanceof EllipticalFinSet))
 					gl.glShadeModel(GLLightingFunc.GL_FLAT);
 				gl.glBegin(GL.GL_TRIANGLE_STRIP);
