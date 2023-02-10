@@ -1,0 +1,3 @@
+[submodule "swing/src/main/resources/datafiles/components-dbcook"]
+	path = swing/src/main/resources/datafiles/components-dbcook
+	url = https://github.com/dbcook/openrocket-database.git
