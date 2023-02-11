@@ -18,18 +18,27 @@ repositories {
 }
 
 dependencies {
-    implementation group: 'org.commonmark', name: 'commonmark', version: '0.18.1'
-    implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25' // 1.7.30
+    implementation group: 'org.commonmark', name: 'commonmark', version: '0.19.0'
+    implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.30' // 1.7.30
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.8.1' // 3.11
     implementation group: 'com.google.inject', name: 'guice', version: '4.2.2' // 4.2.3
-    implementation group: 'com.opencsv', name: 'opencsv', version: '4.3.2' // 5.3
+    implementation group: 'com.opencsv', name: 'opencsv', version: '5.7.1' // 5.3
     implementation group: 'eu.infomas', name: 'annotation-detector', version: '3.0.5'
+    implementation group: 'org.graalvm.sdk', name: 'graal-sdk', version: '22.1.0.1'
+    implementation group: 'org.graalvm.js', name: 'js-scriptengine', version: '22.1.0.1'
+//    implementation group: 'javax.script', name: 'script-api', version: '1.0-osgi'
+    implementation group: 'org.graalvm.truffle', name: 'truffle-api', version: '22.1.0.1'
+    implementation group: 'com.google.inject', name: 'guice', version: '4.2.3'
+    implementation group: 'com.ibm.icu', name: 'icu4j', version: '71.1'
+    implementation group: 'com.sun.istack', name: 'istack-commons-tools', version: '4.1.1' // TODO: Should be gotten rid of?
+    implementation group: 'com.sun.istack', name: 'istack-commons-runtime', version: '4.1.1' // TODO: Should be gotten rid of?
 
     implementation group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.1'
     implementation 'org.glassfish.jaxb:jaxb-runtime:2.3.1'
     implementation 'org.glassfish:javax.json:1.1.3' // 1.1.4
     implementation 'org.eclipse:yasson:1.0.2' // 2.0.1
     implementation group: 'javax.activation', name: 'javax.activation-api', version: '1.2.0'
+
 
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.3.1' // 5.7.0
     testImplementation group: 'org.jmock', name: 'jmock', version: '2.9.0' // 2.12
@@ -38,6 +47,21 @@ dependencies {
 //    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
 //    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
 }
+
+task copyFilesMain(type: Copy) {
+    from('../') {
+        include 'ReleaseNotes.md'
+    }
+    into './src/main/resources'
+}
+task copyFilesTest(type: Copy) {
+    from('../') {
+        include 'ReleaseNotes.md'
+    }
+    into './src/test/resources'
+}
+
+compileJava.dependsOn([copyFilesMain, copyFilesTest])
 
 task testCoreArtifactsJar(type: Jar) {
 //    classifier = "tests"
