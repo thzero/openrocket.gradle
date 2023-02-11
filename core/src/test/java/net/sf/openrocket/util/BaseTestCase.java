@@ -1,4 +1,6 @@
-package net.sf.openrocket.util.BaseTestCase;
+// thzero - begin
+package net.sf.openrocket.util;
+// thzero - end
 
 import net.sf.openrocket.ServicesForTesting;
 import net.sf.openrocket.l10n.DebugTranslator;

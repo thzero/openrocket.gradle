@@ -1,3 +1,4 @@
+// thzero
 package net.sf.openrocket.simulation;
 
 import net.sf.openrocket.document.Simulation;
@@ -6,7 +7,9 @@ import net.sf.openrocket.rocketcomponent.FlightConfigurationId;
 import net.sf.openrocket.rocketcomponent.Rocket;
 import net.sf.openrocket.simulation.exception.MotorIgnitionException;
 import net.sf.openrocket.simulation.exception.SimulationException;
-import net.sf.openrocket.util.BaseTestCase.BaseTestCase;
+// thzero - begin
+import net.sf.openrocket.util.BaseTestCase;
+// thzero - end
 import net.sf.openrocket.util.TestRockets;
 import org.junit.Assert;
 import org.junit.Test;

@@ -1,6 +1,6 @@
 // thzero
 /*
- * RocksimLoaderTest.java
+ * RockSimLoaderTest.java
  *
  */
 package net.sf.openrocket.file.rocksim.importt;
@@ -80,7 +80,9 @@ public class RockSimLoaderTest extends BaseTestCase {
         Assert.assertEquals("FinsOnTransitions", doc.getRocket().getName());
         Assert.assertTrue(loader.getWarnings().isEmpty());
 
-        InputStream stream = this.getClass().getResourceAsStream("FinsOnTransitions.rkt");
+// thzero - begin
+        InputStream stream = this.getClass().getResourceAsStream("/rocksim/FinsOnTransitions.rkt");
+// thzero - end
         Assert.assertNotNull("Could not open FinsOnTransitions.rkt", stream);
 
         doc = OpenRocketDocumentFactory.createEmptyRocket();
@@ -169,7 +171,9 @@ public class RockSimLoaderTest extends BaseTestCase {
         Assert.assertEquals("FooBar Test", doc.getRocket().getName());
         Assert.assertTrue(loader.getWarnings().isEmpty());
 
-        stream = this.getClass().getResourceAsStream("rocksimTestRocket2.rkt");
+// thzero - begin
+        stream = this.getClass().getResourceAsStream("/rocksim/rocksimTestRocket2.rkt");
+// thzero - end
         Assert.assertNotNull("Could not open rocksimTestRocket2.rkt", stream);
 
         doc = OpenRocketDocumentFactory.createEmptyRocket();
@@ -338,7 +342,9 @@ public class RockSimLoaderTest extends BaseTestCase {
         Assert.assertEquals("SubAssembly Test", doc.getRocket().getName());
         Assert.assertEquals(2, loader.getWarnings().size());    // can't add BodyTube to NoseCone, and can't add Transition to Transition
 
-        InputStream stream = this.getClass().getResourceAsStream("SubAssemblyTest.rkt");
+// thzero - begin
+        InputStream stream = this.getClass().getResourceAsStream("/rocksim/SubAssemblyTest.rkt");
+// thzero - end
         Assert.assertNotNull("Could not open SubAssemblyTest.rkt", stream);
 
         doc = OpenRocketDocumentFactory.createEmptyRocket();
@@ -403,7 +409,9 @@ public class RockSimLoaderTest extends BaseTestCase {
         Assert.assertEquals("Pod Test", doc.getRocket().getName());
         Assert.assertEquals(3, loader.getWarnings().size());
 
-        InputStream stream = this.getClass().getResourceAsStream("PodTest.rkt");
+// thzero - begin
+        InputStream stream = this.getClass().getResourceAsStream("/rocksim/PodTest.rkt");
+// thzero - end
         Assert.assertNotNull("Could not open PodTest.rkt", stream);
 
         doc = OpenRocketDocumentFactory.createEmptyRocket();

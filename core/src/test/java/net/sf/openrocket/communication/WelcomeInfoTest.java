@@ -1,6 +1,10 @@
+// thzero
 package net.sf.openrocket.communication;
 
-import net.sf.openrocket.util.BaseTestCase.BaseTestCase;
+import org.junit.Test;
+// thzero - begin
+import net.sf.openrocket.util.BaseTestCase;
+// thzero - end
 import org.junit.Test;
 
 import static org.junit.Assert.assertNotNull;
