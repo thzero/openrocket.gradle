@@ -26,6 +26,8 @@
 /core/build
 /core/tmp
 /core/misc
+/core/src/main/resources/ReleaseNotes.md
+/core/src/test/resources/ReleaseNotes.md
 
 # /core/doc/techdoc/
 /core/doc/techdoc/*.aux
