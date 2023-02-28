@@ -26,6 +26,13 @@ dependencies {
     implementation project(':swing')
 }
 
+task buildSomethingElse(type: GradleBuild) {
+    buildFile = '../someOtherDirectory/build.gradle'
+    tasks = ['build']
+}
+
+build.finalizedBy('buildsomethingElse')
+
 jar {
     // Keep jar clean:
 //    exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA', 'META-INF/*.MF'

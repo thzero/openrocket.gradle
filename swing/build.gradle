@@ -46,3 +46,16 @@ dependencies {
 
     testImplementation project (path: ':core', configuration: 'testArtifacts')
 }
+
+task initComponents(type: Copy) {
+    from('./resources-src/datafiles/components-openrocket') {
+    }
+    from('./resources-src/datafiles/components-dbcook/orc') {
+    }
+    into './src/main/resources/datafiles/components'
+    exclude '**/*.bak'
+
+    includeEmptyDirs = false
+}
+
+compileJava.dependsOn([initComponents])

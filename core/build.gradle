@@ -51,7 +51,7 @@ task serializeEngines(type: JavaExec) {
     workingDir  new File(projectDir, 'build/tmp')
     classpath = sourceSets["main"].runtimeClasspath
     mainClass = 'net.sf.openrocket.thrustcurve.SerializeThrustcurveMotors'
-    args "../../src/main/resources-src/datafiles/thrustcurves/", "../../src/main/resources/datafiles/thrustcurves/thrustcurves.ser"
+    args "../../resources-src/datafiles/thrustcurves/", "../../src/main/resources/datafiles/thrustcurves/thrustcurves.ser"
 }
 
 task copyFilesMain(type: Copy) {
