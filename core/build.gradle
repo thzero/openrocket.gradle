@@ -39,13 +39,19 @@ dependencies {
     implementation 'org.eclipse:yasson:1.0.2' // 2.0.1
     implementation group: 'javax.activation', name: 'javax.activation-api', version: '1.2.0'
 
-
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.3.1' // 5.7.0
     testImplementation group: 'org.jmock', name: 'jmock', version: '2.9.0' // 2.12
     testImplementation group: 'org.jmock', name: 'jmock-junit4', version: '2.9.0' // 2.12.0
     testImplementation 'junit:junit:4.12' // 4.3.1 org.junit.jupiter
 //    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
 //    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+}
+
+task serializeEngines(type: JavaExec) {
+    workingDir  new File(projectDir, 'build/tmp')
+    classpath = sourceSets["main"].runtimeClasspath
+    mainClass = 'net.sf.openrocket.thrustcurve.SerializeThrustcurveMotors'
+    args "../../src/main/resources-src/datafiles/thrustcurves/", "../../src/main/resources/datafiles/thrustcurves/thrustcurves.ser"
 }
 
 task copyFilesMain(type: Copy) {
@@ -64,7 +70,6 @@ task copyFilesTest(type: Copy) {
 compileJava.dependsOn([copyFilesMain, copyFilesTest])
 
 task testCoreArtifactsJar(type: Jar) {
-//    classifier = "tests"
     archiveClassifier.set("tests")
     from sourceSets.test.output
     exclude "**/META-INF", "**/pix", "**/arch", "**/communication", "**/database", "**/file", "**/l10n", "**/models", "**/motor", "**/optimization", "**/plugin", "**/preset", "**/rocketcomponent", "**/simulation", "**/startup", "**/unit"
