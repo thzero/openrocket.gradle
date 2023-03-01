@@ -26,12 +26,8 @@ dependencies {
     implementation project(':swing')
 }
 
-task buildSomethingElse(type: GradleBuild) {
-    buildFile = '../someOtherDirectory/build.gradle'
-    tasks = ['build']
+task serializeEngines(dependsOn: ':core:serializeEngines') {
 }
-
-build.finalizedBy('buildsomethingElse')
 
 jar {
     // Keep jar clean:
@@ -39,8 +35,8 @@ jar {
 //    baseName = 'openrocket'
 //    classifier = null
 
+    archiveBaseName.set('openrocket')
     archiveClassifier.set("openrocket")
-    getArchiveBaseName().set('null')
 
     manifest {
         attributes (
@@ -50,7 +46,9 @@ jar {
     }
 }
 
+jar.dependsOn([serializeEngines])
+
 shadowJar {
-    baseName = 'openrocket'
-    classifier = null
+    archiveBaseName.set('openrocket')
+    archiveClassifier.set("openrocket")
 }
