@@ -46,20 +46,20 @@ dependencies {
 //    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
 }
 
-task serializeEngines(type: JavaExec) {
+tasks.register('serializeEngines', JavaExec) {
     workingDir  new File(projectDir, 'build/tmp')
-    classpath = sourceSets["main"].runtimeClasspath
-    mainClass = 'net.sf.openrocket.thrustcurve.SerializeThrustcurveMotors'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass.set('net.sf.openrocket.thrustcurve.SerializeThrustcurveMotors')
     args "../../resources-src/datafiles/thrustcurves/", "../../src/main/resources/datafiles/thrustcurves/thrustcurves.ser"
 }
 
-task copyFilesMain(type: Copy) {
+tasks.register('copyFilesMain', Copy) {
     from('../') {
         include 'ReleaseNotes.md'
     }
     into './src/main/resources'
 }
-task copyFilesTest(type: Copy) {
+tasks.register('copyFilesTest', Copy) {
     from('../') {
         include 'ReleaseNotes.md'
     }
@@ -68,7 +68,7 @@ task copyFilesTest(type: Copy) {
 
 compileJava.dependsOn([copyFilesMain, copyFilesTest])
 
-task testCoreArtifactsJar(type: Jar) {
+tasks.register('testCoreArtifactsJar', Jar) {
     archiveClassifier.set("tests")
     from sourceSets.test.output
     exclude "**/META-INF", "**/pix", "**/arch", "**/communication", "**/database", "**/file", "**/l10n", "**/models", "**/motor", "**/optimization", "**/plugin", "**/preset", "**/rocketcomponent", "**/simulation", "**/startup", "**/unit"

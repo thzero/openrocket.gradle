@@ -30,11 +30,6 @@ task serializeEngines(dependsOn: ':core:serializeEngines') {
 }
 
 jar {
-    // Keep jar clean:
-//    exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA', 'META-INF/*.MF'
-//    baseName = 'openrocket'
-//    classifier = null
-
     archiveBaseName.set('openrocket')
     archiveClassifier.set("openrocket")
 
@@ -52,3 +47,5 @@ shadowJar {
     archiveBaseName.set('openrocket')
     archiveClassifier.set("openrocket")
 }
+
+shadowJar.dependsOn([serializeEngines])

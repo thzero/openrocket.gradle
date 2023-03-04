@@ -47,15 +47,73 @@ dependencies {
     testImplementation project (path: ':core', configuration: 'testArtifacts')
 }
 
-task initComponents(type: Copy) {
+tasks.register('externalComponentsCopy', Copy) {
+    dependsOn 'externalComponentsValidate'
+    // gradle always performs up-to-date check which causes copying be skipped.
     from('./resources-src/datafiles/components-openrocket') {
     }
     from('./resources-src/datafiles/components-dbcook/orc') {
     }
     into './src/main/resources/datafiles/components'
     exclude '**/*.bak'
-
     includeEmptyDirs = false
+    eachFile { details ->
+        println "Copying $details.sourcePath to $details.path ..."
+    }
+}
+tasks.register('externalComponentsInit') {
+    doLast {
+        exec {
+            workingDir "../"
+            executable 'git'
+            args 'submodule', 'init'
+        }
+        println "Executed externalComponentsInit!"
+    }
+}
+tasks.register('externalComponentsValidate') {
+        def externalResourceComponents = './resources-src/datafiles/components-dbcook/orc';
+        def git = '../.git';
+        if (!project.file(externalResourceComponents).exists()) {
+            println "found: ${project.file(externalResourceComponents)}"
+            def message = "The component database is now a submodule, and must be included into\n" +
+                    "this project to compile and run the app.\n" +
+                    "\n";
+            if (project.file(git).exists()) {
+                message +=
+                        "If you retrieved this code by cloning the openrocket repository, \n" +
+                        "the Gradle build will initialize the submodule if missing.\n" +
+                        "\n" +
+                        "You can also manually initialize and update the submodule from the \n" +
+                        "command line\n" +
+                        "% git submodule init\n" +
+                        "% git submodule update --remote\n" +
+                        "\n";
+                println message
+                dependsOn externalComponentsUpdate
+            } else {
+                message +=
+                        "If you retrieved this code by downloading and uncompressing a zip file,\n" +
+                                "Download the code\n" +
+                                "from https://github.com/dbcook/openrocket-database and uncompress it.\n" +
+                                "Copy the files and directories under openrocket-database-master\n" +
+                                "into ''./swing/${externalResourceComponents}''\n" +
+                                "\n";
+                println message
+                throw new GradleException('Invalid external component resources.')
+            }
+    }
+}
+tasks.register('externalComponentsUpdate') {
+    dependsOn 'externalComponentsInit'
+    doLast {
+        exec {
+            workingDir "../"
+            executable 'git'
+            args 'submodule', 'update', '--force', '--init', '--remote'
+        }
+        println "Executed externalComponentsUpdate!"
+    }
 }
 
-compileJava.dependsOn([initComponents])
+compileJava.dependsOn([externalComponentsCopy])
