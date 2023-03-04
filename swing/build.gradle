@@ -110,7 +110,7 @@ tasks.register('externalComponentsUpdate') {
         exec {
             workingDir "../"
             executable 'git'
-            args 'submodule', 'update', '--force', '--init', '--remote'
+            args 'submodule', 'update', '--remote'
         }
         println "Executed externalComponentsUpdate!"
     }
