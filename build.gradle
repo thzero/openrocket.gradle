@@ -26,12 +26,12 @@ dependencies {
     implementation project(':swing')
 }
 
-task serializeEngines(dependsOn: ':core:serializeEngines') {
-}
+//tasks.register('serializeEngines') {
+//    dependsOn ':core:serializeEngines'
+//}
 
 jar {
     archiveBaseName.set('openrocket')
-    archiveClassifier.set("openrocket")
 
     manifest {
         attributes (
@@ -41,11 +41,24 @@ jar {
     }
 }
 
-jar.dependsOn([serializeEngines])
-
 shadowJar {
     archiveBaseName.set('openrocket')
-    archiveClassifier.set("openrocket")
+    archiveClassifier.set(null)
 }
 
-shadowJar.dependsOn([serializeEngines])
+//shadowJar.dependsOn([':core:serializeEngines'])
+
+tasks.register('deploy') {
+    group = 'openrocket'
+    dependsOn 'shadowJar'
+    doLast {
+        println "Completed the deployable jar in './build/libs"
+    }
+}
+tasks.register('deployFull') {
+    group = 'openrocket'
+    dependsOn ':core:serializeEngines', 'shadowJar'
+    doLast {
+        println "Completed the full build and deployable jar in './build/libs"
+    }
+}

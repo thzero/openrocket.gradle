@@ -46,11 +46,27 @@ dependencies {
 //    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
 }
 
-tasks.register('serializeEngines', JavaExec) {
+def serializedEnginesPath = './src/main/resources/datafiles/thrustcurves/thrustcurves.ser'
+tasks.register('serializeEnginesDelete', Delete) {
+    group = 'openrocket'
+    delete fileTree(serializedEnginesPath)
+}
+tasks.register('serializeEngines') {
+    group = 'openrocket'
+    if (!project.file(serializedEnginesPath).exists()) {
+        println 'Serializing engines.'
+        dependsOn serializeEnginesExecute
+    }
+    else {
+        println 'Serialized engines in ${project.file(serializedEnginesPath)} already exist.'
+    }
+}
+tasks.register('serializeEnginesExecute', JavaExec) {
+    group = 'openrocket'
     workingDir  new File(projectDir, 'build/tmp')
     classpath = sourceSets.main.runtimeClasspath
     mainClass.set('net.sf.openrocket.thrustcurve.SerializeThrustcurveMotors')
-    args "../../resources-src/datafiles/thrustcurves/", "../../src/main/resources/datafiles/thrustcurves/thrustcurves.ser"
+    args '../../resources-src/datafiles/thrustcurves/', '../.' + serializedEnginesPath
 }
 
 tasks.register('copyFilesMain', Copy) {
@@ -66,6 +82,7 @@ tasks.register('copyFilesTest', Copy) {
     into './src/test/resources'
 }
 
+clean.dependsOn([serializeEnginesDelete])
 compileJava.dependsOn([copyFilesMain, copyFilesTest])
 
 // https://docs.gradle.org/7.4/userguide/cross_project_publications.html
