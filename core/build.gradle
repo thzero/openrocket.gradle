@@ -68,6 +68,7 @@ tasks.register('copyFilesTest', Copy) {
 
 compileJava.dependsOn([copyFilesMain, copyFilesTest])
 
+// https://docs.gradle.org/7.4/userguide/cross_project_publications.html
 tasks.register('testCoreArtifactsJar', Jar) {
     archiveClassifier.set("tests")
     from sourceSets.test.output
@@ -75,10 +76,16 @@ tasks.register('testCoreArtifactsJar', Jar) {
     include "**/ServicesForTesting.class", "**/util/BaseTestCase.class"
 }
 
+// https://docs.gradle.org/7.4/userguide/cross_project_publications.html
 configurations {
-    testArtifacts
+    testArtifacts {
+        canBeConsumed = true
+        canBeResolved = false
+        extendsFrom testImplementation
+    }
 }
 
+// https://docs.gradle.org/7.4/userguide/cross_project_publications.html
 artifacts {
-    testArtifacts testCoreArtifactsJar
+    testArtifacts(testCoreArtifactsJar)
 }
