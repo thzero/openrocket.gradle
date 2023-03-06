@@ -69,21 +69,17 @@ tasks.register('serializeEnginesExecute', JavaExec) {
     args '../../resources-src/datafiles/thrustcurves/', '../.' + serializedEnginesPath
 }
 
-tasks.register('copyFilesMain', Copy) {
-    from('../') {
-        include 'ReleaseNotes.md'
+tasks.register('copyReadmeMain', Copy) {
+    doLast {
+        from('../') {
+            include 'ReleaseNotes.md'
+        }
+        into './src/main/resources'
     }
-    into './src/main/resources'
-}
-tasks.register('copyFilesTest', Copy) {
-    from('../') {
-        include 'ReleaseNotes.md'
-    }
-    into './src/test/resources'
 }
 
 clean.dependsOn([serializeEnginesDelete])
-compileJava.dependsOn([copyFilesMain, copyFilesTest])
+compileJava.dependsOn([copyReadmeMain])
 
 // https://docs.gradle.org/7.4/userguide/cross_project_publications.html
 tasks.register('testCoreArtifactsJar', Jar) {
