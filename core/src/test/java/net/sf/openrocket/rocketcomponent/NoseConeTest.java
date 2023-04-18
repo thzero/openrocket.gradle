@@ -22,7 +22,7 @@ public class NoseConeTest extends BaseTestCase {
         NoseCone noseCone = new NoseCone();
 
         // First set the parameters using the normal transition setters (i.e. using AftRadius and AftShoulder instead of Base and Shoulder)
-        noseCone.setType(Transition.Shape.OGIVE);
+        noseCone.setShapeType(Transition.Shape.OGIVE);
         noseCone.setLength(0.06);
         noseCone.setAftRadius(0.1);
         noseCone.setAftShoulderLength(0.01);
@@ -30,12 +30,12 @@ public class NoseConeTest extends BaseTestCase {
         noseCone.setAftShoulderCapped(false);
         noseCone.setAftShoulderThickness(0.001);
 
-        assertEquals(Transition.Shape.OGIVE, noseCone.getType());
+        assertEquals(Transition.Shape.OGIVE, noseCone.getShapeType());
         assertEquals(0.06, noseCone.getLength(), EPSILON);
         assertEquals(0.1, noseCone.getAftRadius(), EPSILON);
         assertEquals(0.1, noseCone.getBaseRadius(), EPSILON);
-        assertEquals(0.1, noseCone.getAftRadiusNoAutomatic(), EPSILON);
-        assertEquals(0.1, noseCone.getBaseRadiusNoAutomatic(), EPSILON);
+        assertEquals(0.1, noseCone.getAftRadius(), EPSILON);
+        assertEquals(0.1, noseCone.getBaseRadius(), EPSILON);
         assertEquals(0.01, noseCone.getAftShoulderLength(), EPSILON);
         assertEquals(0.01, noseCone.getShoulderLength(), EPSILON);
         assertEquals(0.05, noseCone.getAftShoulderRadius(), EPSILON);
@@ -47,7 +47,7 @@ public class NoseConeTest extends BaseTestCase {
         assertFalse(noseCone.isAftRadiusAutomatic());
 
         assertEquals(0, noseCone.getForeRadius(), EPSILON);
-        assertEquals(0, noseCone.getForeRadiusNoAutomatic(), EPSILON);
+        assertEquals(0, noseCone.getForeRadius(), EPSILON);
         assertEquals(0, noseCone.getForeShoulderLength(), EPSILON);
         assertEquals(0, noseCone.getForeShoulderRadius(), EPSILON);
         assertEquals(0, noseCone.getForeShoulderThickness(), EPSILON);
@@ -63,8 +63,8 @@ public class NoseConeTest extends BaseTestCase {
 
         assertEquals(0.2, noseCone.getAftRadius(), EPSILON);
         assertEquals(0.2, noseCone.getBaseRadius(), EPSILON);
-        assertEquals(0.2, noseCone.getAftRadiusNoAutomatic(), EPSILON);
-        assertEquals(0.2, noseCone.getBaseRadiusNoAutomatic(), EPSILON);
+        assertEquals(0.2, noseCone.getAftRadius(), EPSILON);
+        assertEquals(0.2, noseCone.getBaseRadius(), EPSILON);
         assertEquals(0.03, noseCone.getAftShoulderLength(), EPSILON);
         assertEquals(0.03, noseCone.getShoulderLength(), EPSILON);
         assertEquals(0.04, noseCone.getAftShoulderRadius(), EPSILON);
@@ -76,7 +76,7 @@ public class NoseConeTest extends BaseTestCase {
         assertFalse(noseCone.isAftRadiusAutomatic());
 
         assertEquals(0, noseCone.getForeRadius(), EPSILON);
-        assertEquals(0, noseCone.getForeRadiusNoAutomatic(), EPSILON);
+        assertEquals(0, noseCone.getForeRadius(), EPSILON);
         assertEquals(0, noseCone.getForeShoulderLength(), EPSILON);
         assertEquals(0, noseCone.getForeShoulderRadius(), EPSILON);
         assertEquals(0, noseCone.getForeShoulderThickness(), EPSILON);
@@ -89,7 +89,7 @@ public class NoseConeTest extends BaseTestCase {
         NoseCone noseCone = new NoseCone();
 
         // First set the parameters using the normal transition setters (i.e. using AftRadius and AftShoulder instead of Base and Shoulder)
-        noseCone.setType(Transition.Shape.OGIVE);
+        noseCone.setShapeType(Transition.Shape.OGIVE);
         noseCone.setLength(0.06);
         noseCone.setAftRadius(0.1);
         noseCone.setAftShoulderLength(0.01);
@@ -98,12 +98,12 @@ public class NoseConeTest extends BaseTestCase {
         noseCone.setAftShoulderThickness(0.001);
         noseCone.setFlipped(true);
 
-        assertEquals(Transition.Shape.OGIVE, noseCone.getType());
+        assertEquals(Transition.Shape.OGIVE, noseCone.getShapeType());
         assertEquals(0.06, noseCone.getLength(), EPSILON);
         assertEquals(0.1, noseCone.getForeRadius(), EPSILON);
         assertEquals(0.1, noseCone.getBaseRadius(), EPSILON);
-        assertEquals(0.1, noseCone.getForeRadiusNoAutomatic(), EPSILON);
-        assertEquals(0.1, noseCone.getBaseRadiusNoAutomatic(), EPSILON);
+        assertEquals(0.1, noseCone.getForeRadius(), EPSILON);
+        assertEquals(0.1, noseCone.getBaseRadius(), EPSILON);
         assertEquals(0.01, noseCone.getForeShoulderLength(), EPSILON);
         assertEquals(0.01, noseCone.getShoulderLength(), EPSILON);
         assertEquals(0.05, noseCone.getForeShoulderRadius(), EPSILON);
@@ -115,7 +115,7 @@ public class NoseConeTest extends BaseTestCase {
         assertFalse(noseCone.isForeRadiusAutomatic());
 
         assertEquals(0, noseCone.getAftRadius(), EPSILON);
-        assertEquals(0, noseCone.getAftRadiusNoAutomatic(), EPSILON);
+        assertEquals(0, noseCone.getAftRadius(), EPSILON);
         assertEquals(0, noseCone.getAftShoulderLength(), EPSILON);
         assertEquals(0, noseCone.getAftShoulderRadius(), EPSILON);
         assertEquals(0, noseCone.getAftShoulderThickness(), EPSILON);
@@ -131,8 +131,8 @@ public class NoseConeTest extends BaseTestCase {
 
         assertEquals(0.2, noseCone.getForeRadius(), EPSILON);
         assertEquals(0.2, noseCone.getBaseRadius(), EPSILON);
-        assertEquals(0.2, noseCone.getForeRadiusNoAutomatic(), EPSILON);
-        assertEquals(0.2, noseCone.getBaseRadiusNoAutomatic(), EPSILON);
+        assertEquals(0.2, noseCone.getForeRadius(), EPSILON);
+        assertEquals(0.2, noseCone.getBaseRadius(), EPSILON);
         assertEquals(0.03, noseCone.getForeShoulderLength(), EPSILON);
         assertEquals(0.03, noseCone.getShoulderLength(), EPSILON);
         assertEquals(0.04, noseCone.getForeShoulderRadius(), EPSILON);
@@ -144,7 +144,7 @@ public class NoseConeTest extends BaseTestCase {
         assertFalse(noseCone.isForeRadiusAutomatic());
 
         assertEquals(0, noseCone.getAftRadius(), EPSILON);
-        assertEquals(0, noseCone.getAftRadiusNoAutomatic(), EPSILON);
+        assertEquals(0, noseCone.getAftRadius(), EPSILON);
         assertEquals(0, noseCone.getAftShoulderLength(), EPSILON);
         assertEquals(0, noseCone.getAftShoulderRadius(), EPSILON);
         assertEquals(0, noseCone.getAftShoulderThickness(), EPSILON);
@@ -156,8 +156,8 @@ public class NoseConeTest extends BaseTestCase {
 
         assertEquals(0.2, noseCone.getAftRadius(), EPSILON);
         assertEquals(0.2, noseCone.getBaseRadius(), EPSILON);
-        assertEquals(0.2, noseCone.getAftRadiusNoAutomatic(), EPSILON);
-        assertEquals(0.2, noseCone.getBaseRadiusNoAutomatic(), EPSILON);
+        assertEquals(0.2, noseCone.getAftRadius(), EPSILON);
+        assertEquals(0.2, noseCone.getBaseRadius(), EPSILON);
         assertEquals(0.03, noseCone.getAftShoulderLength(), EPSILON);
         assertEquals(0.03, noseCone.getShoulderLength(), EPSILON);
         assertEquals(0.04, noseCone.getAftShoulderRadius(), EPSILON);
@@ -169,7 +169,7 @@ public class NoseConeTest extends BaseTestCase {
         assertFalse(noseCone.isAftRadiusAutomatic());
 
         assertEquals(0, noseCone.getForeRadius(), EPSILON);
-        assertEquals(0, noseCone.getForeRadiusNoAutomatic(), EPSILON);
+        assertEquals(0, noseCone.getForeRadius(), EPSILON);
         assertEquals(0, noseCone.getForeShoulderLength(), EPSILON);
         assertEquals(0, noseCone.getForeShoulderRadius(), EPSILON);
         assertEquals(0, noseCone.getForeShoulderThickness(), EPSILON);
@@ -183,7 +183,7 @@ public class NoseConeTest extends BaseTestCase {
         AxialStage stage = rocket.getStage(0);
 
         NoseCone noseCone = new NoseCone(Transition.Shape.CONICAL, 0.06, 0.01);
-        BodyTube tube1 = new BodyTube(0.06, 0.02);
+        BodyTube tube1 = new BodyTube(0.06, 0.023);
         tube1.setOuterRadiusAutomatic(false);
         BodyTube tube2 = new BodyTube(0.06, 0.03);
         tube2.setOuterRadiusAutomatic(false);
@@ -200,11 +200,11 @@ public class NoseConeTest extends BaseTestCase {
         assertFalse(noseCone.isAftRadiusAutomatic());
         assertFalse(noseCone.isBaseRadiusAutomatic());
         assertFalse(noseCone.isForeRadiusAutomatic());
-        assertEquals(noseCone.getAftRadius(), noseCone.getAftRadiusNoAutomatic(), EPSILON);
-        assertEquals(noseCone.getBaseRadius(), noseCone.getBaseRadiusNoAutomatic(), EPSILON);
-        assertEquals(noseCone.getForeRadius(), noseCone.getForeRadiusNoAutomatic(), EPSILON);
-        assertEquals(0.01, noseCone.getAftRadiusNoAutomatic(), EPSILON);
-        assertEquals(0, noseCone.getForeRadiusNoAutomatic(), EPSILON);
+        assertEquals(noseCone.getAftRadius(), noseCone.getAftRadius(), EPSILON);
+        assertEquals(noseCone.getBaseRadius(), noseCone.getBaseRadius(), EPSILON);
+        assertEquals(noseCone.getForeRadius(), noseCone.getForeRadius(), EPSILON);
+        assertEquals(0.01, noseCone.getAftRadius(), EPSILON);
+        assertEquals(0, noseCone.getForeRadius(), EPSILON);
 
         noseCone.setAftRadiusAutomatic(true, true);
         assertFalse(noseCone.isAftRadiusAutomatic());
@@ -225,10 +225,10 @@ public class NoseConeTest extends BaseTestCase {
         assertFalse(noseCone.isAftRadiusAutomatic());
         assertFalse(noseCone.isBaseRadiusAutomatic());
         assertFalse(noseCone.isForeRadiusAutomatic());
-        assertEquals(noseCone.getAftRadius(), noseCone.getAftRadiusNoAutomatic(), EPSILON);
-        assertEquals(noseCone.getBaseRadius(), noseCone.getBaseRadiusNoAutomatic(), EPSILON);
-        assertEquals(noseCone.getForeRadius(), noseCone.getForeRadiusNoAutomatic(), EPSILON);
-        assertEquals(0, noseCone.getForeRadiusNoAutomatic(), EPSILON);
+        assertEquals(noseCone.getAftRadius(), noseCone.getAftRadius(), EPSILON);
+        assertEquals(noseCone.getBaseRadius(), noseCone.getBaseRadius(), EPSILON);
+        assertEquals(noseCone.getForeRadius(), noseCone.getForeRadius(), EPSILON);
+        assertEquals(0, noseCone.getForeRadius(), EPSILON);
 
         noseCone.setAftRadiusAutomatic(true, true);
         assertFalse(noseCone.usesPreviousCompAutomatic());
@@ -241,24 +241,24 @@ public class NoseConeTest extends BaseTestCase {
         assertTrue(noseCone.isBaseRadiusAutomatic());
         assertFalse(noseCone.isForeRadiusAutomatic());
         assertEquals(tube1.getForeRadius(), noseCone.getAftRadius(), EPSILON);
-        assertEquals(0.01, noseCone.getAftRadiusNoAutomatic(), EPSILON);
+        assertEquals(0.023, noseCone.getAftRadius(), EPSILON);
         assertEquals(tube1.getForeRadius(), noseCone.getBaseRadius(), EPSILON);
-        assertEquals(0.01, noseCone.getBaseRadiusNoAutomatic(), EPSILON);
-        assertEquals(noseCone.getForeRadius(), noseCone.getForeRadiusNoAutomatic(), EPSILON);
-        assertEquals(0, noseCone.getForeRadiusNoAutomatic(), EPSILON);
+        assertEquals(0.023, noseCone.getBaseRadius(), EPSILON);
+        assertEquals(noseCone.getForeRadius(), noseCone.getForeRadius(), EPSILON);
+        assertEquals(0, noseCone.getForeRadius(), EPSILON);
 
         noseCone.setAftRadiusAutomatic(false, true);
-        assertEquals(noseCone.getAftRadius(), noseCone.getAftRadiusNoAutomatic(), EPSILON);
-        assertEquals(noseCone.getBaseRadius(), noseCone.getBaseRadiusNoAutomatic(), EPSILON);
-        assertEquals(noseCone.getForeRadius(), noseCone.getForeRadiusNoAutomatic(), EPSILON);
-        assertEquals(0, noseCone.getForeRadiusNoAutomatic(), EPSILON);
+        assertEquals(noseCone.getAftRadius(), noseCone.getAftRadius(), EPSILON);
+        assertEquals(noseCone.getBaseRadius(), noseCone.getBaseRadius(), EPSILON);
+        assertEquals(noseCone.getForeRadius(), noseCone.getForeRadius(), EPSILON);
+        assertEquals(0, noseCone.getForeRadius(), EPSILON);
 
         noseCone.setBaseRadiusAutomatic(true);
-        assertEquals(0.01, noseCone.getAftRadiusNoAutomatic(), EPSILON);
+        assertEquals(0.023, noseCone.getAftRadius(), EPSILON);
         assertEquals(tube1.getForeRadius(), noseCone.getBaseRadius(), EPSILON);
-        assertEquals(0.01, noseCone.getBaseRadiusNoAutomatic(), EPSILON);
-        assertEquals(noseCone.getForeRadius(), noseCone.getForeRadiusNoAutomatic(), EPSILON);
-        assertEquals(0, noseCone.getForeRadiusNoAutomatic(), EPSILON);
+        assertEquals(0.023, noseCone.getBaseRadius(), EPSILON);
+        assertEquals(noseCone.getForeRadius(), noseCone.getForeRadius(), EPSILON);
+        assertEquals(0, noseCone.getForeRadius(), EPSILON);
 
         noseCone.setForeRadiusAutomatic(true, true);
         assertFalse(noseCone.isForeRadiusAutomatic());
@@ -277,11 +277,11 @@ public class NoseConeTest extends BaseTestCase {
         assertTrue(noseCone.isBaseRadiusAutomatic());
         assertFalse(noseCone.isForeRadiusAutomatic());
         assertEquals(tube1.getForeRadius(), noseCone.getAftRadius(), EPSILON);
-        assertEquals(0.01, noseCone.getAftRadiusNoAutomatic(), EPSILON);
+        assertEquals(0.023, noseCone.getAftRadius(), EPSILON);
         assertEquals(tube1.getForeRadius(), noseCone.getBaseRadius(), EPSILON);
-        assertEquals(0.01, noseCone.getBaseRadiusNoAutomatic(), EPSILON);
-        assertEquals(noseCone.getForeRadius(), noseCone.getForeRadiusNoAutomatic(), EPSILON);
-        assertEquals(0, noseCone.getForeRadiusNoAutomatic(), EPSILON);
+        assertEquals(0.023, noseCone.getBaseRadius(), EPSILON);
+        assertEquals(noseCone.getForeRadius(), noseCone.getForeRadius(), EPSILON);
+        assertEquals(0, noseCone.getForeRadius(), EPSILON);
 
         // Do a flip
         noseCone.setFlipped(true);
@@ -314,11 +314,11 @@ public class NoseConeTest extends BaseTestCase {
         assertFalse(noseCone.isAftRadiusAutomatic());
         assertFalse(noseCone.isBaseRadiusAutomatic());
         assertFalse(noseCone.isForeRadiusAutomatic());
-        assertEquals(noseCone.getAftRadius(), noseCone.getAftRadiusNoAutomatic(), EPSILON);
-        assertEquals(noseCone.getBaseRadius(), noseCone.getBaseRadiusNoAutomatic(), EPSILON);
-        assertEquals(noseCone.getForeRadius(), noseCone.getForeRadiusNoAutomatic(), EPSILON);
-        assertEquals(0, noseCone.getAftRadiusNoAutomatic(), EPSILON);
-        assertEquals(0.01, noseCone.getForeRadiusNoAutomatic(), EPSILON);
+        assertEquals(noseCone.getAftRadius(), noseCone.getAftRadius(), EPSILON);
+        assertEquals(noseCone.getBaseRadius(), noseCone.getBaseRadius(), EPSILON);
+        assertEquals(noseCone.getForeRadius(), noseCone.getForeRadius(), EPSILON);
+        assertEquals(0, noseCone.getAftRadius(), EPSILON);
+        assertEquals(0.01, noseCone.getForeRadius(), EPSILON);
 
         noseCone.setAftRadiusAutomatic(true, true);
         assertFalse(noseCone.isAftRadiusAutomatic());
@@ -339,10 +339,10 @@ public class NoseConeTest extends BaseTestCase {
         assertFalse(noseCone.isAftRadiusAutomatic());
         assertFalse(noseCone.isBaseRadiusAutomatic());
         assertFalse(noseCone.isForeRadiusAutomatic());
-        assertEquals(noseCone.getAftRadius(), noseCone.getAftRadiusNoAutomatic(), EPSILON);
-        assertEquals(noseCone.getBaseRadius(), noseCone.getBaseRadiusNoAutomatic(), EPSILON);
-        assertEquals(noseCone.getForeRadius(), noseCone.getForeRadiusNoAutomatic(), EPSILON);
-        assertEquals(0, noseCone.getAftRadiusNoAutomatic(), EPSILON);
+        assertEquals(noseCone.getAftRadius(), noseCone.getAftRadius(), EPSILON);
+        assertEquals(noseCone.getBaseRadius(), noseCone.getBaseRadius(), EPSILON);
+        assertEquals(noseCone.getForeRadius(), noseCone.getForeRadius(), EPSILON);
+        assertEquals(0, noseCone.getAftRadius(), EPSILON);
 
         noseCone.setBaseRadiusAutomatic(true);
         assertTrue(noseCone.usesPreviousCompAutomatic());
@@ -355,25 +355,25 @@ public class NoseConeTest extends BaseTestCase {
         assertTrue(noseCone.isBaseRadiusAutomatic());
         assertTrue(noseCone.isForeRadiusAutomatic());
         assertEquals(tube1.getAftRadius(), noseCone.getForeRadius(), EPSILON);
-        assertEquals(0.01, noseCone.getForeRadiusNoAutomatic(), EPSILON);
+        assertEquals(0.02, noseCone.getForeRadius(), EPSILON);
         assertEquals(tube1.getAftRadius(), noseCone.getBaseRadius(), EPSILON);
-        assertEquals(0.01, noseCone.getBaseRadiusNoAutomatic(), EPSILON);
-        assertEquals(noseCone.getAftRadius(), noseCone.getAftRadiusNoAutomatic(), EPSILON);
-        assertEquals(0, noseCone.getAftRadiusNoAutomatic(), EPSILON);
+        assertEquals(0.02, noseCone.getBaseRadius(), EPSILON);
+        assertEquals(noseCone.getAftRadius(), noseCone.getAftRadius(), EPSILON);
+        assertEquals(0, noseCone.getAftRadius(), EPSILON);
 
         noseCone.setForeRadiusAutomatic(false, true);
-        assertEquals(noseCone.getAftRadius(), noseCone.getAftRadiusNoAutomatic(), EPSILON);
-        assertEquals(noseCone.getBaseRadius(), noseCone.getBaseRadiusNoAutomatic(), EPSILON);
-        assertEquals(noseCone.getForeRadius(), noseCone.getForeRadiusNoAutomatic(), EPSILON);
-        assertEquals(0.01, noseCone.getForeRadiusNoAutomatic(), EPSILON);
+        assertEquals(noseCone.getAftRadius(), noseCone.getAftRadius(), EPSILON);
+        assertEquals(noseCone.getBaseRadius(), noseCone.getBaseRadius(), EPSILON);
+        assertEquals(noseCone.getForeRadius(), noseCone.getForeRadius(), EPSILON);
+        assertEquals(0.02, noseCone.getForeRadius(), EPSILON);
 
         noseCone.setBaseRadiusAutomatic(true);
         assertEquals(tube1.getAftRadius(), noseCone.getForeRadius(), EPSILON);
-        assertEquals(0.01, noseCone.getForeRadiusNoAutomatic(), EPSILON);
+        assertEquals(0.02, noseCone.getForeRadius(), EPSILON);
         assertEquals(tube1.getAftRadius(), noseCone.getBaseRadius(), EPSILON);
-        assertEquals(0.01, noseCone.getBaseRadiusNoAutomatic(), EPSILON);
-        assertEquals(noseCone.getAftRadius(), noseCone.getAftRadiusNoAutomatic(), EPSILON);
-        assertEquals(0, noseCone.getAftRadiusNoAutomatic(), EPSILON);
+        assertEquals(0.02, noseCone.getBaseRadius(), EPSILON);
+        assertEquals(noseCone.getAftRadius(), noseCone.getAftRadius(), EPSILON);
+        assertEquals(0, noseCone.getAftRadius(), EPSILON);
 
         assertTrue(noseCone.isForeRadiusAutomatic());
         assertTrue(noseCone.isBaseRadiusAutomatic());
@@ -392,10 +392,10 @@ public class NoseConeTest extends BaseTestCase {
         assertTrue(noseCone.isBaseRadiusAutomatic());
         assertTrue(noseCone.isForeRadiusAutomatic());
         assertEquals(tube1.getAftRadius(), noseCone.getForeRadius(), EPSILON);
-        assertEquals(0.01, noseCone.getForeRadiusNoAutomatic(), EPSILON);
+        assertEquals(0.02, noseCone.getForeRadius(), EPSILON);
         assertEquals(tube1.getForeRadius(), noseCone.getBaseRadius(), EPSILON);
-        assertEquals(0.01, noseCone.getBaseRadiusNoAutomatic(), EPSILON);
-        assertEquals(noseCone.getAftRadius(), noseCone.getAftRadiusNoAutomatic(), EPSILON);
+        assertEquals(0.02, noseCone.getBaseRadius(), EPSILON);
+        assertEquals(noseCone.getAftRadius(), noseCone.getAftRadius(), EPSILON);
         assertEquals(0, noseCone.getAftRadius(), EPSILON);
     }
 }

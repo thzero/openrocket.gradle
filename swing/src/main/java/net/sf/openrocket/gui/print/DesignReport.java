@@ -1,4 +1,3 @@
-// thzero
 /*
  * DesignReport.java
  */
@@ -15,20 +14,15 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-// thzero - begin
-import com.itextpdf.awt.PdfGraphics2D;
-// thzero - end
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.itextpdf.awt.DefaultFontMapper;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Rectangle;
-// thzero - begin
-import com.itextpdf.awt.DefaultFontMapper;
-// thzero - end
 import com.itextpdf.text.pdf.PdfContentByte;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
@@ -345,15 +339,8 @@ public class DesignReport {
 		theFigure.updateFigure();
 		
 		final DefaultFontMapper mapper = new DefaultFontMapper();
-// thzero - begin
-		// TODO: Deprecated (External Dependency)
-		//Graphics2D g2d = theCanvas.createGraphics(thePageImageableWidth, thePageImageableHeight * 2, mapper);
-		Graphics2D g2d = new PdfGraphics2D(theCanvas, thePageImageableWidth, thePageImageableHeight * 2, mapper);
-// thzero - end
-// thzero - begin
-//		final double halfFigureHeight = SCALE_FUDGE_FACTOR * theFigure.getFigureHeightPx() / 2;
+		Graphics2D g2d = theCanvas.createGraphics(thePageImageableWidth, thePageImageableHeight * 2, mapper);
 		final double halfFigureHeight = SCALE_FUDGE_FACTOR * theFigure.getFigureHeight() / 2;
-// thzero - end
 		int y = PrintUnit.POINTS_PER_INCH;
 		//If the y dimension is negative, then it will potentially be drawn off the top of the page.  Move the origin
 		//to allow for this.

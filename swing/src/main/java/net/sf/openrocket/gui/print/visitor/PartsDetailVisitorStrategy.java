@@ -9,6 +9,7 @@ import java.util.Set;
 
 import javax.swing.ImageIcon;
 
+import net.sf.openrocket.rocketcomponent.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,25 +19,6 @@ import net.sf.openrocket.gui.print.PrintUtilities;
 import net.sf.openrocket.gui.print.PrintableFinSet;
 import net.sf.openrocket.material.Material;
 import net.sf.openrocket.preset.ComponentPreset;
-import net.sf.openrocket.rocketcomponent.BodyComponent;
-import net.sf.openrocket.rocketcomponent.BodyTube;
-import net.sf.openrocket.rocketcomponent.Bulkhead;
-import net.sf.openrocket.rocketcomponent.Coaxial;
-import net.sf.openrocket.rocketcomponent.ExternalComponent;
-import net.sf.openrocket.rocketcomponent.FinSet;
-import net.sf.openrocket.rocketcomponent.InnerTube;
-import net.sf.openrocket.rocketcomponent.LaunchLug;
-import net.sf.openrocket.rocketcomponent.MassObject;
-import net.sf.openrocket.rocketcomponent.NoseCone;
-import net.sf.openrocket.rocketcomponent.Parachute;
-import net.sf.openrocket.rocketcomponent.RadiusRingComponent;
-import net.sf.openrocket.rocketcomponent.RecoveryDevice;
-import net.sf.openrocket.rocketcomponent.RingComponent;
-import net.sf.openrocket.rocketcomponent.RocketComponent;
-import net.sf.openrocket.rocketcomponent.ShockCord;
-import net.sf.openrocket.rocketcomponent.AxialStage;
-import net.sf.openrocket.rocketcomponent.Streamer;
-import net.sf.openrocket.rocketcomponent.Transition;
 import net.sf.openrocket.unit.Unit;
 import net.sf.openrocket.unit.UnitGroup;
 
@@ -151,18 +133,20 @@ public class PartsDetailVisitorStrategy {
     private void handle (RocketComponent component) {
         //This ugly if-then-else construct is not object oriented.  Originally it was an elegant, and very OO savy, design
         //using the Visitor pattern.  Unfortunately, it was misunderstood and was removed.
-        if (component instanceof AxialStage) {
+        if (component instanceof ComponentAssembly) {
             try {
                 if (grid != null) {
                     document.add(grid);
                 }
-                document.add(ITextHelper.createPhrase(component.getName()));
+                if (level > 1) {
+                    Chunk tab = new Chunk(new VerticalPositionMark(), (level - 1) * 10, false);
+                    document.add(tab);
+                }
+                document.add(ITextHelper.createPhrase(component.getComponentName() + ": " +  component.getName()));
                 grid = new PdfPTable(TABLE_COLUMNS);
                 grid.setWidthPercentage(100);
                 grid.setHorizontalAlignment(Element.ALIGN_LEFT);
-            }
-            catch (DocumentException e) {
-            }
+            } catch (DocumentException ignored) { }
 
             List<RocketComponent> rc = component.getChildren();
             goDeep(rc);
@@ -182,7 +166,7 @@ public class PartsDetailVisitorStrategy {
             grid.addCell(iconToImage(component));
             grid.addCell(createNameCell(component.getName(), true, component.getPresetComponent()));
             grid.addCell(createMaterialCell(nc.getMaterial()));
-            grid.addCell(ITextHelper.createCell(nc.getType().getName(), PdfPCell.BOTTOM));
+            grid.addCell(ITextHelper.createCell(nc.getShapeType().getName(), PdfPCell.BOTTOM));
             grid.addCell(createLengthCell(component.getLength()));
             grid.addCell(createMassCell(component.getMass()));
             List<RocketComponent> rc = component.getChildren();

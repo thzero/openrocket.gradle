@@ -1273,14 +1273,14 @@ public abstract class RocketComponent implements ChangeSource, Cloneable, Iterab
 	 */
 	public double getAxialOffset(AxialMethod asMethod) {
 		double parentLength = 0;
-		if (null != this.parent) {
-		    parentLength = this.parent.length;
+		if (this.parent != null && !(this.parent instanceof Rocket)) {
+		    parentLength = this.parent.getLength();
 		}
 
 		if(AxialMethod.ABSOLUTE == asMethod){
 			return this.getComponentLocations()[0].x;
 		}else {
-			return asMethod.getAsOffset(this.position.x, this.length, parentLength);
+			return asMethod.getAsOffset(this.position.x, getLength(), parentLength);
 		}
 	}
 	
@@ -1296,7 +1296,12 @@ public abstract class RocketComponent implements ChangeSource, Cloneable, Iterab
 		mutex.verify();
 		return 0;
 	}
-	
+
+	public double getRadiusOffset(RadiusMethod method) {
+		double radius = getRadiusMethod().getRadius(parent, this, getRadiusOffset());
+		return method.getAsOffset(parent, this, radius);
+	}
+
 	public RadiusMethod getRadiusMethod() {
 		return RadiusMethod.COAXIAL;
 	}
@@ -1333,8 +1338,19 @@ public abstract class RocketComponent implements ChangeSource, Cloneable, Iterab
 		if( 0 == thisIndex ) {
 			this.position = this.position.setX(0.);
 		}else if( 0 < thisIndex ) {
-			RocketComponent referenceComponent = parent.getChild( thisIndex - 1 );
-		
+			int idx = thisIndex - 1;
+			RocketComponent referenceComponent = parent.getChild(idx);
+			while (!getRocket().getSelectedConfiguration().isComponentActive(referenceComponent) && idx > 0) {
+				idx--;
+				referenceComponent = parent.getChild(idx);
+			}
+
+			// If previous components are inactive, set this as the new reference point
+			if (!getRocket().getSelectedConfiguration().isComponentActive(referenceComponent)) {
+				this.position = this.position.setX(0.);
+				return;
+			}
+
 			double refLength = referenceComponent.getLength();
 			double refRelX = referenceComponent.getPosition().x;
 
@@ -1368,7 +1384,7 @@ public abstract class RocketComponent implements ChangeSource, Cloneable, Iterab
 			this.setAfter();
 			return;
 		} else {
-			newX = requestedMethod.getAsPosition(requestedOffset, this.length, this.parent.getLength());
+			newX = requestedMethod.getAsPosition(requestedOffset, getLength(), this.parent.getLength());
 		}
 		
 		// snap to zero if less than the threshold 'EPSILON'
@@ -2059,20 +2075,37 @@ public abstract class RocketComponent implements ChangeSource, Cloneable, Iterab
 	}
 
 	/**
-	 * Return all the component assemblies that are a child of this component
-	 * @return list of ComponentAssembly components that are a child of this component
+	 * Return all the component assemblies that are a direct/indirect child of this component
+	 * @return list of ComponentAssembly components that are a direct/indirect child of this component
 	 */
-	public final List<RocketComponent> getChildAssemblies() {
+	public final List<ComponentAssembly> getAllChildAssemblies() {
 		checkState();
 
 		Iterator<RocketComponent> children = iterator(false);
 
-		List<RocketComponent> result = new ArrayList<>();
+		List<ComponentAssembly> result = new ArrayList<>();
 
 		while (children.hasNext()) {
 			RocketComponent child = children.next();
 			if (child instanceof ComponentAssembly) {
-				result.add(child);
+				result.add((ComponentAssembly) child);
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * Return all the component assemblies that are a direct child of this component
+	 * @return list of ComponentAssembly components that are a direct child of this component
+	 */
+	public final List<ComponentAssembly> getDirectChildAssemblies() {
+		checkState();
+
+		List<ComponentAssembly> result = new ArrayList<>();
+
+		for (RocketComponent child : this.getChildren()) {
+			if (child instanceof ComponentAssembly) {
+				result.add((ComponentAssembly) child);
 			}
 		}
 		return result;
@@ -2704,7 +2737,7 @@ public abstract class RocketComponent implements ChangeSource, Cloneable, Iterab
 		buf.append(String.format(" >> Dumping Detailed Information from: %s\n", callingMethod));
 		buf.append(String.format("      At Component: %s, of class: %s \n", this.getName(), this.getClass().getSimpleName()));
 		buf.append(String.format("      position: %.6f    at offset: %.4f via: %s\n", this.position.x, this.axialOffset, this.axialMethod.name()));
-		buf.append(String.format("      length: %.4f\n", this.length ));
+		buf.append(String.format("      length: %.4f\n", getLength() ));
 		return buf;
 	}
 	

@@ -6,7 +6,6 @@ import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.fixedfunc.GLMatrixFunc;
 import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.glu.GLUquadric;
-import static com.jogamp.opengl.GL2ES3.GL_QUADS;
 
 import net.sf.openrocket.rocketcomponent.InnerTube;
 import org.slf4j.Logger;
@@ -148,7 +147,7 @@ public class ComponentRenderer {
 			if (which == Surface.INSIDE) {
 				gl.glFrontFace(GL.GL_CCW);
 			}
-			TransitionRenderer.drawTransition(gl, t, LOD, t.getType() == Shape.CONICAL ? 4 : LOD / 2, which == Surface.INSIDE ? -t.getThickness() : 0);
+			TransitionRenderer.drawTransition(gl, t, LOD, t.getShapeType() == Shape.CONICAL ? 4 : LOD / 2, which == Surface.INSIDE ? -t.getThickness() : 0);
 			if (which == Surface.INSIDE) {
 				gl.glFrontFace(GL.GL_CW);
 			}

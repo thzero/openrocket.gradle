@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
 
 import net.sf.openrocket.rocketcomponent.FlightConfiguration;
 import net.sf.openrocket.rocketcomponent.Rocket;
-import net.sf.openrocket.util.StringUtil;
+import net.sf.openrocket.util.StringUtils;
 
 
 /**
@@ -123,7 +123,7 @@ public class UnitGroup {
 		UNITS_LENGTH.addUnit(new GeneralUnit(0.001, "mm"));
 		UNITS_LENGTH.addUnit(new GeneralUnit(0.01, "cm"));
 		UNITS_LENGTH.addUnit(new GeneralUnit(1, "m"));
-		UNITS_LENGTH.addUnit(new InchUnit(0.0254, "in"));
+		UNITS_LENGTH.addUnit(new InchUnit(0.0254, "in", 0.1));
 		UNITS_LENGTH.addUnit(new FractionalUnit(0.0254, "in/64", "in", 64, 1d / 16d, 0.5d / 64d));
 		UNITS_LENGTH.addUnit(new GeneralUnit(0.3048, "ft"));
 		
@@ -257,17 +257,17 @@ public class UnitGroup {
 		UNITS_ROLL.addUnit(new GeneralUnit(2 * Math.PI / 60, "rpm"));
 		
 		UNITS_TEMPERATURE = new UnitGroup();
-		UNITS_TEMPERATURE.addUnit(new FixedPrecisionUnit("K", 1));
-		UNITS_TEMPERATURE.addUnit(new TemperatureUnit(1, 273.15, DEGREE + "C"));
-		UNITS_TEMPERATURE.addUnit(new TemperatureUnit(5.0 / 9.0, 459.67, DEGREE + "F"));
+		UNITS_TEMPERATURE.addUnit(new FixedPrecisionUnit("K", 0.01));
+		UNITS_TEMPERATURE.addUnit(new TemperatureUnit(1, 273.15, 0.01, DEGREE + "C"));
+		UNITS_TEMPERATURE.addUnit(new TemperatureUnit(5.0 / 9.0, 459.67, 0.01, DEGREE + "F"));
 		
 		UNITS_PRESSURE = new UnitGroup();
-		UNITS_PRESSURE.addUnit(new FixedPrecisionUnit("mbar", 1, 1.0e2));
+		UNITS_PRESSURE.addUnit(new FixedPrecisionUnit("mbar", 0.01, 1.0e2));
 		UNITS_PRESSURE.addUnit(new FixedPrecisionUnit("bar", 0.001, 1.0e5));
 		UNITS_PRESSURE.addUnit(new FixedPrecisionUnit("atm", 0.001, 1.01325e5));
-		UNITS_PRESSURE.addUnit(new GeneralUnit(101325.0 / 760.0, "mmHg"));
-		UNITS_PRESSURE.addUnit(new GeneralUnit(3386.389, "inHg"));
-		UNITS_PRESSURE.addUnit(new GeneralUnit(6894.75729, "psi"));
+		UNITS_PRESSURE.addUnit(new FixedPrecisionUnit("mmHg", 0.01, 101325.0 / 760.0));
+		UNITS_PRESSURE.addUnit(new FixedPrecisionUnit("inHg", 0.01, 3386.389));
+		UNITS_PRESSURE.addUnit(new FixedPrecisionUnit("psi", 0.01, 6894.75729));
 		UNITS_PRESSURE.addUnit(new GeneralUnit(1, "Pa"));
 		
 		UNITS_RELATIVE = new UnitGroup();
@@ -283,7 +283,7 @@ public class UnitGroup {
 		
 		
 		UNITS_COEFFICIENT = new UnitGroup();
-		UNITS_COEFFICIENT.addUnit(new FixedPrecisionUnit("" + ZWSP, 0.01)); // zero-width space
+		UNITS_COEFFICIENT.addUnit(new FixedPrecisionUnit("" + ZWSP, 0.001)); // zero-width space
 		
 		
 		// This is not used by OpenRocket, and not extensively tested:
@@ -672,7 +672,7 @@ public class UnitGroup {
 			throw new NumberFormatException("string did not match required pattern");
 		}
 
-		double value = StringUtil.convertToDouble(matcher.group(1));
+		double value = StringUtils.convertToDouble(matcher.group(1));
 		String unit = matcher.group(2).trim();
 		
 		if (unit.equals("")) {

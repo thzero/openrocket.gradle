@@ -582,6 +582,238 @@ public class FlightConfigurationTest extends BaseTestCase {
 		assertThat(components.get(1).getName(), equalTo("Core Stage Body"));
 
 	}
+
+	@Test
+	public void testName() {
+		Rocket rocket = TestRockets.makeFalcon9Heavy();
+		FlightConfiguration selected = rocket.getSelectedConfiguration();
+
+		// Test only motors or only manufacturers
+		selected.setName("[{motors}] - [{manufacturers}]");
+
+		selected.setAllStages();
+		assertEquals("[[Rocket.motorCount.noStageMotors]; M1350-0; 4\u00D7G77-0] - [[Rocket.motorCount.noStageMotors]; AeroTech; 4\u00D7AeroTech]", selected.getName());
+
+		selected.setOnlyStage(0);
+		assertEquals("[[Rocket.motorCount.Nomotor]] - [[Rocket.motorCount.Nomotor]]", selected.getName());
+
+		selected.setOnlyStage(1);
+		assertEquals("[; M1350-0; ] - [; AeroTech; ]", selected.getName());
+
+		selected.setAllStages();
+		selected._setStageActive(0, false);
+		assertEquals("[; M1350-0; 4\u00D7G77-0] - [; AeroTech; 4\u00D7AeroTech]", selected.getName());
+
+
+		// Test combination of motors and manufacturers
+		selected.setName("[{motors  manufacturers}] -- [{manufacturers}] - [{motors}]");
+
+		selected.setAllStages();
+		assertEquals("[[Rocket.motorCount.noStageMotors]; M1350-0  AeroTech; 4\u00D7G77-0  AeroTech] -- [[Rocket.motorCount.noStageMotors]; AeroTech; 4\u00D7AeroTech] - [[Rocket.motorCount.noStageMotors]; M1350-0; 4\u00D7G77-0]", selected.getName());
+
+		selected.setOnlyStage(0);
+		assertEquals("[[Rocket.motorCount.Nomotor]] -- [[Rocket.motorCount.Nomotor]] - [[Rocket.motorCount.Nomotor]]", selected.getName());
+
+		selected.setOnlyStage(1);
+		assertEquals("[; M1350-0  AeroTech; ] -- [; AeroTech; ] - [; M1350-0; ]", selected.getName());
+
+		selected.setAllStages();
+		selected._setStageActive(0, false);
+		assertEquals("[; M1350-0  AeroTech; 4\u00D7G77-0  AeroTech] -- [; AeroTech; 4\u00D7AeroTech] - [; M1350-0; 4\u00D7G77-0]", selected.getName());
+
+		// Test combination of manufacturers and motors
+		selected.setName("[{manufacturers | motors}]");
+
+		selected.setAllStages();
+		assertEquals("[[Rocket.motorCount.noStageMotors]; AeroTech | M1350-0; 4\u00D7AeroTech | G77-0]", selected.getName());
+
+		selected.setOnlyStage(0);
+		assertEquals("[[Rocket.motorCount.Nomotor]]", selected.getName());
+
+		selected.setOnlyStage(1);
+		assertEquals("[; AeroTech | M1350-0; ]", selected.getName());
+
+		selected.setAllStages();
+		selected._setStageActive(0, false);
+		assertEquals("[; AeroTech | M1350-0; 4\u00D7AeroTech | G77-0]", selected.getName());
+
+		// Test empty tags
+		selected.setName("{}");
+
+		selected.setAllStages();
+		assertEquals("{}", selected.getName());
+
+		selected.setOnlyStage(0);
+		assertEquals("{}", selected.getName());
+
+		selected.setOnlyStage(1);
+		assertEquals("{}", selected.getName());
+
+		selected.setAllStages();
+		selected._setStageActive(0, false);
+		assertEquals("{}", selected.getName());
+
+		// Test invalid tags (1)
+		selected.setName("{motorsm}");
+
+		selected.setAllStages();
+		assertEquals("{motorsm}", selected.getName());
+
+		selected.setOnlyStage(0);
+		assertEquals("{motorsm}", selected.getName());
+
+		selected.setOnlyStage(1);
+		assertEquals("{motorsm}", selected.getName());
+
+		selected.setAllStages();
+		selected._setStageActive(0, false);
+		assertEquals("{motorsm}", selected.getName());
+
+		// Test invalid tags (2)
+		selected.setName("{motors manufacturers '}");
+
+		selected.setAllStages();
+		assertEquals("{motors manufacturers '}", selected.getName());
+
+		selected.setOnlyStage(0);
+		assertEquals("{motors manufacturers '}", selected.getName());
+
+		selected.setOnlyStage(1);
+		assertEquals("{motors manufacturers '}", selected.getName());
+
+		selected.setAllStages();
+		selected._setStageActive(0, false);
+		assertEquals("{motors manufacturers '}", selected.getName());
+	}
+
+	@Test
+	public void testCopy() throws NoSuchFieldException, IllegalAccessException {
+		Rocket rocket = TestRockets.makeFalcon9Heavy();
+		FlightConfiguration original = rocket.getSelectedConfiguration();
+		original.setName("[{motors}] - [{manufacturers}]");
+		original.setOnlyStage(0);
+
+		// vvvv Test Target vvvv
+		FlightConfiguration copy = original.copy(null);
+		// ^^^^ Test Target ^^^^
+
+		assertNotEquals(original, copy);
+		assertNotSame(original, copy);
+		assertEquals(original.getName(), copy.getName());
+		assertNotEquals(original.getFlightConfigurationID(), copy.getFlightConfigurationID());
+
+		// Test preloadStageActiveness copy
+		Field preloadStageActivenessField = FlightConfiguration.class.getDeclaredField("preloadStageActiveness");
+		preloadStageActivenessField.setAccessible(true);
+		Map<Integer, Boolean> preloadStageActivenessOriginal = (Map<Integer, Boolean>) preloadStageActivenessField.get(original);
+		Map<Integer, Boolean> preloadStageActivenessCopy = (Map<Integer, Boolean>) preloadStageActivenessField.get(copy);
+		assertEquals(preloadStageActivenessOriginal, preloadStageActivenessCopy);
+		if (preloadStageActivenessOriginal == null) {
+			assertNull(preloadStageActivenessCopy);
+		} else {
+			assertNotSame(preloadStageActivenessOriginal, preloadStageActivenessCopy);
+		}
+
+		// Test cachedBoundsAerodynamic copy
+		Field cachedBoundsAerodynamicField = FlightConfiguration.class.getDeclaredField("cachedBoundsAerodynamic");
+		cachedBoundsAerodynamicField.setAccessible(true);
+		BoundingBox cachedBoundsAerodynamicOriginal = (BoundingBox) cachedBoundsAerodynamicField.get(original);
+		BoundingBox cachedBoundsAerodynamicCopy = (BoundingBox) cachedBoundsAerodynamicField.get(copy);
+		assertEquals(cachedBoundsAerodynamicOriginal, cachedBoundsAerodynamicCopy);
+		assertNotSame(cachedBoundsAerodynamicOriginal, cachedBoundsAerodynamicCopy);
+
+		// Test cachedBounds copy
+		Field cachedBoundsField = FlightConfiguration.class.getDeclaredField("cachedBounds");
+		cachedBoundsField.setAccessible(true);
+		BoundingBox cachedBoundsOriginal = (BoundingBox) cachedBoundsField.get(original);
+		BoundingBox cachedBoundsCopy = (BoundingBox) cachedBoundsField.get(copy);
+		assertEquals(cachedBoundsOriginal, cachedBoundsCopy);
+		assertNotSame(cachedBoundsOriginal, cachedBoundsCopy);
+
+		// Test modID copy
+		assertEquals(original.getModID(), copy.getModID());
+
+		// Test boundModID
+		Field boundsModIDField = FlightConfiguration.class.getDeclaredField("boundsModID");
+		boundsModIDField.setAccessible(true);
+		int boundsModIDCopy = (int) boundsModIDField.get(copy);
+		assertEquals(-1, boundsModIDCopy);
+
+		// Test refLengthModID
+		Field refLengthModIDField = FlightConfiguration.class.getDeclaredField("refLengthModID");
+		refLengthModIDField.setAccessible(true);
+		int refLengthModIDCopy = (int) refLengthModIDField.get(copy);
+		assertEquals(-1, refLengthModIDCopy);
+
+		// Test stageActiveness copy
+		for (int i = 0; i < original.getStageCount(); i++) {
+			assertEquals(original.isStageActive(i), copy.isStageActive(i));
+		}
+	}
+
+	@Test
+	public void testClone() throws NoSuchFieldException, IllegalAccessException {
+		Rocket rocket = TestRockets.makeFalcon9Heavy();
+		FlightConfiguration original = rocket.getSelectedConfiguration();
+		original.setOnlyStage(0);
+
+		// vvvv Test Target vvvv
+		FlightConfiguration clone = original.clone();
+		// ^^^^ Test Target ^^^^
+
+		assertEquals(original, clone);
+		assertNotSame(original, clone);
+		assertEquals(original.getName(), clone.getName());
+		assertEquals(original.getFlightConfigurationID(), clone.getFlightConfigurationID());
+
+		// Test preloadStageActiveness clone
+		Field preloadStageActivenessField = FlightConfiguration.class.getDeclaredField("preloadStageActiveness");
+		preloadStageActivenessField.setAccessible(true);
+		Map<Integer, Boolean> preloadStageActivenessOriginal = (Map<Integer, Boolean>) preloadStageActivenessField.get(original);
+		Map<Integer, Boolean> preloadStageActivenessClone = (Map<Integer, Boolean>) preloadStageActivenessField.get(clone);
+		assertEquals(preloadStageActivenessOriginal, preloadStageActivenessClone);
+		if (preloadStageActivenessOriginal == null) {
+			assertNull(preloadStageActivenessClone);
+		} else {
+			assertNotSame(preloadStageActivenessOriginal, preloadStageActivenessClone);
+		}
+
+		// Test cachedBoundsAerodynamic clone
+		Field cachedBoundsAerodynamicField = FlightConfiguration.class.getDeclaredField("cachedBoundsAerodynamic");
+		cachedBoundsAerodynamicField.setAccessible(true);
+		BoundingBox cachedBoundsAerodynamicOriginal = (BoundingBox) cachedBoundsAerodynamicField.get(original);
+		BoundingBox cachedBoundsAerodynamicClone = (BoundingBox) cachedBoundsAerodynamicField.get(clone);
+		assertEquals(cachedBoundsAerodynamicOriginal, cachedBoundsAerodynamicClone);
+		assertNotSame(cachedBoundsAerodynamicOriginal, cachedBoundsAerodynamicClone);
+
+		// Test cachedBounds clone
+		Field cachedBoundsField = FlightConfiguration.class.getDeclaredField("cachedBounds");
+		cachedBoundsField.setAccessible(true);
+		BoundingBox cachedBoundsOriginal = (BoundingBox) cachedBoundsField.get(original);
+		BoundingBox cachedBoundsClone = (BoundingBox) cachedBoundsField.get(clone);
+		assertEquals(cachedBoundsOriginal, cachedBoundsClone);
+		assertNotSame(cachedBoundsOriginal, cachedBoundsClone);
+
+		// Test modID clone
+		assertEquals(original.getModID(), clone.getModID());
+
+		// Test boundModID
+		Field boundsModIDField = FlightConfiguration.class.getDeclaredField("boundsModID");
+		boundsModIDField.setAccessible(true);
+		int boundsModIDClone = (int) boundsModIDField.get(clone);
+		assertEquals(-1, boundsModIDClone);
+
+		// Test refLengthModID
+		Field refLengthModIDField = FlightConfiguration.class.getDeclaredField("refLengthModID");
+		refLengthModIDField.setAccessible(true);
+		int refLengthModIDClone = (int) refLengthModIDField.get(clone);
+		assertEquals(-1, refLengthModIDClone);
+
+		// Test stageActiveness copy
+		for (int i = 0; i < original.getStageCount(); i++) {
+			assertEquals(original.isStageActive(i), clone.isStageActive(i));
+		}
+	}
 }
 
 

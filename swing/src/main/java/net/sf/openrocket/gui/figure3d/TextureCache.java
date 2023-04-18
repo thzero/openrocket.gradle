@@ -1,4 +1,3 @@
-// thzero
 package net.sf.openrocket.gui.figure3d;
 
 import java.awt.image.BufferedImage;
@@ -12,11 +11,8 @@ import javax.imageio.ImageIO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-// thzero - begin
-import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLProfile;
-// thzero - end
 import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.awt.AWTTextureIO;
 

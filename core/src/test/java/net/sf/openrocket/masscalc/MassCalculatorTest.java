@@ -68,7 +68,8 @@ public class MassCalculatorTest extends BaseTestCase {
 		assertEquals(" Alpha III Empty Mass is incorrect: ", expRocketDryMass, actualRocketDryMass, EPSILON);
 
 		double expCMx = 0.1917685523;
-		Coordinate expCM = new Coordinate(expCMx, 0, 0, expRocketDryMass);
+		double expCMy = -0.00006340812673;		// Slight offset due to launch lug
+		Coordinate expCM = new Coordinate(expCMx, expCMy, 0, expRocketDryMass);
 		assertEquals("Simple Rocket CM.x is incorrect: ", expCM.x, actualRocketDryCM.x, EPSILON);
 		assertEquals("Simple Rocket CM.y is incorrect: ", expCM.y, actualRocketDryCM.y, EPSILON);
 		assertEquals("Simple Rocket CM.z is incorrect: ", expCM.z, actualRocketDryCM.z, EPSILON);
@@ -120,7 +121,8 @@ public class MassCalculatorTest extends BaseTestCase {
 		assertEquals(" Alpha III Total Mass (with motor: " + desig + ") is incorrect: ", expRocketLaunchMass, actualRocketLaunchMass, EPSILON);
 
 		double expCMx = 0.20996455968266833;
-		Coordinate expCM = new Coordinate(expCMx, 0, 0, expRocketLaunchMass);
+		double expCMy = -0.00003845163503;		// Slight offset due to launch lug
+		Coordinate expCM = new Coordinate(expCMx, expCMy, 0, expRocketLaunchMass);
 		assertEquals("Simple Rocket CM.x is incorrect: ", expCM.x, actualRocketLaunchCM.x, EPSILON);
 		assertEquals("Simple Rocket CM.y is incorrect: ", expCM.y, actualRocketLaunchCM.y, EPSILON);
 		assertEquals("Simple Rocket CM.z is incorrect: ", expCM.z, actualRocketLaunchCM.z, EPSILON);
@@ -999,7 +1001,7 @@ public class MassCalculatorTest extends BaseTestCase {
 		double expTotalMass = overrideMass;
 		assertEquals(" Booster Launch Mass is incorrect: ", expTotalMass, calcTotalMass, EPSILON);
 
-		double expCMx = 6.484;
+		double expCMx = 5.92;
 		Coordinate expCM = new Coordinate(expCMx, 0, 0, expTotalMass);
 		assertEquals(" Booster Launch CM.x is incorrect: ", expCM.x, boosterSetCM.x, EPSILON);
 		assertEquals(" Booster Launch CM.y is incorrect: ", expCM.y, boosterSetCM.y, EPSILON);
@@ -1053,7 +1055,7 @@ public class MassCalculatorTest extends BaseTestCase {
 		double expTotalMass = 3.3565872;
 		assertEquals(" Booster Launch Mass is incorrect: ", expTotalMass, boosterData.getMass(), EPSILON);
 
-		double expCMx = 0.847508988;
+		double expCMx = 0.2835089882645608;
 		Coordinate expCM = new Coordinate(expCMx, 0, 0, expTotalMass);
 		assertEquals(" Booster Launch CM.x is incorrect: ", expCM.x, boosterCM.x, EPSILON);
 		assertEquals(" Booster Launch CM.y is incorrect: ", expCM.y, boosterCM.y, EPSILON);
@@ -1100,7 +1102,7 @@ public class MassCalculatorTest extends BaseTestCase {
 		double calcTotalMass = structure.getMass();
 		assertEquals(" Booster Launch Mass is incorrect: ", expMass, calcTotalMass, EPSILON);
 
-		final double expCMx = 1.1191303646438673;
+		final double expCMx = 0.5551303646438673;
 		Coordinate expCM = new Coordinate(expCMx, 0, 0, expMass);
 		assertEquals(" Booster Launch CM.x is incorrect: ", expCM.x, structure.getCM().x, EPSILON);
 		assertEquals(" Booster Launch CM.y is incorrect: ", expCM.y, structure.getCM().y, EPSILON);
