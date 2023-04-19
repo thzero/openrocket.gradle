@@ -59,19 +59,20 @@ public class BulkHeadComponentTests extends BaseTestCase {
 		assertEquals(100.0, bt.getMass(), 0.05);
 	}
 
-	/* thzero - test fails, cound not find when running ant
+	// TODO - test fails, could not find when running ant
+	/*
 	@Test
 	public void changeLengthLeavesPreset() {
 		Bulkhead bt = new Bulkhead();
-		
+
 		bt.loadPreset(preset);
-		
+
 		bt.setLength(1.0);
-		
+
 		assertSame(preset, bt.getPresetComponent());
 	}
 	*/
-	
+
 	@Test
 	public void changeODClearsPreset() {
 		Bulkhead bt = new Bulkhead();

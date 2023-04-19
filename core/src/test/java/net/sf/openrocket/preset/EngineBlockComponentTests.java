@@ -61,7 +61,8 @@ public class EngineBlockComponentTests extends BaseTestCase {
 		assertEquals(100.0, eb.getMass(), 0.05);
 	}
 
-	/* thzero - test fails, cound not find when running ant
+	// TODO - test fails, could not find when running ant
+	/*
 	@Test
 	public void changeLengthLeavesPreset() {
 		EngineBlock eb = new EngineBlock();

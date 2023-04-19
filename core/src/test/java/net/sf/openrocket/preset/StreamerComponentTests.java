@@ -59,7 +59,8 @@ public class StreamerComponentTests extends BaseTestCase {
 		assertEquals(80.0, cr.getMass(), 0.05);
 	}
 
-	/* thzero - test fails, cound not find when running ant
+	// TODO - test fails, could not find when running ant
+	/*
 	@Test
 	public void changeLengthClearsPreset() {
 		Streamer cr = new Streamer();

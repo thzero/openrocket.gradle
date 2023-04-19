@@ -202,7 +202,8 @@ public class BodyTubePresetTests {
 		assertEquals(0.5, preset.get(ComponentPreset.THICKNESS).doubleValue(), 0.0);
 	}
 
-	/* thzero - test fails, cound not find when running ant
+	// TODO - test fails, could not find when running ant
+	/*
 	@Test
 	public void testComputeDensityNoMaterial() throws Exception {
 		TypedPropertyMap presetspec = new TypedPropertyMap();
@@ -228,7 +229,8 @@ public class BodyTubePresetTests {
 	}
 	*/
 
-	/* thzero - test fails, cound not find when running ant
+	// TODO - test fails, could not find when running ant
+	/*
 	@Test
 	public void testMaterial() throws Exception {
 		TypedPropertyMap presetspec = new TypedPropertyMap();
@@ -247,7 +249,8 @@ public class BodyTubePresetTests {
 	}
 	*/
 
-	/* thzero - test fails, cound not find when running ant
+	// TODO - test fails, could not find when running ant
+	/*
 	@Test
 	public void testComputeDensityWithMaterial() throws Exception {
 		TypedPropertyMap presetspec = new TypedPropertyMap();

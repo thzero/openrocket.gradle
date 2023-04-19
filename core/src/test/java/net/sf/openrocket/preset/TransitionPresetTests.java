@@ -145,7 +145,8 @@ public class TransitionPresetTests extends BaseTestCase {
 		}
 	}
 
-	/* thzero - test fails, cound not find when running ant
+	// TODO - test fails, could not find when running ant
+	/*
 	@Test
 	public void testComputeDensityNoMaterial() throws Exception {
 		TypedPropertyMap presetspec = new TypedPropertyMap();
@@ -192,7 +193,8 @@ public class TransitionPresetTests extends BaseTestCase {
 		
 	}
 
-	/* thzero - test fails, cound not find when running ant
+	// TODO - test fails, could not find when running ant
+	/*
 	@Test
 	public void testComputeDensityWithMaterial() throws Exception {
 		TypedPropertyMap presetspec = new TypedPropertyMap();
