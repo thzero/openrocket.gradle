@@ -1,6 +1,7 @@
 plugins {
     id "com.github.johnrengelman.shadow"
     id 'java'
+    id 'com.adarshr.test-logger' version '3.2.0'
 }
 
 group 'net.sf.openrocket'
@@ -16,6 +17,12 @@ version = props['build.version']
 repositories {
     mavenCentral()
 }
+
+//test {
+//    testLogging {
+//        events "PASSED", "SKIPPED", "FAILED"
+//    }
+//}
 
 dependencies {
     implementation group: 'org.commonmark', name: 'commonmark', version: '0.19.0' // 0.21.0
@@ -47,10 +54,12 @@ dependencies {
 }
 
 def serializedEnginesPath = './src/main/resources/datafiles/thrustcurves/thrustcurves.ser'
+// Deletes the serialize engine file if it exists.
 tasks.register('serializeEnginesDelete', Delete) {
     group = 'openrocket'
     delete fileTree(serializedEnginesPath)
 }
+// Executes the serialization of engines from ThrustCurve.
 tasks.register('serializeEngines') {
     group = 'openrocket'
     if (!project.file(serializedEnginesPath).exists()) {
@@ -58,7 +67,7 @@ tasks.register('serializeEngines') {
         dependsOn serializeEnginesExecute
     }
     else {
-        println 'Serialized engines in ${project.file(serializedEnginesPath)} already exist.'
+        println "Serialized engines in ${project.file(serializedEnginesPath)} already exist."
     }
 }
 tasks.register('serializeEnginesExecute', JavaExec) {
@@ -78,7 +87,7 @@ tasks.register('copyReadmeMain', Copy) {
     }
 }
 
-clean.dependsOn([serializeEnginesDelete])
+//clean.dependsOn([serializeEnginesDelete])
 compileJava.dependsOn([copyReadmeMain])
 
 // https://docs.gradle.org/7.4/userguide/cross_project_publications.html
