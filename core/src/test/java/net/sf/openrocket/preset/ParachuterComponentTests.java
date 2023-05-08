@@ -95,7 +95,7 @@ public class ParachuterComponentTests extends BaseTestCase {
 		assertNull(cr.getPresetComponent());
 	}
 
-	// TODO - test fails, could not find when running ant
+	// TODO - test fails, could not find when running Ant
 /*
 	@Test
 	public void changeLineLengthLeavesPreset() {
@@ -120,7 +120,7 @@ public class ParachuterComponentTests extends BaseTestCase {
 		assertNull(cr.getPresetComponent());
 	}
 
-	// TODO - test fails, could not find when running ant
+	// TODO - test fails, could not find when running Ant
 	/*
 	@Test
 	public void changeLineMaterialLeavesPreset() {

@@ -61,7 +61,7 @@ public class CenteringRingComponentTests extends BaseTestCase {
 		assertEquals(100.0, cr.getMass(), 0.05);
 	}
 
-	// TODO - test fails, could not find when running ant
+	// TODO - test fails, could not find when running Ant
 	/*
 	@Test
 	public void changeLengthLeavesPreset() {

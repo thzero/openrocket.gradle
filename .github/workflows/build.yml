@@ -9,8 +9,11 @@ on:
       - unstable
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  gradle:
+    strategy:
+      matrix:
+        os: ubuntu-latest
+    runs-on: ${{ matrix.os }}
 
     steps:
       - name: Checkout repository and submodules
@@ -22,11 +25,18 @@ jobs:
         with:
           java-version: '11'
           distribution: 'adopt'
-      - name: Ant build
-        run: ant -noinput -buildfile build.xml clean check jar unittest
-      - name: Upload Artifact
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+      - name: Gradle build
+        run: ./gradlew clean test distFull
+      - name: Upload build reports
         uses: actions/upload-artifact@v3
         with:
-          name: openrocket_build_${{ github.run_number }}
-          path: ${{github.workspace}}/swing/build/jar/OpenRocket.jar
+          name: build-reports
+          path: build/reports/
+#      - name: Upload Artifact
+#        uses: actions/upload-artifact@v3
+#        with:
+#          name: openrocket_build_${{ github.run_number }}
+#          path: ${{github.workspace}}/swing/build/jar/OpenRocket.jar
 
