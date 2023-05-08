@@ -3,10 +3,10 @@ name: Build
 on: 
   push:
     branches:
-      - unstable
+      - test_gradle
   pull_request:
     branches:
-      - unstable
+      - test_gradle
 
 jobs:
   gradle:
