@@ -13,20 +13,11 @@
 /tmp
 /loganalysis
 
-# /android/
-/android/bin
-
-# /android-libraries/achartengine/
-/android-libraries/achartengine/gen
-/android-libraries/achartengine/bin
-/android-libraries/achartengine/lint.xml
-
 # /core/
 /core/loganalysis
 /core/build
 /core/tmp
 /core/misc
-/core/src/main/resources/datafiles/thrustcurves/thrustcurves.ser
 /core/src/main/resources/ReleaseNotes.md
 /core/src/test/resources/ReleaseNotes.md
 
