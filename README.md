@@ -1,3 +1,6 @@
+Note
+This repo has been deprecated as the gradle build frameowork has been moved into the unstable (main) branch of OpenRocket (https://github.com/openrocket/openrocket).
+
 OpenRocket
 ==========
 [![Build Status](https://travis-ci.org/thzero/openrocket/openrocket.png?branch=gradle-unstable)](https://travis-ci.org/thzero/openrocket)
